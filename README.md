@@ -15,7 +15,7 @@ This is a simple, dynamic blog application built with Node.js, Express, MongoDB,
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/blog-app.git
+    git clone git@github.com:dhamsey3/myclimatechela.git
     cd blog-app
     ```
 
