@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Climate Definition | Personalizing Climate Change</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --white: #ffffff;
+            --black: #202124;
+            --gray: #5f6368;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--black);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--primary-blue);
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+        
+        a {
+            text-decoration: none;
+            color: var(--primary-blue);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #0d5bba;
+            transform: translateY(-2px);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: var(--black);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+        
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1612132274651-ae5105c60c6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding-top: 80px;
+        }
+        
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--white);
+        }
+        
+        /* About Section */
+        .about {
+            background-color: var(--white);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 40px;
+        }
+        
+        .about-img {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        blockquote {
+            font-style: italic;
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        
+        /* Mission Section */
+        .mission {
+            background-color: var(--light-blue);
+        }
+        
+        .mission-vision {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .mission-box, .vision-box {
+            flex: 1;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Content Hub Section */
+        .content-hub {
+            background-color: var(--white);
+        }
+        
+        .articles {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .article-card {
+            background-color: var(--light-blue);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .article-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .article-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .article-card:hover .article-img img {
+            transform: scale(1.1);
+        }
+        
+        .article-content {
+            padding: 20px;
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(rgba(26, 115, 232, 0.9), rgba(26, 115, 232, 0.9)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80') no-repeat center center/cover;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .stat-box {
+            padding: 30px;
+            margin: 10px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+        }
+        
+        /* Contact Section */
+        .contact {
+            background-color: var(--white);
+        }
+        
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            margin-top: 40px;
+        }
+        
+        .contact-info {
+            flex: 1;
+        }
+        
+        .contact-info p {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-info i {
+            margin-right: 15px;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            margin-top: 30px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-blue);
+            border-radius: 50%;
+            margin-right: 15px;
+            color: var(--primary-blue);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .contact-form {
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: var(--white);
+        }
+        
+        .copyright {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .about-content, .mission-vision, .contact-container {
+                flex-direction: column;
+            }
+            
+            .about-img, .about-text, .mission-box, .vision-box, .contact-info, .contact-form {
+                flex: none;
+                width: 100%;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: var(--white);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 40px;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .articles {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">My Climate Definition</div>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#mission">Mission</a></li>
+                    <li><a href="#content">Content Hub</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" class="btn">Donate</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>"DEFINING CLIMATE CHANGE THROUGH OUR STORIES"</h1>
+                <a href="#about" class="btn">GET INVOLVED</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="text-center">ABOUT US</h2>
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Patricia Korir">
+                </div>
+                <div class="about-text">
+                    <h3>"WELCOME TO MY CLIMATE DEFINITION"</h3>
+                    <p>Hi! I'm Patricia Korir — an environmentalist with a background in environmental studies and international development. I've spent years working on climate-related issues, but it wasn't until I took a step back and truly reflected that I realized how personal this journey has to be.</p>
+                    <p>My Climate Definition was born from the idea that understanding climate change isn't just about the science — it's about the stories we share, the experiences we go through, and the changes we make in our own lives. I started this blog with the aim of breaking down the complexities of climate change and personalizing it for all of us. It's about making it more relatable, engaging, and ultimately inspiring action.</p>
+                    
+                    <blockquote>"THE LEARNING JOURNEY"</blockquote>
+                    
+                    <p>I've come to realize that climate change isn't something you just learn once. It's a continuous journey of learning, relearning, and unlearning. From discovering the basic science behind climate change to unlearning old habits and ideas that no longer serve us, this process has shaped my understanding and deepened my commitment to change.</p>
+                    <p>This space is where I share my own story — and the stories of many others — to show that we are all on this journey together. This platform is about the planet and how we, as individuals and communities, adapt, rethink, and act. Every step we take in this journey matters, and through this blog, I hope to inspire positive change in you, just as I'm continually inspired by the incredible transformations I've witnessed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="mission">
+        <div class="container">
+            <h2 class="text-center">OUR MISSION & VISION</h2>
+            <div class="mission-vision">
+                <div class="mission-box">
+                    <h3>MISSION</h3>
+                    <p>To personalize climate change by sharing stories, experiences, and insights that simplify its complexities, educate and raise awareness, inspire positive action, and empower individuals to adapt, embrace sustainable lifestyles, and drive meaningful social change.</p>
+                </div>
+                <div class="vision-box">
+                    <h3>VISION</h3>
+                    <p>A world where everyone is informed, empowered to embrace change, and inspired to shape a sustainable and equitable future for all.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Hub Section -->
+    <section id="content" class="content-hub">
+        <div class="container">
+            <h2 class="text-center">CONTENT HUB</h2>
+            <div class="articles">
+                <div class="article-card">
+                    <div class="article-img">
+                        <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Kenya landscape">
+                    </div>
+                    <div class="article-content">
+                        <h3>WELCOME TO MY CLIMATE DEFINITION</h3>
+                        <p>Over the past six years, I have personally experienced the reality of climate change in my home country, Kenya, where seasonal weather patterns have shifted dramatically.</p>
+                        <a href="#" class="btn">Read More</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img">
+                        <img src="https://images.unsplash.com/photo-1566438480900-0609be27a4be?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Mukuru kwa Njenga">
+                    </div>
+                    <div class="article-content">
+                        <h3>BUILDING RESILIENCE FROM WITHIN: LESSONS FROM MUKURU KWA NJENGA</h3>
+                        <p>What stood out the most was that most residents consider Mukuru kwa Njenga their home, having lived there for years, with some being born and raising families in the area.</p>
+                        <a href="#" class="btn">Read More</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-img">
+                        <img src="https://images.unsplash.com/photo-1507034589631-9433cc6bc453?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Bicycles in Netherlands">
+                    </div>
+                    <div class="article-content">
+                        <h3>WHY ON EARTH ARE THERE SO MANY BICYCLES HERE?</h3>
+                        <p>I remember my first time visiting the Netherlands – I was shocked by the sheer number of bikes everywhere. I had read before traveling that bicycles were the main mode of transport, but I didn't fully grasp the scale until I saw it in person.</p>
+                        <a href="#" class="btn">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2 class="text-center">DEDICATED TO MAKING A DIFFERENCE</h2>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-number">543,210</div>
+                    <div class="stat-label">Monthly Visitors</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">6,543</div>
+                    <div class="stat-label">Weekly Visitors</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">4,321</div>
+                    <div class="stat-label">Countries Reached</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="text-center">CONTACT US</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>DONATE</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> My Climate Definition<br>Tuinderslaan 45<br>Erica, Netherlands</p>
+                    <p><i class="fas fa-phone"></i> +31616950346</p>
+                    <p><i class="fas fa-envelope"></i> info@myclimatedefinition.org</p>
+                    <p><i class="fas fa-hashtag"></i> @myclimatedefinition</p>
+                    
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="logo">My Climate Definition</div>
+            <ul class="footer-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#mission">Mission</a></li>
+                <li><a href="#content">Content</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright">© 2023 My Climate Definition. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                }
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Sticky header on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            header.classList.toggle('sticky', window.scrollY > 0);
+        });
+    </script>
+</body>
+</html>
