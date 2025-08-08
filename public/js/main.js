@@ -52,7 +52,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const older = document.getElementById('older');
 
   try {
-    // thanks to <base href="/trish/"> this is relative to the project root
+    // thanks to <base href="/myclimatechela/"> this is relative to the project root
     const res = await fetch('posts.json', { cache: 'no-store' });
     posts = await res.json();
   } catch (e) {
