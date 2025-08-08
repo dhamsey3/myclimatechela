@@ -1,0 +1,95 @@
+name: Build & Deploy (static + Medium)
+
+on:
+  push:
+    branches: ["main", "master"]
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install feedparser
+        run: pip install feedparser
+
+      - name: Generate posts.json from Medium RSS
+        run: |
+          python - << 'PY'
+import feedparser, re, html, textwrap, time, datetime, json, pathlib
+FEED = "https://medium.com/feed/@myclimatedefinition"   # change to your handle
+out = pathlib.Path("public/posts.json")
+out.parent.mkdir(parents=True, exist_ok=True)
+
+def clean(s): return html.unescape(re.sub("<.*?>","", s or ""))
+def to_iso(ts):
+  if not ts: return ""
+  try:
+    return datetime.datetime.fromtimestamp(time.mktime(ts), datetime.timezone.utc).isoformat()
+  except: return ""
+
+def image(entry):
+  if entry.get("media_thumbnail"): 
+    t = entry["media_thumbnail"][0].get("url")
+    if t: return t
+  if entry.get("media_content"):
+    c = entry["media_content"][0].get("url")
+    if c: return c
+  blob = entry.get("summary","")
+  for c in entry.get("content", []): blob += " " + c.get("value","")
+  m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', blob, re.I)
+  return m.group(1) if m else None
+
+feed = feedparser.parse(FEED)
+items = []
+for e in feed.entries:
+  items.append({
+    "title": e.get("title","Untitled"),
+    "permalink": e.get("link","#"),          # direct to Medium OR your site; choose one
+    "external_url": e.get("link","#"),
+    "date": to_iso(e.get("published_parsed")),
+    "summary": textwrap.shorten(clean(e.get("summary","")), 220),
+    "image": image(e),
+  })
+
+out.write_text(json.dumps(items, ensure_ascii=False), encoding="utf-8")
+print(f"Wrote {len(items)} posts to {out}")
+PY
+
+      - name: Copy static site
+        run: |
+          mkdir -p dist
+          cp -R public/* dist/
+          # ensure assets exist
+          mkdir -p dist/css dist/js dist/img
+          cp -R css dist/ || true
+          cp -R js dist/ || true
+          cp -R img dist/ || true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v4
