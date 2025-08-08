@@ -30,11 +30,13 @@ jobs:
       - name: Install feedparser
         run: pip install feedparser
 
-      - name: Generate posts.json from Medium RSS
+           - name: Generate posts.json from Medium RSS
         run: |
           python - << 'PY'
-          import feedparser, re, html, textwrap, time, datetime, json, pathlib
-          FEED = "https://medium.com/feed/@myclimatedefinition"   # <-- change to your handle
+          import re, html, textwrap, time, datetime, json, pathlib, sys
+          import feedparser, requests
+
+          FEED = "https://medium.com/feed/@myclimatedefinition"  # <-- your handle
           out = pathlib.Path("public/posts.json")
           out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -43,21 +45,32 @@ jobs:
               if not ts: return ""
               try:
                   return datetime.datetime.fromtimestamp(time.mktime(ts), datetime.timezone.utc).isoformat()
-              except: return ""
+              except Exception:
+                  return ""
 
-          def image(entry):
+          def extract_image(entry):
               if entry.get("media_thumbnail"):
-                  t = entry["media_thumbnail"][0].get("url")
-                  if t: return t
+                  u = entry["media_thumbnail"][0].get("url")
+                  if u: return u
               if entry.get("media_content"):
-                  c = entry["media_content"][0].get("url")
-                  if c: return c
+                  u = entry["media_content"][0].get("url")
+                  if u: return u
               blob = entry.get("summary","")
-              for c in entry.get("content", []): blob += " " + c.get("value","")
+              for c in entry.get("content", []):
+                  blob += " " + c.get("value","")
               m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', blob, re.I)
               return m.group(1) if m else None
 
-          feed = feedparser.parse(FEED)
+          # Fetch with a browser-like User-Agent to avoid 403s from Medium
+          headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"}
+          try:
+              r = requests.get(FEED, headers=headers, timeout=30)
+              r.raise_for_status()
+              feed = feedparser.parse(r.content)
+          except Exception as e:
+              print(f"ERROR fetching feed: {e}", file=sys.stderr)
+              feed = feedparser.parse(b"")
+
           items = []
           for e in feed.entries:
               items.append({
@@ -66,7 +79,7 @@ jobs:
                   "external_url": e.get("link","#"),
                   "date": to_iso(e.get("published_parsed")),
                   "summary": textwrap.shorten(clean(e.get("summary","")), 220),
-                  "image": image(e),
+                  "image": extract_image(e),
               })
 
           out.write_text(json.dumps(items, ensure_ascii=False), encoding="utf-8")
