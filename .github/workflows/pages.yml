@@ -34,7 +34,7 @@ jobs:
         run: |
           python - << 'PY'
 import feedparser, re, html, textwrap, time, datetime, json, pathlib
-FEED = "https://medium.com/feed/@myclimatedefinition"   # change to your handle
+FEED = "https://medium.com/feed/@myclimatedefinition"   # <-- change to your handle
 out = pathlib.Path("public/posts.json")
 out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -46,7 +46,7 @@ def to_iso(ts):
   except: return ""
 
 def image(entry):
-  if entry.get("media_thumbnail"): 
+  if entry.get("media_thumbnail"):
     t = entry["media_thumbnail"][0].get("url")
     if t: return t
   if entry.get("media_content"):
@@ -62,7 +62,7 @@ items = []
 for e in feed.entries:
   items.append({
     "title": e.get("title","Untitled"),
-    "permalink": e.get("link","#"),          # direct to Medium OR your site; choose one
+    "permalink": e.get("link","#"),
     "external_url": e.get("link","#"),
     "date": to_iso(e.get("published_parsed")),
     "summary": textwrap.shorten(clean(e.get("summary","")), 220),
@@ -73,20 +73,10 @@ out.write_text(json.dumps(items, ensure_ascii=False), encoding="utf-8")
 print(f"Wrote {len(items)} posts to {out}")
 PY
 
-      - name: Copy static site
-        run: |
-          mkdir -p dist
-          cp -R public/* dist/
-          # ensure assets exist
-          mkdir -p dist/css dist/js dist/img
-          cp -R css dist/ || true
-          cp -R js dist/ || true
-          cp -R img dist/ || true
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: public
 
   deploy:
     needs: build
