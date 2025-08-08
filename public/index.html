@@ -1,20 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Climate Chela</title>
+
+  <!-- IMPORTANT: base = repo name -->
+  <base href="/myclimatechela/">
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
 <body>
-    <header>...</header>
-    <main class="container">
-  
-      <!-- your hero block -->
-  
-      <!-- your slider block -->
-  
-      <h2 class="section-title">Latest posts</h2>
-      <div id="posts" class="hlist"></div>
-  
-      <nav class="pager" id="pager" hidden>
-        <button id="older" class="btn">Older »</button>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="./">🌱 My Climate Chela</a>
+      <nav class="nav">
+        <a href="./" class="active">Home</a>
       </nav>
-    </main>
-    <footer>...</footer>
-  
-    <script src="/myclimatechela/js/main.js"></script>
-  </body>
-  
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Climate & Everyday Choices</h1>
+        <p class="hero-sub">Stories, definitions, and experiments in sustainability — auto-synced from Medium.</p>
+        <p><a class="btn btn-primary" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener">Follow on Medium →</a></p>
+      </div>
+    </section>
+
+    <!-- SLIDER -->
+    <section class="slider" aria-label="Featured images">
+      <button class="slider-btn prev" aria-label="Previous slide">‹</button>
+      <div class="slider-viewport">
+        <div class="slider-track">
+          <div class="slide"><img src="img/slide1.png" alt="Slide 1"></div>
+          <div class="slide"><img src="img/slide2.png" alt="Slide 2"></div>
+          <div class="slide"><img src="img/slide3.png" alt="Slide 3"></div>
+          <div class="slide"><img src="img/slide4.png" alt="Slide 4"></div>
+        </div>
+      </div>
+      <button class="slider-btn next" aria-label="Next slide">›</button>
+      <div class="slider-dots" role="tablist" aria-label="Slide pagination"></div>
+    </section>
+
+    <h2 class="section-title">Latest posts</h2>
+    <div id="posts" class="hlist"></div>
+
+    <nav class="pager" id="pager" hidden>
+      <button id="older" class="btn">Older »</button>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="f-brand">
+        <div class="f-logo">🌱</div>
+        <p>Short notes on climate, sustainability, and everyday choices.</p>
+      </div>
+      <div class="f-social">
+        <h4>Connect</h4>
+        <div class="socials">
+          <a href="https://medium.com/@myclimatedefinition" class="icon" target="_blank" rel="noopener" aria-label="Medium">M</a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> My Climate Chela</p>
+      <a href="#" class="backtop">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
