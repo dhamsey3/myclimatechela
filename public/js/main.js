@@ -35,7 +35,6 @@ document.getElementById('year').textContent = new Date().getFullYear();
   next.addEventListener('click', () => { go(i + 1); start(); });
   dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
 
-  // optional: pause on hover & tab change
   slider.addEventListener('mouseenter', stop);
   slider.addEventListener('mouseleave', start);
   window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
@@ -52,24 +51,26 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const older = document.getElementById('older');
 
   try {
-    // thanks to <base href="/myclimatechela/"> this is relative to the project root
+    // thanks to <base href="/myclimatechela/"> this resolves to /myclimatechela/posts.json
     const res = await fetch('posts.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
   } catch (e) {
     console.error('Failed to load posts.json', e);
+    list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
     return;
   }
 
   function esc(s){ return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function card(p) {
-    const img = p.image ? `<a class="hcard-media" href="${p.permalink}" target="_blank" rel="noopener">
+    const img = p.image ? `<a class="hcard-media" href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow">
       <img src="${p.image}" alt="">
-    </a>` : `<a class="hcard-media placeholder" href="${p.permalink}" target="_blank" rel="noopener"><div></div></a>`;
+    </a>` : `<a class="hcard-media placeholder" href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow"><div></div></a>`;
     return `
       <article class="hcard">
         ${img}
         <div class="hcard-body">
-          <h3 class="hcard-title"><a href="${p.permalink}" target="_blank" rel="noopener">${esc(p.title)}</a></h3>
+          <h3 class="hcard-title"><a href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow">${esc(p.title)}</a></h3>
           <small class="hcard-meta">${p.date ? new Date(p.date).toLocaleDateString() : ''}</small>
           <p class="hcard-text">${esc(p.summary || '')}</p>
           ${p.external_url ? `<p><a class="btn" href="${p.external_url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
