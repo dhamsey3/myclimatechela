@@ -2,9 +2,11 @@ name: Build & Deploy (static + Medium)
 
 on:
   push:
-    branches: ["main", "master"]
+    branches:
+      - main
+      - master
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -25,18 +27,20 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: '3.x'
 
-      - name: Install feedparser
-        run: pip install feedparser
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install feedparser requests
 
-           - name: Generate posts.json from Medium RSS
+      - name: Generate posts.json from Medium RSS
         run: |
           python - << 'PY'
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
 
-          FEED = "https://medium.com/feed/@myclimatedefinition"  # <-- your handle
+          FEED = "https://medium.com/feed/@myclimatedefinition"  # <-- change to your handle
           out = pathlib.Path("public/posts.json")
           out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -61,7 +65,6 @@ jobs:
               m = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', blob, re.I)
               return m.group(1) if m else None
 
-          # Fetch with a browser-like User-Agent to avoid 403s from Medium
           headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"}
           try:
               r = requests.get(FEED, headers=headers, timeout=30)
