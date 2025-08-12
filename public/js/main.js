@@ -6,13 +6,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const slider = document.querySelector('.slider');
   if (!slider) return;
 
-  const track = slider.querySelector('.slider-track');
-  const slides = Array.from(slider.querySelectorAll('.slide'));
-  const dotsWrap = slider.querySelector('.slider-dots');
-  const prev = slider.querySelector('.slider-btn.prev');
-  const next = slider.querySelector('.slider-btn.next');
+  const track   = slider.querySelector('.slider-track');
+  const slides  = Array.from(slider.querySelectorAll('.slide'));
+  const dotsWrap= slider.querySelector('.slider-dots');
+  const prev    = slider.querySelector('.slider-btn.prev');
+  const next    = slider.querySelector('.slider-btn.next');
 
-  // build dots
+  // Build dots
   dotsWrap.innerHTML = slides.map((_, i) =>
     `<button role="tab" aria-selected="${i===0}" aria-label="Go to slide ${i+1}" data-slide="${i}"></button>`
   ).join('');
@@ -26,17 +26,30 @@ document.getElementById('year').textContent = new Date().getFullYear();
     dots.forEach((d, k) => {
       d.classList.toggle('active', k === i);
       d.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      d.tabIndex = k === i ? 0 : -1;
     });
   }
-  function start(){ stop(); timer = setInterval(() => go(i + 1), 5000); }
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function start(){
+    stop();
+    if (!prefersReduced) timer = setInterval(() => go(i + 1), 5000);
+  }
   function stop(){ if (timer) clearInterval(timer); }
 
-  prev.addEventListener('click', () => { go(i - 1); start(); });
-  next.addEventListener('click', () => { go(i + 1); start(); });
-  dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }));
+  prev.addEventListener('click', () => { go(i - 1); start(); }, { passive: true });
+  next.addEventListener('click', () => { go(i + 1); start(); }, { passive: true });
+  dots.forEach(d => d.addEventListener('click', () => { go(+d.dataset.slide); start(); }, { passive: true }));
 
-  slider.addEventListener('mouseenter', stop);
-  slider.addEventListener('mouseleave', start);
+  // Keyboard support (←/→)
+  slider.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(i - 1); start(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(i + 1); start(); }
+  });
+
+  slider.addEventListener('mouseenter', stop, { passive: true });
+  slider.addEventListener('mouseleave', start, { passive: true });
   window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
 
   go(0); start();
@@ -67,12 +80,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
     return;
   }
 
+  const dateFmt = new Intl.DateTimeFormat(undefined, { year:'numeric', month:'short', day:'numeric' });
+
   function esc(s){ return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function card(p) {
     const url = p.external_url || p.permalink || '#';
     const img = p.image
       ? `<a class="hcard-media" href="${url}" target="_blank" rel="noopener nofollow">
-           <img src="${p.image}" alt="">
+           <img src="${p.image}" alt="${esc(p.title || 'Post image')}" loading="lazy">
          </a>`
       : `<a class="hcard-media placeholder" href="${url}" target="_blank" rel="noopener nofollow"><div></div></a>`;
     return `
@@ -80,7 +95,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
         ${img}
         <div class="hcard-body">
           <h3 class="hcard-title"><a href="${url}" target="_blank" rel="noopener nofollow">${esc(p.title)}</a></h3>
-          <small class="hcard-meta">${p.date ? new Date(p.date).toLocaleDateString() : ''}</small>
+          <small class="hcard-meta">${p.date ? dateFmt.format(new Date(p.date)) : ''}</small>
           <p class="hcard-text">${esc(p.summary || '')}</p>
           ${url && url !== '#' ? `<p><a class="btn" href="${url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
         </div>
@@ -99,6 +114,16 @@ document.getElementById('year').textContent = new Date().getFullYear();
     pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
   }
 
-  older.addEventListener('click', renderPage);
+  older.addEventListener('click', renderPage, { passive: true });
   renderPage();
+})();
+
+/* ========= Enhance UX: Smooth back-to-top ========= */
+(() => {
+  const link = document.querySelector('.backtop');
+  if (!link) return;
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 })();
