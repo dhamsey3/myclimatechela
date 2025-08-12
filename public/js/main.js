@@ -46,34 +46,43 @@ document.getElementById('year').textContent = new Date().getFullYear();
 (async function () {
   const POSTS_PER_PAGE = 3;
   let page = 0, posts = [];
-  const list = document.getElementById('posts');
+
+  const list  = document.getElementById('posts');
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
 
+  // If the container elements aren't present, skip
+  if (!list || !pager || !older) return;
+
   try {
-    // thanks to <base href="/myclimatechela/"> this resolves to /myclimatechela/posts.json
-    const res = await fetch('posts.json', { cache: 'no-store' });
+    // Root-absolute path so it works on custom domain and GH Pages
+    const res = await fetch('/posts.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
+    if (!Array.isArray(posts)) throw new Error('posts.json is not an array');
   } catch (e) {
     console.error('Failed to load posts.json', e);
     list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
+    pager.hidden = true;
     return;
   }
 
   function esc(s){ return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function card(p) {
-    const img = p.image ? `<a class="hcard-media" href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow">
-      <img src="${p.image}" alt="">
-    </a>` : `<a class="hcard-media placeholder" href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow"><div></div></a>`;
+    const url = p.external_url || p.permalink || '#';
+    const img = p.image
+      ? `<a class="hcard-media" href="${url}" target="_blank" rel="noopener nofollow">
+           <img src="${p.image}" alt="">
+         </a>`
+      : `<a class="hcard-media placeholder" href="${url}" target="_blank" rel="noopener nofollow"><div></div></a>`;
     return `
       <article class="hcard">
         ${img}
         <div class="hcard-body">
-          <h3 class="hcard-title"><a href="${p.external_url || p.permalink}" target="_blank" rel="noopener nofollow">${esc(p.title)}</a></h3>
+          <h3 class="hcard-title"><a href="${url}" target="_blank" rel="noopener nofollow">${esc(p.title)}</a></h3>
           <small class="hcard-meta">${p.date ? new Date(p.date).toLocaleDateString() : ''}</small>
           <p class="hcard-text">${esc(p.summary || '')}</p>
-          ${p.external_url ? `<p><a class="btn" href="${p.external_url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
+          ${url && url !== '#' ? `<p><a class="btn" href="${url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
         </div>
       </article>`;
   }
@@ -81,6 +90,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
   function renderPage() {
     const start = page * POSTS_PER_PAGE;
     const slice = posts.slice(start, start + POSTS_PER_PAGE);
+    if (slice.length === 0) {
+      pager.hidden = true;
+      return;
+    }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
     pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
