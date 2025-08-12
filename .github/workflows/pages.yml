@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 */6 * * *'   # refresh every 6h
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -39,7 +39,7 @@ jobs:
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
 
-          FEED = "https://medium.com/feed/@myclimatedefinition"  # <-- change to your Medium handle
+          FEED = "https://medium.com/feed/@myclimatedefinition"
           out = pathlib.Path("public/posts.json")
           out.parent.mkdir(parents=True, exist_ok=True)
 
@@ -92,6 +92,9 @@ jobs:
           test -f public/css/style.css || (echo "public/css/style.css missing!" && exit 1)
           test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
           test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
+
+      - name: Add CNAME
+        run: echo 'www.climatedefinition.org' > public/CNAME
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
