@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,16 +26,16 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: "3.x"
 
-      - name: Install Python deps (inline, no requirements.txt needed)
+      - name: Install Python deps (inline)
         run: |
           python -m pip install --upgrade pip
           pip install feedparser requests Pillow
 
       - name: Generate posts.json from Medium RSS
         run: |
-          python - << 'PY'
+          python - <<'PY'
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
 
@@ -86,14 +86,13 @@ jobs:
           print(f"Wrote {len(items)} posts to {out}")
           PY
 
-      - name: Ensure head tags (SEO/OG/icons/manifest) exist in index.html
+      - name: Ensure head tags (SEO/OG/icons/manifest) exist
         run: |
-          python - << 'PY'
+          python - <<'PY'
           from pathlib import Path
           p = Path("public/index.html")
           html = p.read_text(encoding="utf-8")
 
-          # Minimal snippet to inject if missing
           snippet = """
   <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium.">
   <link rel="canonical" href="https://myclimatedefinition.org/">
@@ -114,9 +113,9 @@ jobs:
   <meta name="theme-color" content="#0f172a">
           """.rstrip()
 
-          needed_markers = ["og:image", "manifest.webmanifest", "apple-touch-icon", "favicon.ico"]
-          if not any(m in html for m in needed_markers):
-              # Insert before </head>
+          # If none of these markers exist, inject the snippet before </head>
+          markers = ["og:image", "manifest.webmanifest", "apple-touch-icon", "favicon.ico"]
+          if not any(m in html for m in markers):
               if "</head>" in html:
                   html = html.replace("</head>", snippet + "\n</head>")
                   p.write_text(html, encoding="utf-8")
@@ -147,7 +146,6 @@ jobs:
           def on_canvas(w,h,scale=0.66, bg=THEME_BG):
               c = Image.new("RGBA",(w,h), ImageColor.getrgb(bg)+(255,))
               r = src.copy()
-              # fit the logo nicely
               target = int(min(w,h)*scale)
               ratio = src.width/src.height
               tw = int(target*ratio); th = target
@@ -171,11 +169,10 @@ jobs:
           base512.resize((16,16), Image.LANCZOS).save(imgd/"favicon-16.png")
           base512.save(imgd/"favicon.ico", sizes=[(16,16),(32,32),(48,48),(64,64)])
 
-          # Open Graph
+          # Open Graph image
           og = on_canvas(OG_W, OG_H, scale=0.45)
           d = ImageDraw.Draw(og)
           caption = "My Climate Definition"
-          # Measure with textbbox (works on all Pillow versions)
           bbox = d.textbbox((0,0), caption)
           tw = bbox[2]-bbox[0]
           d.text(((OG_W - tw)//2, OG_H - 60), caption, fill=(255,255,255,230))
