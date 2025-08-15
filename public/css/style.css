@@ -17,11 +17,15 @@ body{
 .logo{
   display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--text);
 }
+/* Logo — bigger + visible on white header */
 .logo img{
-  height:28px; width:auto; display:block; max-width:100%;
-  background:#0f172a;           /* dark slate behind the logo */
-  padding:6px 10px;
-  border-radius:10px;
+  height: clamp(40px, 5vw, 60px);
+  width: auto;
+  display: block;
+  max-width: 100%;
+  background: #0f172a;
+  padding: 8px 12px;
+  border-radius: 12px;
 }
 
 /* Nav */
