@@ -1,4 +1,4 @@
-````markdown
+
 # My Climate Definition — Static Site
 
 A fast, static website that auto-syncs your latest Medium posts to a clean, responsive homepage. Built with plain **HTML/CSS/JS** and deployed to **GitHub Pages** via **Actions**.
@@ -12,6 +12,7 @@ A fast, static website that auto-syncs your latest Medium posts to a clean, resp
 - **Responsive UI**: hero, image slider, and paginated post cards
 - **Accessibility**: keyboard controls for the slider, alt text, ARIA labels
 - **Custom domain ready**: ships `CNAME` and `.nojekyll`
+
 
 ---
 
@@ -212,10 +213,3 @@ requests
 
 ---
 
-## License
-
-MIT (or your choice). Add a `LICENSE` file to specify otherwise.
-
-```
-::contentReference[oaicite:0]{index=0}
-```
