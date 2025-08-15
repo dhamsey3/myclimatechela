@@ -1,10 +1,12 @@
-name: Build & Deploy (static + Medium)
+name: "Build and Deploy (static + Medium)"
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
@@ -26,9 +28,9 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
-          cache: 'pip'
-          cache-dependency-path: 'requirements.txt'
+          python-version: "3.x"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
         run: |
@@ -36,8 +38,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Generate posts.json from Medium RSS
+        shell: bash
         run: |
-          python - << 'PY'
+          python - <<'PY'
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
 
@@ -45,9 +48,12 @@ jobs:
           out = pathlib.Path("public/posts.json")
           out.parent.mkdir(parents=True, exist_ok=True)
 
-          def clean(s): return html.unescape(re.sub("<.*?>","", s or ""))
+          def clean(s): 
+              return html.unescape(re.sub("<.*?>","", s or ""))
+
           def to_iso(ts):
-              if not ts: return ""
+              if not ts: 
+                  return ""
               try:
                   return datetime.datetime.fromtimestamp(time.mktime(ts), datetime.timezone.utc).isoformat()
               except Exception:
@@ -94,28 +100,21 @@ jobs:
       - name: Verify required files exist
         run: |
           set -e
-          test -f public/index.html || (echo "public/index.html missing!" && exit 1)
-          test -f public/css/style.css || (echo "public/css/style.css missing!" && exit 1)
-          test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
-          test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
+          test -f public/index.html
+          test -f public/css/style.css
+          test -f public/js/main.js
+          test -f public/posts.json
 
       - name: Verify images exist
         run: |
           set -e
-          test -f public/img/logo.png || (echo "public/img/logo.png missing!" && exit 1)
+          test -f public/img/logo.png
           [ -f public/img/logo@2x.png ] || echo "Note: public/img/logo@2x.png not found (optional for retina)."
 
       - name: Add CNAME (apex domain)
         run: |
           mkdir -p public
           echo 'myclimatedefinition.org' > public/CNAME
-
-      - name: Debug: list shipped files
-        run: |
-          echo "==== PUBLIC TREE ===="
-          find public -maxdepth 3 -type f | sort
-          echo "==== posts.json (head) ===="
-          head -c 500 public/posts.json || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -128,6 +127,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
