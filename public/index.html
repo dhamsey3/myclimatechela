@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Core metadata -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
@@ -9,10 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- ABSOLUTE paths so they match your live domain -->
+  <!-- ABSOLUTE path so it matches your live domain -->
   <link rel="stylesheet" href="/css/style.css" />
 
-  <!-- Preload both logo candidates -->
+  <!-- (Optional) Preload both logo candidates -->
   <link rel="preload" as="image" href="/img/logo.png">
   <link rel="preload" as="image" href="/img/logo@2x.png">
 </head>
@@ -20,7 +21,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo: retina-aware but with automatic fallback if @2x is missing -->
+      <!-- Logo: retina-aware, with automatic fallback if @2x is missing -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
           id="logoImg"
@@ -119,13 +120,13 @@
   <!-- ABSOLUTE path -->
   <script src="/js/main.js" defer></script>
 
-  <!-- Retina safeguard: if /img/logo@2x.png is missing (404), drop srcset so /img/logo.png always shows -->
+  <!-- Retina safeguard: if /img/logo@2x.png is missing, drop srcset so /img/logo.png always shows -->
   <script>
     (function(){
       var img = document.getElementById('logoImg');
       if (!img) return;
       var probe = new Image();
-      probe.onload = function(){ /* ok: keep srcset */ };
+      probe.onload = function(){ /* @2x exists: keep srcset */ };
       probe.onerror = function(){ img.removeAttribute('srcset'); };
       probe.src = '/img/logo@2x.png?ts=' + Date.now();
     })();
