@@ -36,7 +36,7 @@ jobs:
       - name: Build posts.json
         run: python scripts/build_posts.py
 
-      - name: Inject head tags (SEO/OG/icons/manifest)
+      - name: Inject head tags (with build stamp)
         run: python scripts/ensure_head.py
 
       - name: Generate icons & social image
@@ -64,8 +64,8 @@ jobs:
           echo "=== manifest.webmanifest ==="
           [ -f public/manifest.webmanifest ] && cat public/manifest.webmanifest || echo "manifest.webmanifest not found"
 
-      - name: Add CNAME
-        run: echo 'www.climatedefinition.org' > public/CNAME
+      - name: Add CNAME (apex domain)
+        run: echo 'myclimatedefinition.org' > public/CNAME
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
