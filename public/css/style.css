@@ -13,19 +13,29 @@ body{
 .site-header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
 .header-inner{display:flex; align-items:center; justify-content:space-between; padding:.6rem 0}
 
-/* Logo — add a subtle dark chip so light/white logos show */
+/* Logo + brand text */
 .logo{
-  display:inline-flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--text);
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;                 /* space between icon and text */
+  text-decoration:none;
+  color:var(--text);
 }
-/* Logo — bigger + visible on white header */
 .logo img{
-  height: clamp(40px, 5vw, 60px);
-  width: auto;
-  display: block;
-  max-width: 100%;
-  background: #0f172a;
-  padding: 8px 12px;
-  border-radius: 12px;
+  height:clamp(40px, 5vw, 60px);
+  width:auto;
+  display:block;
+  max-width:100%;
+  background:#0f172a;        /* dark chip so white logos pop */
+  padding:8px 12px;
+  border-radius:12px;
+}
+.logo .brand-text{
+  font-weight:800;
+  font-size:clamp(18px, 2.4vw, 22px);
+  line-height:1;
+  letter-spacing:.2px;
+  color:#111;
 }
 
 /* Nav */
