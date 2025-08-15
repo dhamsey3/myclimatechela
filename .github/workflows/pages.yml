@@ -96,7 +96,7 @@ jobs:
           p = Path("public/index.html")
           html = p.read_text(encoding="utf-8")
 
-          snippet = """
+          snippet = '''\
   <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium.">
   <link rel="canonical" href="https://myclimatedefinition.org/">
   <meta property="og:type" content="website">
@@ -113,8 +113,7 @@ jobs:
   <link rel="icon" type="image/png" href="/img/favicon-16.png" sizes="16x16">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#0f172a">
-          """.rstrip()
+  <meta name="theme-color" content="#0f172a">'''
 
           markers = ["og:image", "manifest.webmanifest", "apple-touch-icon", "favicon.ico"]
           if not any(m in html for m in markers):
