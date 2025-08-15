@@ -1,12 +1,10 @@
-name: "Build and Deploy (static + Medium)"
+name: Build & Deploy (static + Medium)
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -28,19 +26,16 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
-          cache: pip
-          cache-dependency-path: requirements.txt
+          python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install Python deps (inline, no requirements.txt needed)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install feedparser requests Pillow
 
       - name: Generate posts.json from Medium RSS
-        shell: bash
         run: |
-          python - <<'PY'
+          python - << 'PY'
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
 
@@ -48,12 +43,9 @@ jobs:
           out = pathlib.Path("public/posts.json")
           out.parent.mkdir(parents=True, exist_ok=True)
 
-          def clean(s): 
-              return html.unescape(re.sub("<.*?>","", s or ""))
-
+          def clean(s): return html.unescape(re.sub("<.*?>","", s or ""))
           def to_iso(ts):
-              if not ts: 
-                  return ""
+              if not ts: return ""
               try:
                   return datetime.datetime.fromtimestamp(time.mktime(ts), datetime.timezone.utc).isoformat()
               except Exception:
@@ -94,110 +86,127 @@ jobs:
           print(f"Wrote {len(items)} posts to {out}")
           PY
 
-      - name: Disable Jekyll
-        run: touch public/.nojekyll
-
-      - name: Verify required files exist
+      - name: Ensure head tags (SEO/OG/icons/manifest) exist in index.html
         run: |
-          set -e
-          test -f public/index.html
-          test -f public/css/style.css
-          test -f public/js/main.js
-          test -f public/posts.json
+          python - << 'PY'
+          from pathlib import Path
+          p = Path("public/index.html")
+          html = p.read_text(encoding="utf-8")
 
-      - name: Verify images exist
-        run: |
-          set -e
-          test -f public/img/logo.png
-          [ -f public/img/logo@2x.png ] || echo "Note: public/img/logo@2x.png not found (optional for retina)."
+          # Minimal snippet to inject if missing
+          snippet = """
+  <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium.">
+  <link rel="canonical" href="https://myclimatedefinition.org/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="My Climate Definition">
+  <meta property="og:description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium.">
+  <meta property="og:url" content="https://myclimatedefinition.org/">
+  <meta property="og:image" content="https://myclimatedefinition.org/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="My Climate Definition">
+  <meta name="twitter:description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium.">
+  <meta name="twitter:image" content="https://myclimatedefinition.org/img/og.png">
+  <link rel="icon" href="/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/img/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/img/favicon-16.png" sizes="16x16">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0f172a">
+          """.rstrip()
 
-      - name: Add CNAME (apex domain)
-        run: |
-          mkdir -p public
-          echo 'myclimatedefinition.org' > public/CNAME
+          needed_markers = ["og:image", "manifest.webmanifest", "apple-touch-icon", "favicon.ico"]
+          if not any(m in html for m in needed_markers):
+              # Insert before </head>
+              if "</head>" in html:
+                  html = html.replace("</head>", snippet + "\n</head>")
+                  p.write_text(html, encoding="utf-8")
+                  print("Injected head tags.")
+              else:
+                  print("No </head> tag found; skipped injection.")
+          else:
+              print("Head tags already present; no changes.")
+          PY
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
       - name: Generate icons & social image from logo.png
         run: |
           python - <<'PY'
-          from PIL import Image, ImageOps, ImageColor, ImageDraw, ImageFont
+          from PIL import Image, ImageColor, ImageDraw
           import pathlib, sys
+          base = pathlib.Path("public"); imgd = base/"img"; imgd.mkdir(parents=True, exist_ok=True)
+          logo = imgd/"logo.png"
+          if not logo.exists():
+              print("No public/img/logo.png found; skipping icon generation."); sys.exit(0)
 
-          base_dir = pathlib.Path("public")
-          img_dir  = base_dir / "img"
-          logo_fp  = img_dir / "logo.png"
+          THEME_BG = "#0f172a"
+          ICON_SIZES = [192, 512]
+          APPLE_SIZE = 180
+          OG_W, OG_H = 1200, 630
 
-          if not logo_fp.exists():
-              print("No public/img/logo.png found; skipping icon generation.")
-              sys.exit(0)
+          src = Image.open(logo).convert("RGBA")
 
-          # Theme + sizes
-          THEME_BG = "#0f172a"      # matches your header chip / theme-color
-          ICON_SIZES = [192, 512]   # PWA icons
-          APPLE_SIZE = 180          # Apple touch icon
-          FAV_SIZES  = [(16,16),(32,32),(48,48),(64,64)]  # favicon.ico
-          OG_SIZE    = (1200, 630)  # Social preview (Open Graph/Twitter)
+          def on_canvas(w,h,scale=0.66, bg=THEME_BG):
+              c = Image.new("RGBA",(w,h), ImageColor.getrgb(bg)+(255,))
+              r = src.copy()
+              # fit the logo nicely
+              target = int(min(w,h)*scale)
+              ratio = src.width/src.height
+              tw = int(target*ratio); th = target
+              if tw > int(w*scale):
+                  tw = int(w*scale); th = int(tw/ratio)
+              r.thumbnail((tw,th), Image.LANCZOS)
+              c.alpha_composite(r, ((w-r.width)//2, (h-r.height)//2))
+              return c
 
-          img_dir.mkdir(parents=True, exist_ok=True)
-          logo = Image.open(logo_fp).convert("RGBA")
-
-          def fit_on_canvas(canvas_w, canvas_h, scale=0.7, bg=THEME_BG):
-              """Return a canvas with the logo centered, scaled to a % of min-dimension."""
-              canvas = Image.new("RGBA", (canvas_w, canvas_h), ImageColor.getrgb(bg)+(255,))
-              # compute target box
-              target_h = int(min(canvas_w, canvas_h) * scale)
-              # keep aspect ratio
-              ratio = logo.width / logo.height
-              target_w = int(target_h * ratio)
-              # if too wide for canvas, clamp
-              if target_w > int(canvas_w * scale):
-                  target_w = int(canvas_w * scale)
-                  target_h = int(target_w / ratio)
-              resized = logo.copy()
-              resized.thumbnail((target_w, target_h), Image.LANCZOS)
-              x = (canvas_w - resized.width) // 2
-              y = (canvas_h - resized.height) // 2
-              canvas.alpha_composite(resized, (x, y))
-              return canvas
-
-          # 1) PWA icons
+          # PWA icons
           for s in ICON_SIZES:
-              out = fit_on_canvas(s, s, scale=0.66)
-              out.convert("RGBA").save(img_dir / f"icon-{s}.png")
+              on_canvas(s,s).save(imgd/f"icon-{s}.png")
 
-          # 2) Apple touch icon (no transparency preferred)
-          apple = fit_on_canvas(APPLE_SIZE, APPLE_SIZE, scale=0.66).convert("RGB")
-          apple.save(img_dir / "apple-touch-icon.png")
+          # Apple touch icon
+          on_canvas(APPLE_SIZE,APPLE_SIZE).convert("RGB").save(imgd/"apple-touch-icon.png")
 
-          # 3) Favicon PNGs + ICO
-          fav_base = fit_on_canvas(512, 512, scale=0.66)  # high-res base
-          fav_base.save(img_dir / "favicon-512.png")
-          fav_32 = fav_base.resize((32,32), Image.LANCZOS)
-          fav_16 = fav_base.resize((16,16), Image.LANCZOS)
-          fav_32.save(img_dir / "favicon-32.png")
-          fav_16.save(img_dir / "favicon-16.png")
-          # multi-size ICO
-          fav_base.save(img_dir / "favicon.ico", sizes=[(16,16),(32,32),(48,48),(64,64)])
+          # Favicons
+          base512 = on_canvas(512,512)
+          base512.save(imgd/"favicon-512.png")
+          base512.resize((32,32), Image.LANCZOS).save(imgd/"favicon-32.png")
+          base512.resize((16,16), Image.LANCZOS).save(imgd/"favicon-16.png")
+          base512.save(imgd/"favicon.ico", sizes=[(16,16),(32,32),(48,48),(64,64)])
 
-          # 4) Open Graph image (1200x630)
-          og = fit_on_canvas(OG_SIZE[0], OG_SIZE[1], scale=0.45)
-          # optional: simple title at bottom (uses default PIL font)
-          draw = ImageDraw.Draw(og)
+          # Open Graph
+          og = on_canvas(OG_W, OG_H, scale=0.45)
+          d = ImageDraw.Draw(og)
           caption = "My Climate Definition"
-          # simple centered caption
-          w, h = draw.textlength(caption), 24
-          draw.text(((OG_SIZE[0]-w)//2, OG_SIZE[1]-60), caption, fill=(255,255,255,230))
-          og.convert("RGB").save(img_dir / "og.png", quality=92)
+          # Measure with textbbox (works on all Pillow versions)
+          bbox = d.textbbox((0,0), caption)
+          tw = bbox[2]-bbox[0]
+          d.text(((OG_W - tw)//2, OG_H - 60), caption, fill=(255,255,255,230))
+          og.convert("RGB").save(imgd/"og.png", quality=92)
 
-          print("Generated: icon-192.png, icon-512.png, apple-touch-icon.png, favicon-*.png, favicon.ico, og.png")
+          print("Generated: icon-192.png, icon-512.png, apple-touch-icon.png, favicon.{ico,16,32}, og.png")
           PY
-          
+
+      - name: Create manifest.webmanifest (if missing)
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          m = Path("public/manifest.webmanifest")
+          if not m.exists():
+              m.write_text('''{
+  "name": "My Climate Definition",
+  "short_name": "ClimateDef",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "/img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}''', encoding="utf-8")
+              print("Wrote manifest.webmanifest")
+          else:
+              print("manifest.webmanifest already exists")
+          PY
+
       - name: Generate sitemap.xml and robots.txt
         run: |
           python - <<'PY'
@@ -214,25 +223,45 @@ jobs:
               u = p.get("permalink") or p.get("external_url")
               if u and u.startswith("http"): urls.append(u)
           now = datetime.date.today().isoformat()
-          lines = ['<?xml version="1.0" encoding="UTF-8"?>',
-                  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          lines = ['<?xml version="1.0" encoding="UTF-8"?>','<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
           for u in sorted(set(urls)):
-              lines += [ "<url>", f"<loc>{u}</loc>", f"<lastmod>{now}</lastmod>", "</url>" ]
+              lines += ["<url>", f"<loc>{u}</loc>", f"<lastmod>{now}</lastmod>", "</url>"]
           lines += ["</urlset>"]
           pub.joinpath("sitemap.xml").write_text("\n".join(lines), "utf-8")
-          pub.joinpath("robots.txt").write_text(
-            "User-agent: *\nAllow: /\nSitemap: " + base + "/sitemap.xml\n", "utf-8"
-          )
+          pub.joinpath("robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: "+base+"/sitemap.xml\n","utf-8")
           PY
 
+      - name: Verify required files exist
+        run: |
+          set -e
+          test -f public/index.html || (echo "public/index.html missing!" && exit 1)
+          test -f public/css/style.css || (echo "public/css/style.css missing!" && exit 1)
+          test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
+          test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
 
+      - name: Debug: show head + list generated images
+        run: |
+          echo "==== public/index.html (first 80 lines) ===="
+          awk 'NR<=80{printf "%03d| %s\n", NR, $0}' public/index.html
+          echo "==== public/img ===="
+          ls -al public/img || true
+          echo "==== manifest.webmanifest ===="
+          [ -f public/manifest.webmanifest ] && cat public/manifest.webmanifest || echo "manifest.webmanifest not found"
+
+      - name: Add CNAME
+        run: echo 'www.climatedefinition.org' > public/CNAME
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
