@@ -2,7 +2,7 @@ name: Build & Deploy (static + Medium)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -28,13 +28,15 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Python deps (inline)
+      - name: Install deps
         run: |
+          set -e
           python -m pip install --upgrade pip
           pip install feedparser requests Pillow
 
       - name: Generate posts.json from Medium RSS
         run: |
+          set -e
           python - <<'PY'
           import re, html, textwrap, time, datetime, json, pathlib, sys
           import feedparser, requests
@@ -86,8 +88,9 @@ jobs:
           print(f"Wrote {len(items)} posts to {out}")
           PY
 
-      - name: Ensure head tags (SEO/OG/icons/manifest) exist
+      - name: Ensure head tags (SEO/OG/icons/manifest)
         run: |
+          set -e
           python - <<'PY'
           from pathlib import Path
           p = Path("public/index.html")
@@ -113,7 +116,6 @@ jobs:
   <meta name="theme-color" content="#0f172a">
           """.rstrip()
 
-          # If none of these markers exist, inject the snippet before </head>
           markers = ["og:image", "manifest.webmanifest", "apple-touch-icon", "favicon.ico"]
           if not any(m in html for m in markers):
               if "</head>" in html:
@@ -128,6 +130,7 @@ jobs:
 
       - name: Generate icons & social image from logo.png
         run: |
+          set -e
           python - <<'PY'
           from PIL import Image, ImageColor, ImageDraw
           import pathlib, sys
@@ -155,21 +158,16 @@ jobs:
               c.alpha_composite(r, ((w-r.width)//2, (h-r.height)//2))
               return c
 
-          # PWA icons
           for s in ICON_SIZES:
               on_canvas(s,s).save(imgd/f"icon-{s}.png")
-
-          # Apple touch icon
           on_canvas(APPLE_SIZE,APPLE_SIZE).convert("RGB").save(imgd/"apple-touch-icon.png")
 
-          # Favicons
           base512 = on_canvas(512,512)
           base512.save(imgd/"favicon-512.png")
           base512.resize((32,32), Image.LANCZOS).save(imgd/"favicon-32.png")
           base512.resize((16,16), Image.LANCZOS).save(imgd/"favicon-16.png")
           base512.save(imgd/"favicon.ico", sizes=[(16,16),(32,32),(48,48),(64,64)])
 
-          # Open Graph image
           og = on_canvas(OG_W, OG_H, scale=0.45)
           d = ImageDraw.Draw(og)
           caption = "My Climate Definition"
@@ -181,8 +179,9 @@ jobs:
           print("Generated: icon-192.png, icon-512.png, apple-touch-icon.png, favicon.{ico,16,32}, og.png")
           PY
 
-      - name: Create manifest.webmanifest (if missing)
+      - name: Create manifest.webmanifest if missing
         run: |
+          set -e
           python - <<'PY'
           from pathlib import Path
           m = Path("public/manifest.webmanifest")
@@ -206,6 +205,7 @@ jobs:
 
       - name: Generate sitemap.xml and robots.txt
         run: |
+          set -e
           python - <<'PY'
           import json, pathlib, datetime
           base = "https://myclimatedefinition.org"
@@ -228,21 +228,21 @@ jobs:
           pub.joinpath("robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: "+base+"/sitemap.xml\n","utf-8")
           PY
 
-      - name: Verify required files exist
+      - name: Verify files
         run: |
           set -e
-          test -f public/index.html || (echo "public/index.html missing!" && exit 1)
-          test -f public/css/style.css || (echo "public/css/style.css missing!" && exit 1)
-          test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
-          test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
+          test -f public/index.html
+          test -f public/css/style.css
+          test -f public/js/main.js
+          test -f public/posts.json
 
-      - name: Debug: show head + list generated images
+      - name: Debug listing
         run: |
-          echo "==== public/index.html (first 80 lines) ===="
+          echo "=== index.html (first 80 lines) ==="
           awk 'NR<=80{printf "%03d| %s\n", NR, $0}' public/index.html
-          echo "==== public/img ===="
+          echo "=== img dir ==="
           ls -al public/img || true
-          echo "==== manifest.webmanifest ===="
+          echo "=== manifest.webmanifest ==="
           [ -f public/manifest.webmanifest ] && cat public/manifest.webmanifest || echo "manifest.webmanifest not found"
 
       - name: Add CNAME
@@ -263,6 +263,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
