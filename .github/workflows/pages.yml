@@ -123,6 +123,109 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
+      - name: Generate icons & social image from logo.png
+        run: |
+          python - <<'PY'
+          from PIL import Image, ImageOps, ImageColor, ImageDraw, ImageFont
+          import pathlib, sys
+
+          base_dir = pathlib.Path("public")
+          img_dir  = base_dir / "img"
+          logo_fp  = img_dir / "logo.png"
+
+          if not logo_fp.exists():
+              print("No public/img/logo.png found; skipping icon generation.")
+              sys.exit(0)
+
+          # Theme + sizes
+          THEME_BG = "#0f172a"      # matches your header chip / theme-color
+          ICON_SIZES = [192, 512]   # PWA icons
+          APPLE_SIZE = 180          # Apple touch icon
+          FAV_SIZES  = [(16,16),(32,32),(48,48),(64,64)]  # favicon.ico
+          OG_SIZE    = (1200, 630)  # Social preview (Open Graph/Twitter)
+
+          img_dir.mkdir(parents=True, exist_ok=True)
+          logo = Image.open(logo_fp).convert("RGBA")
+
+          def fit_on_canvas(canvas_w, canvas_h, scale=0.7, bg=THEME_BG):
+              """Return a canvas with the logo centered, scaled to a % of min-dimension."""
+              canvas = Image.new("RGBA", (canvas_w, canvas_h), ImageColor.getrgb(bg)+(255,))
+              # compute target box
+              target_h = int(min(canvas_w, canvas_h) * scale)
+              # keep aspect ratio
+              ratio = logo.width / logo.height
+              target_w = int(target_h * ratio)
+              # if too wide for canvas, clamp
+              if target_w > int(canvas_w * scale):
+                  target_w = int(canvas_w * scale)
+                  target_h = int(target_w / ratio)
+              resized = logo.copy()
+              resized.thumbnail((target_w, target_h), Image.LANCZOS)
+              x = (canvas_w - resized.width) // 2
+              y = (canvas_h - resized.height) // 2
+              canvas.alpha_composite(resized, (x, y))
+              return canvas
+
+          # 1) PWA icons
+          for s in ICON_SIZES:
+              out = fit_on_canvas(s, s, scale=0.66)
+              out.convert("RGBA").save(img_dir / f"icon-{s}.png")
+
+          # 2) Apple touch icon (no transparency preferred)
+          apple = fit_on_canvas(APPLE_SIZE, APPLE_SIZE, scale=0.66).convert("RGB")
+          apple.save(img_dir / "apple-touch-icon.png")
+
+          # 3) Favicon PNGs + ICO
+          fav_base = fit_on_canvas(512, 512, scale=0.66)  # high-res base
+          fav_base.save(img_dir / "favicon-512.png")
+          fav_32 = fav_base.resize((32,32), Image.LANCZOS)
+          fav_16 = fav_base.resize((16,16), Image.LANCZOS)
+          fav_32.save(img_dir / "favicon-32.png")
+          fav_16.save(img_dir / "favicon-16.png")
+          # multi-size ICO
+          fav_base.save(img_dir / "favicon.ico", sizes=[(16,16),(32,32),(48,48),(64,64)])
+
+          # 4) Open Graph image (1200x630)
+          og = fit_on_canvas(OG_SIZE[0], OG_SIZE[1], scale=0.45)
+          # optional: simple title at bottom (uses default PIL font)
+          draw = ImageDraw.Draw(og)
+          caption = "My Climate Definition"
+          # simple centered caption
+          w, h = draw.textlength(caption), 24
+          draw.text(((OG_SIZE[0]-w)//2, OG_SIZE[1]-60), caption, fill=(255,255,255,230))
+          og.convert("RGB").save(img_dir / "og.png", quality=92)
+
+          print("Generated: icon-192.png, icon-512.png, apple-touch-icon.png, favicon-*.png, favicon.ico, og.png")
+          PY
+          
+      - name: Generate sitemap.xml and robots.txt
+        run: |
+          python - <<'PY'
+          import json, pathlib, datetime
+          base = "https://myclimatedefinition.org"
+          pub = pathlib.Path("public")
+          posts = []
+          try:
+              posts = json.loads(pub.joinpath("posts.json").read_text("utf-8"))
+          except Exception:
+              pass
+          urls = [f"{base}/"]
+          for p in posts:
+              u = p.get("permalink") or p.get("external_url")
+              if u and u.startswith("http"): urls.append(u)
+          now = datetime.date.today().isoformat()
+          lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+                  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          for u in sorted(set(urls)):
+              lines += [ "<url>", f"<loc>{u}</loc>", f"<lastmod>{now}</lastmod>", "</url>" ]
+          lines += ["</urlset>"]
+          pub.joinpath("sitemap.xml").write_text("\n".join(lines), "utf-8")
+          pub.joinpath("robots.txt").write_text(
+            "User-agent: *\nAllow: /\nSitemap: " + base + "/sitemap.xml\n", "utf-8"
+          )
+          PY
+
+
 
   deploy:
     needs: build
