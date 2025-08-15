@@ -68,8 +68,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   if (!list || !pager || !older) return;
 
   try {
-    // RELATIVE path
-    const res = await fetch('posts.json?ts=' + Date.now(), { cache: 'no-store' });
+    // ABSOLUTE path to avoid any base/path issues
+    const res = await fetch('/posts.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
     if (!Array.isArray(posts)) throw new Error('posts.json is not an array');

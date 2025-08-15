@@ -9,18 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Use RELATIVE path -->
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- ABSOLUTE path so it 1:1 matches the live URL structure -->
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo image only (no duplicate text), no fixed width/height -->
+      <!-- Logo uses ABSOLUTE path to the working file -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
-          src="img/logo.png"
-          srcset="img/logo@2x.png 2x, img/logo.png 1x"
+          src="/img/logo.png"
+          srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
           alt="My Climate Definition"
           decoding="async"
           fetchpriority="high">
@@ -47,10 +47,10 @@
       <button class="slider-btn prev" aria-label="Previous slide">‹</button>
       <div class="slider-viewport">
         <div class="slider-track">
-          <div class="slide"><img src="img/slide1.png" alt="Slide 1"></div>
-          <div class="slide"><img src="img/slide2.png" alt="Slide 2"></div>
-          <div class="slide"><img src="img/slide3.png" alt="Slide 3"></div>
-          <div class="slide"><img src="img/slide4.png" alt="Slide 4"></div>
+          <div class="slide"><img src="/img/slide1.png" alt="Slide 1"></div>
+          <div class="slide"><img src="/img/slide2.png" alt="Slide 2"></div>
+          <div class="slide"><img src="/img/slide3.png" alt="Slide 3"></div>
+          <div class="slide"><img src="/img/slide4.png" alt="Slide 4"></div>
         </div>
       </div>
       <button class="slider-btn next" aria-label="Next slide">›</button>
@@ -75,7 +75,7 @@
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
-          <a class="icon email" href="mailto:hello@example.com" aria-label="Email">
+          <a class="icon email" href="mailto:myclimatedefinition@gmail.com" aria-label="Email">
             <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
@@ -111,7 +111,15 @@
     </div>
   </footer>
 
-  <!-- Use RELATIVE path -->
-  <script src="js/main.js" defer></script>
+  <!-- ABSOLUTE path so it’s guaranteed to load -->
+  <script src="/js/main.js" defer></script>
+
+  <!-- Year fallback in case JS fails -->
+  <script>
+    (function(){
+      var y = document.getElementById('year');
+      if (y && !y.textContent) y.textContent = new Date().getFullYear();
+    })();
+  </script>
 </body>
 </html>
