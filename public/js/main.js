@@ -1,5 +1,8 @@
-// Footer year
-document.getElementById('year').textContent = new Date().getFullYear();
+/* ========= Footer year (robust) ========= */
+document.addEventListener('DOMContentLoaded', () => {
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+});
 
 /* ========= Slider (automatic, one at a time) ========= */
 (function () {
@@ -64,17 +67,22 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
 
-  // If the container elements aren't present, skip
   if (!list || !pager || !older) return;
 
   try {
-    // ABSOLUTE path to avoid any base/path issues
     const res = await fetch('/posts.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
     if (!Array.isArray(posts)) throw new Error('posts.json is not an array');
   } catch (e) {
     console.error('Failed to load posts.json', e);
+    list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
+    pager.hidden = true;
+    return;
+  }
+
+  // ✅ New: if the feed is empty, show a friendly message
+  if (!posts.length) {
     list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
     pager.hidden = true;
     return;
@@ -105,10 +113,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   function renderPage() {
     const start = page * POSTS_PER_PAGE;
     const slice = posts.slice(start, start + POSTS_PER_PAGE);
-    if (slice.length === 0) {
-      pager.hidden = true;
-      return;
-    }
+    if (slice.length === 0) { pager.hidden = true; return; }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
     pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
