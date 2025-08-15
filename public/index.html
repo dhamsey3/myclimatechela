@@ -10,26 +10,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- ABSOLUTE path so it matches your live domain -->
+  <!-- Use ABSOLUTE path to match your live domain -->
   <link rel="stylesheet" href="/css/style.css" />
-
-  <!-- (Optional) Preload both logo candidates -->
-  <link rel="preload" as="image" href="/img/logo.png">
-  <link rel="preload" as="image" href="/img/logo@2x.png">
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo: retina-aware, with automatic fallback if @2x is missing -->
+      <!-- Logo: image + brand text; empty alt so SRs don't read twice -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
           id="logoImg"
           src="/img/logo.png"
           srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
-          alt="My Climate Definition"
+          alt=""
           decoding="async"
           fetchpriority="high">
+        <span class="brand-text">My Climate Definition</span>
       </a>
 
       <nav class="nav">
@@ -126,7 +123,6 @@
       var img = document.getElementById('logoImg');
       if (!img) return;
       var probe = new Image();
-      probe.onload = function(){ /* @2x exists: keep srcset */ };
       probe.onerror = function(){ img.removeAttribute('srcset'); };
       probe.src = '/img/logo@2x.png?ts=' + Date.now();
     })();
