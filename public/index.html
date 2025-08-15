@@ -5,30 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Preload logo to avoid any race conditions -->
-  <link rel="preload" as="image" href="img/logo.png" imagesrcset="img/logo@2x.png 2x, img/logo.png 1x">
-
   <!-- Use RELATIVE paths -->
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="image" href="img/logo.png">
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo with text fallback if the image fails -->
+      <!-- Logo: image + text fallback -->
       <a class="logo" href="/" aria-label="My Climate Definition">
-        <img
-          src="img/logo.png"
-          srcset="img/logo@2x.png 2x, img/logo.png 1x"
-          alt="My Climate Definition"
-          width="200" height="40"  <!-- adjust to your asset’s aspect ratio -->
-          decoding="async"
-          fetchpriority="high"
-          onerror="this.style.display='none'; var f=this.nextElementSibling; if(f) f.style.display='inline-block';">
+        <img id="logoImg"
+             src="img/logo.png"
+             srcset="img/logo@2x.png 2x, img/logo.png 1x"
+             alt="My Climate Definition"
+             decoding="async"
+             fetchpriority="high"
+             width="200" height="40"
+             style="display:block">
         <span class="brand-text fallback" style="display:none">My Climate Definition</span>
       </a>
 
@@ -39,7 +36,6 @@
   </header>
 
   <main class="container">
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-inner">
         <h1>Climate & Everyday Choices</h1>
@@ -48,7 +44,6 @@
       </div>
     </section>
 
-    <!-- SLIDER -->
     <section class="slider" aria-label="Featured images">
       <button class="slider-btn prev" aria-label="Previous slide">‹</button>
       <div class="slider-viewport">
@@ -117,7 +112,53 @@
     </div>
   </footer>
 
-  <!-- RELATIVE path -->
-  <script src="js/main.js" defer></script>
+  <!-- Load JS (relative) -->
+  <script src="js/main.js" defer onerror="console.warn('main.js failed to load')"></script>
+
+  <!-- Minimal inline helpers:
+       1) Set year if main.js didn't run
+       2) Make the logo super-robust: try common filename variants, show fallback text if all fail
+  -->
+  <script>
+    // 1) Year fallback
+    document.addEventListener('DOMContentLoaded', function(){
+      var y = document.getElementById('year');
+      if (y && !y.textContent) y.textContent = new Date().getFullYear();
+    });
+
+    // 2) Robust logo loader
+    (function(){
+      var img = document.getElementById('logoImg');
+      if (!img) return;
+      var fallbackText = document.querySelector('.logo .fallback');
+      var tried = false;
+      var candidates = [
+        'img/logo.png',
+        'img/logo.PNG',
+        'img/Logo.png',
+        'img/Logo.PNG',
+        'img/logo.jpg',
+        'img/logo.jpeg',
+        'img/logo.webp'
+      ];
+      function tryNext(ix){
+        if (ix >= candidates.length) {
+          if (img) img.style.display = 'none';
+          if (fallbackText) fallbackText.style.display = 'inline-block';
+          return;
+        }
+        var url = candidates[ix] + '?v=' + Date.now(); // cache-bust
+        var probe = new Image();
+        probe.onload = function(){ img.src = candidates[ix]; img.style.display = 'block'; };
+        probe.onerror = function(){ tryNext(ix + 1); };
+        probe.src = url;
+      }
+      img.addEventListener('error', function(){
+        if (tried) return;
+        tried = true;
+        tryNext(0);
+      }, { once: true });
+    })();
+  </script>
 </body>
 </html>
