@@ -13,7 +13,7 @@ body{
 .site-header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
 .header-inner{display:flex; align-items:center; justify-content:space-between; padding:.6rem 0}
 
-/* UPDATED logo styles */
+/* PNG logo styles */
 .logo{
   display:inline-flex;
   align-items:center;
@@ -23,21 +23,20 @@ body{
   color:var(--text);
 }
 .logo img{
-  height:28px;           /* control visual height */
-  width:auto;
+  /* Keep the image from being scaled UP (blurry) or down unevenly */
+  height:28px;           /* visual height in header */
+  width:auto;            /* preserve aspect ratio */
   display:block;
+  max-width:100%;
 }
 .brand-text{
   font-weight:800;
   letter-spacing:.1px;
 }
 @media (max-width:420px){
-  .brand-text{ display:none; } /* optional: hide wordmark on tiny screens */
+  .brand-text{ display:none; }
 }
 
-.nav{display:flex; gap:1rem}
-.nav a{text-decoration:none; color:#444; padding:.25rem .2rem; border-radius:8px}
-.nav a.active{font-weight:600}
 
 /* Hero */
 .hero{border-radius:16px; padding:3rem 1.25rem; margin:0 0 1.25rem;

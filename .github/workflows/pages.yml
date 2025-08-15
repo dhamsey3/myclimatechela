@@ -95,16 +95,17 @@ jobs:
           test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
           test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
 
-      # NEW: verify logo and (optional) slider images are present
       - name: Verify images exist
         run: |
           set -e
-          test -f public/img/logo.svg || (echo "public/img/logo.svg missing! Add your logo to public/img/logo.svg or update the path in index.html." && exit 1)
-          # If you’re using these, keep the checks; otherwise delete them or replace with your actual filenames
-          test -f public/img/slide1.png || echo "Note: public/img/slide1.png not found."
-          test -f public/img/slide2.png || echo "Note: public/img/slide2.png not found."
-          test -f public/img/slide3.png || echo "Note: public/img/slide3.png not found."
-          test -f public/img/slide4.png || echo "Note: public/img/slide4.png not found."
+          test -f public/img/logo.png || (echo "public/img/logo.png missing! Add your logo to public/img/logo.png or update the path in index.html." && exit 1)
+          # Optional: retina source (skip failing if absent)
+          [ -f public/img/logo@2x.png ] || echo "Note: public/img/logo@2x.png not found (optional for retina)."
+          # Optional: slider images
+          [ -f public/img/slide1.png ] || echo "Note: public/img/slide1.png not found."
+          [ -f public/img/slide2.png ] || echo "Note: public/img/slide2.png not found."
+          [ -f public/img/slide3.png ] || echo "Note: public/img/slide3.png not found."
+          [ -f public/img/slide4.png ] || echo "Note: public/img/slide4.png not found."
 
       - name: Add CNAME
         run: |

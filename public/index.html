@@ -15,9 +15,15 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- UPDATED: logo image + wordmark -->
+      <!-- PNG logo + optional wordmark -->
       <a class="logo" href="/" aria-label="My Climate Definition">
-        <img src="/img/logo.svg" alt="" width="120" height="32" decoding="async" fetchpriority="high">
+        <!-- Tip: add a 2x file (logo@2x.png) for retina crispness -->
+        <img
+          src="/img/logo.png"
+          srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+          alt="My Climate Definition"
+          decoding="async"
+          fetchpriority="high">
         <span class="brand-text">My Climate Definition</span>
       </a>
 
