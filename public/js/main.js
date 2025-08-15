@@ -64,10 +64,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
 
+  // If the container elements aren't present, skip
   if (!list || !pager || !older) return;
 
   try {
-    // 👉 RELATIVE path so it works on custom domains & GH Pages
+    // RELATIVE path
     const res = await fetch('posts.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
