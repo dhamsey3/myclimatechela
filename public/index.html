@@ -5,25 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
 
-  <!-- Fonts: Inter (body) + Merriweather (headings) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- 👉 use RELATIVE path so it works on Pages/custom domains -->
+  <!-- Preload logo to avoid any race conditions -->
+  <link rel="preload" as="image" href="img/logo.png" imagesrcset="img/logo@2x.png 2x, img/logo.png 1x">
+
+  <!-- Use RELATIVE paths -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- PNG logo only (no duplicate text next to it) -->
+      <!-- Logo with text fallback if the image fails -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
           src="img/logo.png"
           srcset="img/logo@2x.png 2x, img/logo.png 1x"
           alt="My Climate Definition"
+          width="200" height="40"  <!-- adjust to your asset’s aspect ratio -->
           decoding="async"
-          fetchpriority="high">
+          fetchpriority="high"
+          onerror="this.style.display='none'; var f=this.nextElementSibling; if(f) f.style.display='inline-block';">
+        <span class="brand-text fallback" style="display:none">My Climate Definition</span>
       </a>
 
       <nav class="nav">
@@ -111,7 +117,7 @@
     </div>
   </footer>
 
-  <!-- 👉 use RELATIVE path -->
+  <!-- RELATIVE path -->
   <script src="js/main.js" defer></script>
 </body>
 </html>

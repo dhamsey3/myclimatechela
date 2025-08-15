@@ -131,3 +131,18 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 
 /* Utilities */
 .section-title{margin:.75rem 0 1rem}
+/* ...everything else unchanged... */
+
+/* Logo image sizing */
+.logo img{
+  height:28px;   /* adjust to taste */
+  width:auto;
+  display:block;
+  max-width:100%;
+}
+
+/* Optional: style the fallback wordmark if it appears */
+.logo .fallback{
+  font-weight:800;
+  letter-spacing:.1px;
+}
