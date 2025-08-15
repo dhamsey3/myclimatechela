@@ -27,6 +27,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
@@ -88,13 +89,27 @@ jobs:
 
       - name: Verify required files exist
         run: |
+          set -e
           test -f public/index.html || (echo "public/index.html missing!" && exit 1)
           test -f public/css/style.css || (echo "public/css/style.css missing!" && exit 1)
           test -f public/js/main.js || (echo "public/js/main.js missing!" && exit 1)
           test -f public/posts.json || (echo "public/posts.json missing!" && exit 1)
 
+      # NEW: verify logo and (optional) slider images are present
+      - name: Verify images exist
+        run: |
+          set -e
+          test -f public/img/logo.svg || (echo "public/img/logo.svg missing! Add your logo to public/img/logo.svg or update the path in index.html." && exit 1)
+          # If you’re using these, keep the checks; otherwise delete them or replace with your actual filenames
+          test -f public/img/slide1.png || echo "Note: public/img/slide1.png not found."
+          test -f public/img/slide2.png || echo "Note: public/img/slide2.png not found."
+          test -f public/img/slide3.png || echo "Note: public/img/slide3.png not found."
+          test -f public/img/slide4.png || echo "Note: public/img/slide4.png not found."
+
       - name: Add CNAME
-        run: echo 'www.climatedefinition.org' > public/CNAME
+        run: |
+          mkdir -p public
+          echo 'www.climatedefinition.org' > public/CNAME
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
