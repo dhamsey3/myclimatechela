@@ -88,6 +88,9 @@ jobs:
           print(f"Wrote {len(items)} posts to {out}")
           PY
 
+      - name: Disable Jekyll
+        run: touch public/.nojekyll
+
       - name: Verify required files exist
         run: |
           set -e
@@ -99,17 +102,20 @@ jobs:
       - name: Verify images exist
         run: |
           set -e
-          test -f public/img/logo.png || (echo "public/img/logo.png missing! Add your logo to public/img/logo.png or update the path in index.html." && exit 1)
+          test -f public/img/logo.png || (echo "public/img/logo.png missing!" && exit 1)
           [ -f public/img/logo@2x.png ] || echo "Note: public/img/logo@2x.png not found (optional for retina)."
-          [ -f public/img/slide1.png ] || echo "Note: public/img/slide1.png not found."
-          [ -f public/img/slide2.png ] || echo "Note: public/img/slide2.png not found."
-          [ -f public/img/slide3.png ] || echo "Note: public/img/slide3.png not found."
-          [ -f public/img/slide4.png ] || echo "Note: public/img/slide4.png not found."
 
-      - name: Add CNAME
+      - name: Add CNAME (apex domain)
         run: |
           mkdir -p public
-          echo 'www.climatedefinition.org' > public/CNAME
+          echo 'myclimatedefinition.org' > public/CNAME
+
+      - name: Debug: list shipped files
+        run: |
+          echo "==== PUBLIC TREE ===="
+          find public -maxdepth 3 -type f | sort
+          echo "==== posts.json (head) ===="
+          head -c 500 public/posts.json || true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

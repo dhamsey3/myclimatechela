@@ -9,22 +9,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- If your site is a *project* page on GitHub Pages, consider making this relative: href="css/style.css" -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <!-- 👉 use RELATIVE path so it works on Pages/custom domains -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- PNG logo (with retina). If your PNG already contains the wordmark, remove <span class="brand-text">…</span> -->
+      <!-- PNG logo only (no duplicate text next to it) -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
-          src="/img/logo.png"
-          srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+          src="img/logo.png"
+          srcset="img/logo@2x.png 2x, img/logo.png 1x"
           alt="My Climate Definition"
           decoding="async"
           fetchpriority="high">
-        <span class="brand-text">My Climate Definition</span>
       </a>
 
       <nav class="nav">
@@ -48,10 +47,10 @@
       <button class="slider-btn prev" aria-label="Previous slide">‹</button>
       <div class="slider-viewport">
         <div class="slider-track">
-          <div class="slide"><img src="/img/slide1.png" alt="Slide 1"></div>
-          <div class="slide"><img src="/img/slide2.png" alt="Slide 2"></div>
-          <div class="slide"><img src="/img/slide3.png" alt="Slide 3"></div>
-          <div class="slide"><img src="/img/slide4.png" alt="Slide 4"></div>
+          <div class="slide"><img src="img/slide1.png" alt="Slide 1"></div>
+          <div class="slide"><img src="img/slide2.png" alt="Slide 2"></div>
+          <div class="slide"><img src="img/slide3.png" alt="Slide 3"></div>
+          <div class="slide"><img src="img/slide4.png" alt="Slide 4"></div>
         </div>
       </div>
       <button class="slider-btn next" aria-label="Next slide">›</button>
@@ -112,7 +111,7 @@
     </div>
   </footer>
 
-  <!-- If project page paths give 404s, make this relative: src="js/main.js" -->
-  <script src="/js/main.js" defer></script>
+  <!-- 👉 use RELATIVE path -->
+  <script src="js/main.js" defer></script>
 </body>
 </html>

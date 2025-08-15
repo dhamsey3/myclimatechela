@@ -64,12 +64,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
 
-  // If the container elements aren't present, skip
   if (!list || !pager || !older) return;
 
   try {
-    // Root-absolute path so it works on custom domain and GH Pages
-    const res = await fetch('/posts.json?ts=' + Date.now(), { cache: 'no-store' });
+    // 👉 RELATIVE path so it works on custom domains & GH Pages
+    const res = await fetch('posts.json?ts=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
     posts = await res.json();
     if (!Array.isArray(posts)) throw new Error('posts.json is not an array');
