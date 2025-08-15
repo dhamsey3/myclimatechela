@@ -9,16 +9,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- ABSOLUTE path so it 1:1 matches the live URL structure -->
+  <!-- ABSOLUTE paths so they match your live domain -->
   <link rel="stylesheet" href="/css/style.css" />
+
+  <!-- Preload both logo candidates -->
+  <link rel="preload" as="image" href="/img/logo.png">
+  <link rel="preload" as="image" href="/img/logo@2x.png">
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo uses ABSOLUTE path to the working file -->
+      <!-- Logo: retina-aware but with automatic fallback if @2x is missing -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
+          id="logoImg"
           src="/img/logo.png"
           srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
           alt="My Climate Definition"
@@ -37,7 +42,7 @@
     <section class="hero">
       <div class="hero-inner">
         <h1>Climate & Everyday Choices</h1>
-        <p class="hero-sub">Stories, definitions, and experiments in sustainability.</p>
+        <p class="hero-sub">Stories, definitions, and experiments in sustainability — auto-synced from Medium.</p>
         <p><a class="btn btn-primary" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener">Follow on Medium →</a></p>
       </div>
     </section>
@@ -75,7 +80,7 @@
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
-          <a class="icon email" href="mailto:myclimatedefinition@gmail.com" aria-label="Email">
+          <a class="icon email" href="mailto:hello@example.com" aria-label="Email">
             <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
           <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
@@ -111,8 +116,20 @@
     </div>
   </footer>
 
-  <!-- ABSOLUTE path so it’s guaranteed to load -->
+  <!-- ABSOLUTE path -->
   <script src="/js/main.js" defer></script>
+
+  <!-- Retina safeguard: if /img/logo@2x.png is missing (404), drop srcset so /img/logo.png always shows -->
+  <script>
+    (function(){
+      var img = document.getElementById('logoImg');
+      if (!img) return;
+      var probe = new Image();
+      probe.onload = function(){ /* ok: keep srcset */ };
+      probe.onerror = function(){ img.removeAttribute('srcset'); };
+      probe.src = '/img/logo@2x.png?ts=' + Date.now();
+    })();
+  </script>
 
   <!-- Year fallback in case JS fails -->
   <script>
