@@ -1,10 +1,26 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Google Analytics: Global site tag (gtag.js) -->
+  <!-- Loads Google Analytics script asynchronously -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJZR6VLZK0"></script>
+  <script>
+    // Initializes Google Analytics data layer
+    window.dataLayer = window.dataLayer || [];
+
+    // Defines the gtag function
+    function gtag(){dataLayer.push(arguments);}
+
+    // Sets the current time and configures with your GA4 ID
+    gtag('js', new Date());
+    gtag('config', 'G-LJZR6VLZK0');
+  </script>
+
   <!-- Core metadata -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
+
   <!-- SEO -->
   <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium." />
   <link rel="canonical" href="https://myclimatedefinition.org/" />
@@ -28,7 +44,6 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#0f172a">
 
-
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
@@ -36,7 +51,6 @@
   <!-- Use ABSOLUTE path to match your live domain -->
   <link rel="stylesheet" href="/css/style.css" />
 </head>
-
 <body>
   <header class="site-header">
     <div class="container header-inner">
@@ -131,10 +145,10 @@
       </div>
     </div>
 
-<div class="container footer-bottom">
-  <p>© <span id="year">2025</span> My Climate Definition</p>
-  <a href="#" class="backtop">Back to top ↑</a>
-</div>
+    <div class="container footer-bottom">
+      <p>© <span id="year">2025</span> My Climate Definition</p>
+      <a href="#" class="backtop">Back to top ↑</a>
+    </div>
   </footer>
 
   <!-- ABSOLUTE path -->
