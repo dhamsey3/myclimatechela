@@ -140,3 +140,8 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 
 /* Utilities */
 .section-title{margin:.75rem 0 1rem}
+
+.f-logo {
+  vertical-align: middle;
+  margin-right: 8px;
+}
