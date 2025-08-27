@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google Analytics: Global site tag (gtag.js) -->
+  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJZR6VLZK0"></script>
   <script>
-    // GA4 bootstrap
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-LJZR6VLZK0');
   </script>
@@ -15,6 +14,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
+
   <!-- SEO -->
   <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium." />
   <link rel="canonical" href="https://myclimatedefinition.org/" />
@@ -42,20 +42,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Use ABSOLUTE path to match your live domain -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <!-- CSS (relative so it works in subfolders too) -->
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Logo: image + brand text; empty alt so SRs don't read twice -->
+      <!-- Header logo: clean image + brand text (no background chip) -->
       <a class="logo" href="/" aria-label="My Climate Definition">
         <img
           id="logoImg"
+          class="header-logo-img"
           src="/img/logo.png"
           srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
-          alt=""
+          alt="My Climate Definition logo"
           decoding="async"
           fetchpriority="high">
         <span class="brand-text">My Climate Definition</span>
@@ -78,7 +79,7 @@
     </section>
 
     <!-- SLIDER -->
-    <section class="slider" aria-label="Featured images">
+    <section class="slider" aria-label="Featured images" tabindex="0">
       <button class="slider-btn prev" aria-label="Previous slide">‹</button>
       <div class="slider-viewport">
         <div class="slider-track">
@@ -112,7 +113,6 @@
               src="/img/logo.png"
               srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
               alt="My Climate Definition logo"
-              width="28" height="28"
               decoding="async">
           </a>
           <span>Short notes on climate, sustainability, and everyday choices.</span>
@@ -153,15 +153,15 @@
     </div>
 
     <div class="container footer-bottom">
-      <p>© <span id="year">2025</span> My Climate Definition</p>
+      <p>© <span id="year"></span> My Climate Definition</p>
       <a href="#" class="backtop">Back to top ↑</a>
     </div>
   </footer>
 
-  <!-- ABSOLUTE path -->
+  <!-- JS (relative so it works in subfolders too) -->
   <script src="./js/main.js" defer></script>
 
-  <!-- Retina safeguard: if /img/logo@2x.png is missing, drop srcset so /img/logo.png always shows -->
+  <!-- Retina safeguards: if @2x is missing, keep base logo -->
   <script>
     (function(){
       var img = document.getElementById('logoImg');
@@ -170,24 +170,12 @@
       probe.onerror = function(){ img.removeAttribute('srcset'); };
       probe.src = '/img/logo@2x.png?ts=' + Date.now();
     })();
-  </script>
-
-  <!-- Retina safeguard for FOOTER logo -->
-  <script>
     (function(){
       var img = document.getElementById('footerLogoImg');
       if (!img) return;
       var probe = new Image();
       probe.onerror = function(){ img.removeAttribute('srcset'); };
       probe.src = '/img/logo@2x.png?ts=' + Date.now();
-    })();
-  </script>
-
-  <!-- Year fallback in case JS fails -->
-  <script>
-    (function(){
-      var y = document.getElementById('year');
-      if (y && !y.textContent) y.textContent = new Date().getFullYear();
     })();
   </script>
 </body>

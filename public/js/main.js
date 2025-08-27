@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const dotsWrap = slider.querySelector('.slider-dots');
   const prev     = slider.querySelector('.slider-btn.prev');
   const next     = slider.querySelector('.slider-btn.next');
-
   if (!track || !slides.length || !dotsWrap || !prev || !next) return;
 
   // Build dots
@@ -36,11 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function start(){
-    stop();
-    if (!prefersReduced) timer = setInterval(() => go(i + 1), 5000);
-  }
+  function start(){ stop(); if (!prefersReduced) timer = setInterval(() => go(i + 1), 5000); }
   function stop(){ if (timer) clearInterval(timer); }
 
   prev.addEventListener('click', () => { go(i - 1); start(); }, { passive: true });
@@ -60,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   go(0); start();
 })();
 
-/* ========= Render Medium posts from posts.json ========= */
+/* ========= Render posts from posts.json (robust path) ========= */
 (async function () {
   const POSTS_PER_PAGE = 3;
   let page = 0, posts = [];
@@ -68,50 +63,57 @@ document.addEventListener('DOMContentLoaded', () => {
   const list  = document.getElementById('posts');
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
+  if (!list || !pager || !older) return;
 
-  if (!list || !pager || !older) {
-    console.warn('[posts] Missing list/pager/older elements');
-    return;
+  // Try URLs that work at root and in subfolders
+  const candidates = [
+    new URL('./posts.json', window.location.href),
+    new URL('posts.json', window.location.href),
+    new URL('/posts.json', window.location.origin),
+  ];
+  candidates.forEach(u => u.searchParams.set('ts', Date.now())); // bust cache
+
+  async function fetchFirstOk(urls) {
+    for (const u of urls) {
+      try {
+        const res = await fetch(u.toString(), { cache: 'no-store' });
+        if (!res.ok) { console.warn('[posts] Not OK:', u.toString(), res.status); continue; }
+        const data = await res.json();
+        if (!Array.isArray(data)) { console.warn('[posts] Not an array at', u.toString()); continue; }
+        console.log('[posts] Loaded from', u.toString(), `(${data.length} items)`);
+        return data;
+      } catch (e) {
+        console.warn('[posts] Fetch failed:', u.toString(), e);
+      }
+    }
+    return null;
   }
 
-  try {
-    // Build a robust URL that works from root or a subpath
-    const u = new URL('posts.json', window.location.origin + window.location.pathname.replace(/[^/]*$/, ''));
-    u.searchParams.set('ts', Date.now());
+  posts = await fetchFirstOk(candidates);
 
-    const res = await fetch(u.toString(), { cache: 'no-store' });
-    if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
-
-    posts = await res.json();
-    if (!Array.isArray(posts)) throw new Error('posts.json is not an array');
-  } catch (e) {
-    console.error('Failed to load posts.json', e);
-    list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
-    pager.hidden = true;
-    return;
-  }
-
-  if (!posts.length) {
+  if (!posts || !posts.length) {
     list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
     pager.hidden = true;
     return;
   }
 
   const dateFmt = new Intl.DateTimeFormat(undefined, { year:'numeric', month:'short', day:'numeric' });
+  const esc = (s) => (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  function esc(s){ return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function card(p) {
     const url = p.external_url || p.permalink || '#';
+    const title = esc(p.title || 'Untitled');
     const img = p.image
       ? `<a class="hcard-media" href="${url}" target="_blank" rel="noopener nofollow">
-           <img src="${p.image}" alt="${esc(p.title || 'Post image')}" loading="lazy">
+           <img src="${p.image}" alt="${title}" loading="lazy">
          </a>`
       : `<a class="hcard-media placeholder" href="${url}" target="_blank" rel="noopener nofollow"><div></div></a>`;
+
     return `
       <article class="hcard">
         ${img}
         <div class="hcard-body">
-          <h3 class="hcard-title"><a href="${url}" target="_blank" rel="noopener nofollow">${esc(p.title)}</a></h3>
+          <h3 class="hcard-title"><a href="${url}" target="_blank" rel="noopener nofollow">${title}</a></h3>
           <small class="hcard-meta">${p.date ? dateFmt.format(new Date(p.date)) : ''}</small>
           <p class="hcard-text">${esc(p.summary || '')}</p>
           ${url && url !== '#' ? `<p><a class="btn" href="${url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
@@ -128,11 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
     pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
   }
 
+  pager.hidden = posts.length <= POSTS_PER_PAGE;
   older.addEventListener('click', renderPage, { passive: true });
   renderPage();
 })();
 
-/* ========= Enhance UX: Smooth back-to-top ========= */
+/* ========= Smooth back-to-top ========= */
 (() => {
   const link = document.querySelector('.backtop');
   if (!link) return;
