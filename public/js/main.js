@@ -9,11 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const slider = document.querySelector('.slider');
   if (!slider) return;
 
-  const track   = slider.querySelector('.slider-track');
-  const slides  = Array.from(slider.querySelectorAll('.slide'));
-  const dotsWrap= slider.querySelector('.slider-dots');
-  const prev    = slider.querySelector('.slider-btn.prev');
-  const next    = slider.querySelector('.slider-btn.next');
+  const track    = slider.querySelector('.slider-track');
+  const slides   = Array.from(slider.querySelectorAll('.slide'));
+  const dotsWrap = slider.querySelector('.slider-dots');
+  const prev     = slider.querySelector('.slider-btn.prev');
+  const next     = slider.querySelector('.slider-btn.next');
+
+  if (!track || !slides.length || !dotsWrap || !prev || !next) return;
 
   // Build dots
   dotsWrap.innerHTML = slides.map((_, i) =>
@@ -67,11 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
 
-  if (!list || !pager || !older) return;
+  if (!list || !pager || !older) {
+    console.warn('[posts] Missing list/pager/older elements');
+    return;
+  }
 
   try {
-    const res = await fetch('/posts.json?ts=' + Date.now(), { cache: 'no-store' });
+    // Build a robust URL that works from root or a subpath
+    const u = new URL('posts.json', window.location.origin + window.location.pathname.replace(/[^/]*$/, ''));
+    u.searchParams.set('ts', Date.now());
+
+    const res = await fetch(u.toString(), { cache: 'no-store' });
     if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+
     posts = await res.json();
     if (!Array.isArray(posts)) throw new Error('posts.json is not an array');
   } catch (e) {
@@ -81,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // ✅ New: if the feed is empty, show a friendly message
   if (!posts.length) {
     list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
     pager.hidden = true;
@@ -113,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderPage() {
     const start = page * POSTS_PER_PAGE;
     const slice = posts.slice(start, start + POSTS_PER_PAGE);
-    if (slice.length === 0) { pager.hidden = true; return; }
+    if (!slice.length) { pager.hidden = true; return; }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
     pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
