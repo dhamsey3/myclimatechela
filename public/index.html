@@ -2,16 +2,11 @@
 <html lang="en">
 <head>
   <!-- Google Analytics: Global site tag (gtag.js) -->
-  <!-- Loads Google Analytics script asynchronously -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJZR6VLZK0"></script>
   <script>
-    // Initializes Google Analytics data layer
+    // GA4 bootstrap
     window.dataLayer = window.dataLayer || [];
-
-    // Defines the gtag function
     function gtag(){dataLayer.push(arguments);}
-
-    // Sets the current time and configures with your GA4 ID
     gtag('js', new Date());
     gtag('config', 'G-LJZR6VLZK0');
   </script>
@@ -20,7 +15,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Climate Definition</title>
-
   <!-- SEO -->
   <meta name="description" content="Stories, definitions, and experiments in sustainability — auto-synced from Medium." />
   <link rel="canonical" href="https://myclimatedefinition.org/" />
@@ -51,6 +45,7 @@
   <!-- Use ABSOLUTE path to match your live domain -->
   <link rel="stylesheet" href="/css/style.css" />
 </head>
+
 <body>
   <header class="site-header">
     <div class="container header-inner">
@@ -107,16 +102,20 @@
 
   <footer class="site-footer">
     <div class="container footer-grid">
+      <!-- Footer brand: real logo inline with tagline -->
       <div class="f-brand">
-        <p>
-          <a href="/" aria-label="My Climate Definition">
-            <img src="/img/logo.png" 
-                 srcset="/img/logo@2x.png 2x, /img/logo.png 1x" 
-                 alt="My Climate Definition" 
-                 class="f-logo" 
-                 width="28" height="28">
+        <p class="f-tagline">
+          <a href="/" aria-label="My Climate Definition" class="footer-logo">
+            <img
+              id="footerLogoImg"
+              class="footer-logo-img"
+              src="/img/logo.png"
+              srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+              alt="My Climate Definition logo"
+              width="28" height="28"
+              decoding="async">
           </a>
-          Short notes on climate, sustainability, and everyday choices.
+          <span>Short notes on climate, sustainability, and everyday choices.</span>
         </p>
       </div>
 
@@ -166,6 +165,17 @@
   <script>
     (function(){
       var img = document.getElementById('logoImg');
+      if (!img) return;
+      var probe = new Image();
+      probe.onerror = function(){ img.removeAttribute('srcset'); };
+      probe.src = '/img/logo@2x.png?ts=' + Date.now();
+    })();
+  </script>
+
+  <!-- Retina safeguard for FOOTER logo -->
+  <script>
+    (function(){
+      var img = document.getElementById('footerLogoImg');
       if (!img) return;
       var probe = new Image();
       probe.onerror = function(){ img.removeAttribute('srcset'); };

@@ -141,7 +141,32 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 /* Utilities */
 .section-title{margin:.75rem 0 1rem}
 
+/* Legacy footer emoji helper (safe to keep) */
 .f-logo {
   vertical-align: middle;
   margin-right: 8px;
+}
+
+/* NEW: Footer tagline + logo layout */
+.f-tagline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* NEW: Footer logo wrapper */
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+}
+
+/* NEW: Footer logo image */
+.footer-logo-img {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
