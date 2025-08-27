@@ -13,20 +13,13 @@ body{
 .site-header{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--border); box-shadow:var(--shadow)}
 .header-inner{display:flex; align-items:center; justify-content:space-between; padding:.6rem 0}
 
-/* Logo + brand text */
+/* Brand link + text */
 .logo{
   display:inline-flex;
   align-items:center;
-  gap:.6rem;                 /* space between icon and text */
+  gap:.6rem;
   text-decoration:none;
   color:var(--text);
-}
-/* New header logo style */
-.header-logo-img {
-  display: block;
-  height: clamp(40px, 5vw, 60px); /* responsive height */
-  width: auto;
-  object-fit: contain;
 }
 .logo .brand-text{
   font-weight:800;
@@ -139,32 +132,38 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 /* Utilities */
 .section-title{margin:.75rem 0 1rem}
 
-/* Legacy footer emoji helper (safe to keep) */
-.f-logo {
-  vertical-align: middle;
-  margin-right: 8px;
+/* ============ CLEAN LOGO SETUP (no duplication) ============ */
+
+/* Remove any leftover “chip” styles that might still target images */
+.logo > img { background:none !important; padding:0 !important; border-radius:0 !important; }
+
+/* Header logo image (responsive) */
+.header-logo-img{
+  display:block;
+  height:clamp(40px, 5vw, 60px);
+  width:auto;
+  object-fit:contain;
 }
 
-/* NEW: Footer tagline + logo layout */
-.f-tagline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
+/* Footer tagline layout */
+.f-tagline{ display:flex; align-items:center; gap:8px; margin:0; }
+
+/* Footer logo link wrapper */
+.footer-logo{ display:inline-flex; align-items:center; line-height:0; text-decoration:none; }
+
+/* Footer logo image (slightly smaller than header) */
+.footer-logo-img{
+  display:block;
+  height:clamp(28px, 3.5vw, 42px);
+  width:auto;
+  object-fit:contain;
 }
 
-/* NEW: Footer logo wrapper */
-.footer-logo {
-  display: inline-flex;
-  align-items: center;
-  line-height: 0;
-  text-decoration: none;
+/* If you want the footer EXACTLY same size as header, swap the block above for:
+.footer-logo-img{
+  display:block;
+  height:clamp(40px, 5vw, 60px);
+  width:auto;
+  object-fit:contain;
 }
-
-/* Footer logo image — match header scaling */
-.footer-logo-img {
-  display: block;
-  height: clamp(40px, 5vw, 60px); /* same as header */
-  width: auto;
-  object-fit: contain;
-}
+*/
