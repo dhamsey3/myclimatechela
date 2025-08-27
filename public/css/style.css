@@ -163,10 +163,10 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
   text-decoration: none;
 }
 
-/* NEW: Footer logo image */
+/* Footer logo image — match header scaling */
 .footer-logo-img {
   display: block;
-  width: 28px;
-  height: 28px;
+  height: clamp(40px, 5vw, 60px); /* same as header */
+  width: auto;
   object-fit: contain;
 }
