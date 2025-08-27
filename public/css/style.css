@@ -29,6 +29,23 @@ body{
   color:#111;
 }
 
+/* 🔥 Ensure NO “chip” styles on any logo image */
+.logo > img,
+.header-logo-img,
+.footer-logo-img{
+  background:none !important;
+  padding:0 !important;
+  border-radius:0 !important;
+}
+
+/* Header logo image */
+.header-logo-img{
+  display:block;
+  height:clamp(40px, 5vw, 60px);
+  width:auto;
+  object-fit:contain;
+}
+
 /* Nav */
 .nav{display:flex; gap:1rem}
 .nav a{text-decoration:none; color:#444; padding:.25rem .2rem; border-radius:8px}
@@ -36,9 +53,10 @@ body{
 
 /* Hero */
 .hero{border-radius:16px; padding:3rem 1.25rem; margin:0 0 1.25rem;
-  background: radial-gradient(1200px 600px at 10% -10%, rgba(82,132,255,.18), transparent 60%),
-              radial-gradient(900px 900px at 100% 0%, rgba(108,230,180,.18), transparent 40%),
-              linear-gradient(180deg, #f6f8ff, #f9fbff);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(82,132,255,.18), transparent 60%),
+    radial-gradient(900px 900px at 100% 0%, rgba(108,230,180,.18), transparent 40%),
+    linear-gradient(180deg, #f6f8ff, #f9fbff);
   box-shadow:0 10px 24px rgba(0,0,0,.05)
 }
 .hero-inner{max-width:980px; margin:0 auto}
@@ -129,26 +147,8 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 .support-btn{ background:#111; color:#fff; border-color:#111; font-weight:600 }
 .support-btn:hover{ transform:translateY(-1px) }
 
-/* Utilities */
-.section-title{margin:.75rem 0 1rem}
-
-/* ============ CLEAN LOGO SETUP (no duplication) ============ */
-
-/* Remove any leftover “chip” styles that might still target images */
-.logo > img { background:none !important; padding:0 !important; border-radius:0 !important; }
-
-/* Header logo image (responsive) */
-.header-logo-img{
-  display:block;
-  height:clamp(40px, 5vw, 60px);
-  width:auto;
-  object-fit:contain;
-}
-
-/* Footer tagline layout */
+/* Footer tagline + logo */
 .f-tagline{ display:flex; align-items:center; gap:8px; margin:0; }
-
-/* Footer logo link wrapper */
 .footer-logo{ display:inline-flex; align-items:center; line-height:0; text-decoration:none; }
 
 /* Footer logo image (slightly smaller than header) */
@@ -158,12 +158,3 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
   width:auto;
   object-fit:contain;
 }
-
-/* If you want the footer EXACTLY same size as header, swap the block above for:
-.footer-logo-img{
-  display:block;
-  height:clamp(40px, 5vw, 60px);
-  width:auto;
-  object-fit:contain;
-}
-*/
