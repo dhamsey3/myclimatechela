@@ -21,14 +21,12 @@ body{
   text-decoration:none;
   color:var(--text);
 }
-.logo img{
-  height:clamp(40px, 5vw, 60px);
-  width:auto;
-  display:block;
-  max-width:100%;
-  background:#0f172a;        /* dark chip so white logos pop */
-  padding:8px 12px;
-  border-radius:12px;
+/* New header logo style */
+.header-logo-img {
+  display: block;
+  height: clamp(40px, 5vw, 60px); /* responsive height */
+  width: auto;
+  object-fit: contain;
 }
 .logo .brand-text{
   font-weight:800;
