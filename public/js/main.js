@@ -4,6 +4,31 @@ document.addEventListener('DOMContentLoaded', () => {
   if (y) y.textContent = new Date().getFullYear();
 });
 
+/* ========= Auto-highlight active nav link ========= */
+(() => {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  const links = Array.from(nav.querySelectorAll('a[href]'));
+
+  const normalize = (href) => {
+    try {
+      const u = new URL(href, location.origin);
+      let p = u.pathname.replace(/index\.html?$/i, '');
+      if (!p.endsWith('/')) p += '/';
+      return p;
+    } catch { return href; }
+  };
+
+  let current = location.pathname.replace(/index\.html?$/i, '');
+  if (!current.endsWith('/')) current += '/';
+
+  links.forEach(a => {
+    const p = normalize(a.getAttribute('href'));
+    const isMatch = (current === p) || (current.startsWith(p) && p !== '/');
+    a.classList.toggle('active', !!isMatch);
+  });
+})();
+
 /* ========= Slider (automatic, one at a time) ========= */
 (function () {
   const slider = document.querySelector('.slider');
@@ -142,5 +167,73 @@ document.addEventListener('DOMContentLoaded', () => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+/* ========= Retina safeguards for logos ========= */
+(() => {
+  function retinaGuard(id) {
+    const img = document.getElementById(id);
+    if (!img) return;
+    const probe = new Image();
+    probe.onerror = () => { img.removeAttribute('srcset'); };
+    probe.src = '/img/logo@2x.png?ts=' + Date.now();
+  }
+  retinaGuard('logoImg');
+  retinaGuard('footerLogoImg');
+})();
+
+/* ========= Contact form (progressive enhancement) ========= */
+(() => {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+
+  const status = document.getElementById('formStatus');
+  const submitBtn = form.querySelector('[type="submit"]');
+  const honeypot = form.querySelector('#website'); // hidden anti-spam
+
+  const setStatus = (text, opts = {}) => {
+    if (!status) return;
+    status.textContent = text || '';
+    if (opts.polite) status.setAttribute('aria-live', 'polite');
+    if (opts.assertive) status.setAttribute('aria-live', 'assertive');
+  };
+
+  form.addEventListener('submit', async (e) => {
+    // Honeypot: silently drop spam
+    if (honeypot && honeypot.value) { e.preventDefault(); return; }
+
+    const endpoint = form.getAttribute('action') || '';
+    // If using mailto:, let the browser handle it
+    if (endpoint.startsWith('mailto:')) {
+      setStatus('Opening mail client…', { polite: true });
+      return; // no preventDefault
+    }
+
+    // Use fetch for XHR-friendly endpoints (e.g., Formspree)
+    e.preventDefault();
+    setStatus('Sending…', { polite: true });
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
+
+    try {
+      const fd = new FormData(form);
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!res.ok) throw new Error('Network response was not ok');
+
+      // Optional: check JSON for errors if your backend returns them
+      setStatus('Message sent! Thanks ✓', { assertive: true });
+      form.reset();
+    } catch (err) {
+      console.error('[contact] submit failed:', err);
+      const fallbackEmail = (form.querySelector('a[href^="mailto:"]')?.getAttribute('href') || '').replace('mailto:', '') || 'hello@example.com';
+      setStatus(`Couldn’t send. Please email us: ${fallbackEmail}`, { assertive: true });
+    } finally {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
+    }
   });
 })();
