@@ -29,7 +29,7 @@
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- Organization structured data (not visible to users) -->
+  <!-- Organization structured data (no visible email) -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -43,7 +43,6 @@
       "https://instagram.com/myclimatedefinition",
       "https://tiktok.com/@myclimatedefinition_"
     ],
-    "email":"info@myclimatedefinition.org",
     "logo":"https://myclimatedefinition.org/img/logo.png"
   }
   </script>
@@ -74,58 +73,48 @@
   <main class="container">
     <section class="section contact" aria-labelledby="contact-title">
       <h1 id="contact-title" class="section-title">Contact us</h1>
-      <div class="grid-2">
-        <div class="stack">
-          <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
 
-          <!-- Contact detail (email only) -->
-          <div class="card">
-            <ul class="contact-list">
-              <li>📧 Email: <a href="mailto:info@myclimatedefinition.org">info@myclimatedefinition.org</a></li>
-            </ul>
-          </div>
+      <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
+
+      <!-- Form moved under the intro, full width -->
+      <form class="card" id="contactForm"
+            action="mailto:info@myclimatedefinition.org?subject=New%20message%20from%20My%20Climate%20Definition"
+            method="POST" enctype="text/plain" aria-describedby="privacy-note">
+        <div class="form-field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
         </div>
 
-        <!-- Contact form (mailto now; you can swap action to Formspree later) -->
-        <form class="card" id="contactForm"
-              action="mailto:info@myclimatedefinition.org?subject=New%20message%20from%20My%20Climate%20Definition"
-              method="POST" enctype="text/plain" aria-describedby="privacy-note">
-          <div class="form-field">
-            <label for="name">Your name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required>
-          </div>
+        <div class="form-field">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
 
-          <div class="form-field">
-            <label for="email">Your email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required>
-          </div>
+        <div class="form-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
 
-          <div class="form-field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="6" required></textarea>
-          </div>
+        <!-- Spam honeypot -->
+        <div class="hidepot">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
 
-          <!-- Spam honeypot -->
-          <div class="hidepot">
-            <label for="website">Website</label>
-            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
-          </div>
+        <div class="form-field">
+          <label>
+            <input type="checkbox" name="consent" required>
+            I agree to be contacted about this inquiry.
+          </label>
+        </div>
 
-          <div class="form-field">
-            <label>
-              <input type="checkbox" name="consent" required>
-              I agree to be contacted about this inquiry.
-            </label>
-          </div>
+        <p id="privacy-note" class="muted">We only use your details to respond to your message.</p>
 
-          <p id="privacy-note" class="muted">We only use your details to respond to your message.</p>
-
-          <div class="form-actions">
-            <button class="btn btn-primary" type="submit">Send message</button>
-            <span class="muted" id="formStatus" role="status" aria-live="polite"></span>
-          </div>
-        </form>
-      </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <span class="muted" id="formStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
     </section>
   </main>
 
@@ -147,7 +136,7 @@
         </p>
       </div>
 
-      <!-- Footer socials stay intact -->
+      <!-- Footer socials/email remain unchanged -->
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
@@ -164,30 +153,4 @@
             <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
           </a>
           <a class="icon instagram" href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener" aria-label="Open on Instagram">
-            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0z"/></svg>
-          </a>
-          <a class="icon tiktok" href="https://tiktok.com/@myclimatedefinition_" target="_blank" rel="noopener" aria-label="Open on TikTok">
-            <svg viewBox="0 0 24 24"><path d="M19.3 5.56c-.16-.1-.31-.2-.44-.26-.5-.27-.87-.57-1.14-.83C16.85 3.61 16.4 2.63 16.4 1.5V1h-3.55v14.7a2.16 2.16 0 1 1-4.31 0 2.16 2.16 0 0 1 2.78-2.06V9.93a5.75 5.75 0 0 0-.63-.03 5.78 5.78 0 1 0 5.78 5.78V8.51a9.8 9.8 0 0 0 4.07 1.27V6.18a3.65 3.65 0 0 1-2.55-.62z"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <div class="f-support">
-        <h4>Support us</h4>
-        <p>If our work helps you, consider supporting the project.</p>
-        <div class="support-row">
-          <a class="btn support-btn" href="https://www.buymeacoffee.com/korirjpatr1" target="_blank" rel="noopener">Buy Me a Coffee</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="container footer-bottom">
-      <p>© <span id="year"></span> My Climate Definition</p>
-      <a href="#" class="backtop">Back to top ↑</a>
-    </div>
-  </footer>
-
-  <!-- JS -->
-  <script src="./js/main.js" defer></script>
-</body>
-</html>
+            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1
