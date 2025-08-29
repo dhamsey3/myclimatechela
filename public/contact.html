@@ -73,10 +73,9 @@
   <main class="container">
     <section class="section contact" aria-labelledby="contact-title">
       <h1 id="contact-title" class="section-title">Contact us</h1>
-
       <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
 
-      <!-- Form moved under the intro, full width -->
+      <!-- Form under the intro, full width -->
       <form class="card" id="contactForm"
             action="mailto:info@myclimatedefinition.org?subject=New%20message%20from%20My%20Climate%20Definition"
             method="POST" enctype="text/plain" aria-describedby="privacy-note">
@@ -118,9 +117,10 @@
     </section>
   </main>
 
+  <!-- Footer restored to the original structure -->
   <footer class="site-footer">
     <div class="container footer-grid">
-      <!-- Footer brand -->
+      <!-- Footer brand: real logo inline with tagline -->
       <div class="f-brand">
         <p class="f-tagline">
           <a href="/" aria-label="My Climate Definition" class="footer-logo">
@@ -136,21 +136,46 @@
         </p>
       </div>
 
-      <!-- Footer socials/email remain unchanged -->
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
           <a class="icon email" href="mailto:info@myclimatedefinition.org" aria-label="Email">
             <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Open on Medium">
+          <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
             <svg viewBox="0 0 1044 593"><path d="M589 296c0 164-131 296-294 296S1 460 1 296 132 0 295 0s294 132 294 296zM873 296c0 154-66 280-147 280s-147-126-147-280S645 17 726 17s147 126 147 280zm171 0c0 142-23 256-52 256s-52-114-52-256S963 40 992 40s52 116 52 256z"/></svg>
           </a>
-          <a class="icon twitter" href="https://x.com/cmdefinition" target="_blank" rel="noopener" aria-label="Open on X">
+          <a class="icon twitter" href="https://x.com/cmdefinition" target="_blank" rel="noopener" aria-label="X">
             <svg viewBox="0 0 24 24"><path d="M4 3h4.8l4.6 6.6L18.7 3H21l-6.8 9.5L21.3 21h-4.8l-5-7L9 21H6.7l6.8-9.5L4 3z"/></svg>
           </a>
-          <a class="icon linkedin" href="https://www.linkedin.com/company/my-climate-definition" target="_blank" rel="noopener" aria-label="Open on LinkedIn">
+          <a class="icon linkedin" href="https://www.linkedin.com/company/my-climate-definition" target="_blank" rel="noopener" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
           </a>
-          <a class="icon instagram" href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener" aria-label="Open on Instagram">
-            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1
+          <a class="icon instagram" href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0z"/></svg>
+          </a>
+          <a class="icon tiktok" href="https://tiktok.com/@myclimatedefinition_" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.3 5.56c-.16-.1-.31-.2-.44-.26-.5-.27-.87-.57-1.14-.83C16.85 3.61 16.4 2.63 16.4 1.5V1h-3.55v14.7a2.16 2.16 0 1 1-4.31 0 2.16 2.16 0 0 1 2.78-2.06V9.93a5.75 5.75 0 0 0-.63-.03 5.78 5.78 0 1 0 5.78 5.78V8.51a9.8 9.8 0 0 0 4.07 1.27V6.18a3.65 3.65 0 0 1-2.55-.62z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="f-support">
+        <h4>Support us</h4>
+        <p>If our work helps you, consider supporting the project.</p>
+        <div class="support-row">
+          <a class="btn support-btn" href="https://www.buymeacoffee.com/korirjpatr1" target="_blank" rel="noopener">Buy Me a Coffee</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> My Climate Definition</p>
+      <a href="#" class="backtop">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="./js/main.js" defer></script>
+</body>
+</html>
