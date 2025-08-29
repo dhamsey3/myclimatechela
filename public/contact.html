@@ -29,40 +29,64 @@
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- Organization structured data (no visible email) -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"My Climate Definition",
-    "url":"https://myclimatedefinition.org/",
-    "sameAs":[
-      "https://medium.com/@myclimatedefinition",
-      "https://x.com/cmdefinition",
-      "https://www.linkedin.com/company/my-climate-definition",
-      "https://instagram.com/myclimatedefinition",
-      "https://tiktok.com/@myclimatedefinition_"
-    ],
-    "logo":"https://myclimatedefinition.org/img/logo.png"
-  }
-  </script>
+  <!-- Page-local styles for collapsible menu -->
+  <style>
+    .nav-toggle{
+      display:none;
+      appearance:none; border:1px solid var(--border); background:#fff; color:#111;
+      width:40px; height:40px; border-radius:10px; cursor:pointer;
+      align-items:center; justify-content:center; line-height:0;
+      transition:transform .06s ease, box-shadow .12s ease, background .15s ease;
+    }
+    .nav-toggle:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.06); }
+    .nav-toggle .close{ display:none; }
+    .nav-toggle.is-open .hamb{ display:none; }
+    .nav-toggle.is-open .close{ display:block; }
+    @media (max-width: 860px){
+      .header-inner{ position:relative; }
+      .nav-toggle{ display:inline-flex; }
+      .nav{
+        position:absolute; top:calc(100% + 8px); right:0;
+        background:#fff; border:1px solid var(--border); border-radius:12px;
+        box-shadow:var(--shadow);
+        padding:.5rem; min-width: 180px;
+        display:flex; flex-direction:column; gap:.25rem;
+      }
+      .nav[aria-hidden="true"]{ display:none; }
+      .nav[aria-hidden="false"]{ display:flex; }
+      .nav a{ color:#111; padding:.55rem .65rem; border-radius:8px; text-decoration:none; }
+      .nav a:hover{ background:#f7f8fa; }
+    }
+    @media (min-width: 861px){
+      .nav{ display:flex !important; position:static; background:transparent; border:0; box-shadow:none; padding:0; flex-direction:row; gap:1rem; }
+      .nav a{ padding:.25rem .2rem; }
+      .nav-toggle{ display:none !important; }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="/" aria-label="My Climate Definition">
-        <img
-          id="logoImg"
-          class="header-logo-img"
-          src="/img/logo.png"
-          srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
-          alt="My Climate Definition logo"
-          decoding="async"
-          fetchpriority="high">
+        <img id="logoImg" class="header-logo-img"
+             src="/img/logo.png"
+             srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+             alt="My Climate Definition logo" decoding="async" fetchpriority="high">
         <span class="brand-text">My Climate Definition</span>
       </a>
 
-      <nav class="nav">
+      <!-- Mobile menu button -->
+      <button class="nav-toggle" aria-label="Open menu" aria-controls="site-nav" aria-expanded="false">
+        <svg class="hamb" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="close" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Collapsible nav -->
+      <nav id="site-nav" class="nav" aria-hidden="true">
         <a href="/">Home</a>
         <a href="/about.html">About</a>
         <a href="/contact.html" class="active">Contact</a>
@@ -75,7 +99,7 @@
       <h1 id="contact-title" class="section-title">Contact us</h1>
       <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
 
-      <!-- Form under the intro, full width -->
+      <!-- Full-width contact form (no in-page socials or email) -->
       <form class="card" id="contactForm"
             action="mailto:info@myclimatedefinition.org?subject=New%20message%20from%20My%20Climate%20Definition"
             method="POST" enctype="text/plain" aria-describedby="privacy-note">
@@ -83,12 +107,10 @@
           <label for="name">Your name</label>
           <input id="name" name="name" type="text" autocomplete="name" required>
         </div>
-
         <div class="form-field">
           <label for="email">Your email</label>
           <input id="email" name="email" type="email" autocomplete="email" required>
         </div>
-
         <div class="form-field">
           <label for="message">Message</label>
           <textarea id="message" name="message" rows="6" required></textarea>
@@ -117,20 +139,15 @@
     </section>
   </main>
 
-  <!-- Footer restored to the original structure -->
   <footer class="site-footer">
     <div class="container footer-grid">
-      <!-- Footer brand: real logo inline with tagline -->
       <div class="f-brand">
         <p class="f-tagline">
           <a href="/" aria-label="My Climate Definition" class="footer-logo">
-            <img
-              id="footerLogoImg"
-              class="footer-logo-img"
-              src="/img/logo.png"
-              srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
-              alt="My Climate Definition logo"
-              decoding="async">
+            <img id="footerLogoImg" class="footer-logo-img"
+                 src="/img/logo.png"
+                 srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+                 alt="My Climate Definition logo" decoding="async">
           </a>
           <span>Short notes on climate, sustainability, and everyday choices.</span>
         </p>
