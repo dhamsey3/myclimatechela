@@ -158,6 +158,70 @@ document.addEventListener('DOMContentLoaded', () => {
   retinaGuard('footerLogoImg');
 })();
 
+/* ========= Header: collapsible nav (Home/About/Contact) ========= */
+(() => {
+  const btn = document.querySelector('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  if (!btn || !nav) return; // header on some pages might not be updated yet
+
+  const mql = window.matchMedia('(min-width: 861px)');
+
+  function setOpen(open){
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    nav.setAttribute('aria-hidden', open ? 'false' : 'true');
+    btn.classList.toggle('is-open', open);
+  }
+
+  // Toggle on click
+  btn.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    setOpen(!isOpen);
+  });
+
+  // Close on ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+
+  // Close on link click (mobile)
+  nav.addEventListener('click', (e) => {
+    if (e.target.closest('a')) setOpen(false);
+  });
+
+  // Click outside to close (mobile)
+  document.addEventListener('click', (e) => {
+    if (mql.matches) return; // desktop
+    if (!nav.contains(e.target) && !btn.contains(e.target)) setOpen(false);
+  });
+
+  // Keep state in sync on resize
+  function sync(){
+    if (mql.matches){
+      btn.setAttribute('aria-expanded','false');
+      nav.removeAttribute('aria-hidden'); // always visible on desktop
+      btn.classList.remove('is-open');
+    } else {
+      nav.setAttribute('aria-hidden','true'); // closed by default on mobile
+    }
+  }
+  (mql.addEventListener ? mql.addEventListener('change', sync) : window.addEventListener('resize', sync));
+  sync();
+
+  // Optional: auto-mark active link if not set server-side
+  try {
+    const path = location.pathname.replace(/\/index\.html?$/,'/') || '/';
+    const links = nav.querySelectorAll('a[href]');
+    let hasActive = false;
+    links.forEach(a => { if (a.classList.contains('active')) hasActive = true; });
+    if (!hasActive){
+      links.forEach(a => {
+        const href = a.getAttribute('href');
+        if (href === path) a.classList.add('active');
+      });
+    }
+  } catch(_) {}
+})();
+
 /* ========= Contact form (works with mailto: or Formspree) ========= */
 (() => {
   const form = document.getElementById('contactForm');
@@ -182,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // If it's mailto:, let the browser handle it
     if (endpoint.startsWith('mailto:')) {
-      setStatus('Opening mail app…', 'polite');
+      setStatus('Opening your mail app…', 'polite');
       return; // do not preventDefault
     }
 
@@ -201,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
     } catch (err) {
       console.error('[contact] submit failed:', err);
-      setStatus('Couldn’t send. Please email us: info@myclimatedefinition.org', 'assertive');
+      setStatus('Couldn’t send. Please try again, or use the email link in the footer.', 'assertive');
     } finally {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
     }
