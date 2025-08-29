@@ -136,3 +136,134 @@ footer{border-top:1px solid var(--border); padding-top:2rem}
 /* Optional: smooth scroll and anchor offset if you link to on-page sections elsewhere */
 html { scroll-behavior: smooth; }
 :target { scroll-margin-top: 96px; }
+
+/* ===== Modern polish (non-breaking, layered on top) ===== */
+
+/* 1) Design tokens (add accent + refined neutrals) */
+:root{
+  --accent: #06b6d4;          /* cyan */
+  --accent-2: #3b82f6;        /* blue */
+  --text-strong:#0f172a;
+  --text-muted-2:#475569;
+}
+
+/* 2) Dark mode (keeps your layout; only swaps tokens) */
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg:#0b1220; --surface:#0f172a; --text:#e5e7eb; --muted:#9aa7b7; --border:#1f2937;
+    --shadow: 0 2px 10px rgba(0,0,0,.45);
+  }
+  body{ background:var(--bg); color:var(--text); }
+  .card, .hcard, .btn{ background: var(--surface); }
+  .hcard-text{ color:#cbd5e1; }
+  .hero{ box-shadow: 0 10px 24px rgba(0,0,0,.35); }
+  .btn{ border-color:#2b3340; }
+  .btn-primary{ border-color: transparent; }
+  .icon{ background: var(--surface); border-color:#2b3340; color: var(--text); }
+}
+
+/* 3) Global focus (professional, consistent) */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent);
+  border-color: color-mix(in oklab, var(--accent) 45%, #cbd5e1);
+}
+
+/* 4) Header nav: subtle active + hover underline */
+.nav a{
+  position: relative;
+  color:#475569;
+  transition: color .15s ease;
+}
+.nav a:hover{ color: var(--text-strong); }
+.nav a.active{
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.nav a::after{
+  content:"";
+  position:absolute; left:.1rem; right:.1rem; bottom:-6px;
+  height:2px; border-radius:2px;
+  background: color-mix(in oklab, var(--accent) 65%, var(--accent-2));
+  transform: scaleX(0); transform-origin: left; transition: transform .2s ease;
+}
+.nav a:hover::after, .nav a.active::after{ transform: scaleX(1); }
+
+/* 5) Buttons: softer, modern, with gradient primary */
+.btn{
+  border-radius: 999px;
+  padding: .65rem 1rem;
+  font-weight: 600;
+  transition: transform .06s ease, box-shadow .2s ease, filter .2s ease, background .2s ease;
+}
+.btn-primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color:#fff; border-color: transparent;
+  box-shadow: 0 10px 24px color-mix(in oklab, var(--accent-2) 25%, transparent);
+}
+.btn-primary:hover{ filter: brightness(1.06); }
+.btn-primary:active{ transform: translateY(1px); }
+
+/* 6) Forms: clearer hierarchy + friendly invalid state */
+.form-field label{ color: var(--text-strong); }
+.form-field input, .form-field textarea{
+  border-radius: 12px;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+  background: #fff;
+}
+@media (prefers-color-scheme: dark){
+  .form-field input, .form-field textarea{ background:#0b1220; }
+}
+.form-field input:focus, .form-field textarea:focus{
+  outline: none;
+  border-color: color-mix(in oklab, var(--accent) 50%, #cbd5e1);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent);
+}
+.form-field input:invalid, .form-field textarea:invalid{
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px color-mix(in oklab, #f97316 22%, transparent);
+}
+
+/* 7) Hero: make gradient tokens + slightly tighter look */
+.hero{
+  --g1: color-mix(in oklab, var(--accent) 25%, transparent);
+  --g2: color-mix(in oklab, var(--accent-2) 22%, transparent);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--g1), transparent 60%),
+    radial-gradient(900px 900px at 100% 0%, var(--g2), transparent 40%),
+    linear-gradient(180deg, #f6f8ff, #f9fbff);
+}
+@media (prefers-color-scheme: dark){
+  .hero{
+    background:
+      radial-gradient(1000px 500px at 10% -10%, color-mix(in oklab, var(--accent) 18%, transparent), transparent 60%),
+      radial-gradient(800px 600px at 100% 0%, color-mix(in oklab, var(--accent-2) 16%, transparent), transparent 45%),
+      linear-gradient(180deg, #0f172a, #0b1220);
+  }
+  .hero-sub{ color:#cbd5e1; }
+}
+
+/* 8) Cards: lighter borders, depth that reads “product” not “blog” */
+.card, .hcard{
+  border-color: color-mix(in oklab, var(--border) 70%, #d0d7e2);
+  box-shadow: 0 10px 20px rgba(2,6,23,.06);
+}
+@media (prefers-color-scheme: dark){
+  .card, .hcard{ box-shadow: 0 10px 20px rgba(0,0,0,.35); }
+}
+
+/* 9) Posts list: nicer title weight and spacing */
+.hcard-title{ font-size: 1.06rem; line-height:1.25; font-weight: 700; }
+.hcard-body p:last-child{ margin-bottom: 0; }
+
+/* 10) Footer: ensure logo doesn’t stretch + tidy alignment (keeps your sizes) */
+.header-logo-img, .footer-logo-img{
+  width:auto; height:auto; object-fit:contain; display:block;
+}
+.f-tagline{ display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+
+/* 11) Motion sensitivity: ease down transitions for users who prefer it */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+  .slide img:hover{ transform:none; }
+}
