@@ -4,31 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (y) y.textContent = new Date().getFullYear();
 });
 
-/* ========= Auto-highlight active nav link ========= */
-(() => {
-  const nav = document.querySelector('.nav');
-  if (!nav) return;
-  const links = Array.from(nav.querySelectorAll('a[href]'));
-
-  const normalize = (href) => {
-    try {
-      const u = new URL(href, location.origin);
-      let p = u.pathname.replace(/index\.html?$/i, '');
-      if (!p.endsWith('/')) p += '/';
-      return p;
-    } catch { return href; }
-  };
-
-  let current = location.pathname.replace(/index\.html?$/i, '');
-  if (!current.endsWith('/')) current += '/';
-
-  links.forEach(a => {
-    const p = normalize(a.getAttribute('href'));
-    const isMatch = (current === p) || (current.startsWith(p) && p !== '/');
-    a.classList.toggle('active', !!isMatch);
-  });
-})();
-
 /* ========= Slider (automatic, one at a time) ========= */
 (function () {
   const slider = document.querySelector('.slider');
@@ -170,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 
-/* ========= Retina safeguards for logos ========= */
+/* ========= Retina safeguards for logos (site-wide) ========= */
 (() => {
   function retinaGuard(id) {
     const img = document.getElementById(id);
@@ -183,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
   retinaGuard('footerLogoImg');
 })();
 
-/* ========= Contact form (progressive enhancement) ========= */
+/* ========= Contact form (works with mailto: or Formspree) ========= */
 (() => {
   const form = document.getElementById('contactForm');
   if (!form) return;
@@ -192,46 +167,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = form.querySelector('[type="submit"]');
   const honeypot = form.querySelector('#website'); // hidden anti-spam
 
-  const setStatus = (text, opts = {}) => {
+  const setStatus = (text, kind = 'polite') => {
     if (!status) return;
     status.textContent = text || '';
-    if (opts.polite) status.setAttribute('aria-live', 'polite');
-    if (opts.assertive) status.setAttribute('aria-live', 'assertive');
+    status.setAttribute('aria-live', kind === 'assertive' ? 'assertive' : 'polite');
   };
 
   form.addEventListener('submit', async (e) => {
-    // Honeypot: silently drop spam
+    // Block obvious bots
     if (honeypot && honeypot.value) { e.preventDefault(); return; }
 
     const endpoint = form.getAttribute('action') || '';
-    // If using mailto:, let the browser handle it
+    if (!endpoint) return;
+
+    // If it's mailto:, let the browser handle it
     if (endpoint.startsWith('mailto:')) {
-      setStatus('Opening mail client…', { polite: true });
-      return; // no preventDefault
+      setStatus('Opening mail app…', 'polite');
+      return; // do not preventDefault
     }
 
-    // Use fetch for XHR-friendly endpoints (e.g., Formspree)
+    // Otherwise (e.g., Formspree), POST via fetch
     e.preventDefault();
-    setStatus('Sending…', { polite: true });
+    setStatus('Sending…', 'polite');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
-
     try {
-      const fd = new FormData(form);
       const res = await fetch(endpoint, {
         method: 'POST',
-        body: fd,
+        body: new FormData(form),
         headers: { 'Accept': 'application/json' }
       });
-
-      if (!res.ok) throw new Error('Network response was not ok');
-
-      // Optional: check JSON for errors if your backend returns them
-      setStatus('Message sent! Thanks ✓', { assertive: true });
+      if (!res.ok) throw new Error('Bad response');
+      setStatus('Message sent! Thanks ✓', 'assertive');
       form.reset();
     } catch (err) {
       console.error('[contact] submit failed:', err);
-      const fallbackEmail = (form.querySelector('a[href^="mailto:"]')?.getAttribute('href') || '').replace('mailto:', '') || 'hello@example.com';
-      setStatus(`Couldn’t send. Please email us: ${fallbackEmail}`, { assertive: true });
+      setStatus('Couldn’t send. Please email us: info@myclimatedefinition.org', 'assertive');
     } finally {
       if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute('aria-busy'); }
     }

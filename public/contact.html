@@ -1,34 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJZR6VLZK0"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LJZR6VLZK0');</script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-LJZR6VLZK0');
+  </script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact — My Climate Definition</title>
   <meta name="description" content="Contact My Climate Definition — questions, ideas, or feedback." />
   <link rel="canonical" href="https://myclimatedefinition.org/contact.html" />
+
+  <!-- Icons / Manifest -->
   <link rel="icon" href="/img/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#0f172a">
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- Organization structured data -->
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Organization","name":"My Climate Definition","url":"https://myclimatedefinition.org/","sameAs":["https://medium.com/@myclimatedefinition","https://x.com/cmdefinition","https://www.linkedin.com/company/my-climate-definition","https://instagram.com/myclimatedefinition","https://tiktok.com/@myclimatedefinition_"],"email":"hello@example.com","logo":"https://myclimatedefinition.org/img/logo.png"}
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"My Climate Definition",
+    "url":"https://myclimatedefinition.org/",
+    "sameAs":[
+      "https://medium.com/@myclimatedefinition",
+      "https://x.com/cmdefinition",
+      "https://www.linkedin.com/company/my-climate-definition",
+      "https://instagram.com/myclimatedefinition",
+      "https://tiktok.com/@myclimatedefinition_"
+    ],
+    "email":"info@myclimatedefinition.org",
+    "logo":"https://myclimatedefinition.org/img/logo.png"
+  }
   </script>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="/" aria-label="My Climate Definition">
-        <img id="logoImg" class="header-logo-img" src="/img/logo.png" srcset="/img/logo@2x.png 2x, /img/logo.png 1x" alt="My Climate Definition logo" decoding="async" fetchpriority="high">
+        <img
+          id="logoImg"
+          class="header-logo-img"
+          src="/img/logo.png"
+          srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+          alt="My Climate Definition logo"
+          decoding="async"
+          fetchpriority="high">
         <span class="brand-text">My Climate Definition</span>
       </a>
+
       <nav class="nav">
-        <a href="/" class="">Home</a>
-        <a href="/about.html" class="">About</a>
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
         <a href="/contact.html" class="active">Contact</a>
       </nav>
     </div>
@@ -40,39 +77,52 @@
       <div class="grid-2">
         <div class="stack">
           <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
+
+          <!-- Contact details -->
           <div class="card">
             <ul class="contact-list">
               <li>📧 Email: <a href="mailto:info@myclimatedefinition.org">info@myclimatedefinition.org</a></li>
               <li>📰 Medium: <a href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener">/ @myclimatedefinition</a></li>
               <li>𝕏 X: <a href="https://x.com/cmdefinition" target="_blank" rel="noopener">@cmdefinition</a></li>
               <li>🔗 LinkedIn: <a href="https://www.linkedin.com/company/my-climate-definition" target="_blank" rel="noopener">Company page</a></li>
+              <li>📸 Instagram: <a href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener">@myclimatedefinition</a></li>
+              <li>🎵 TikTok: <a href="https://tiktok.com/@myclimatedefinition_" target="_blank" rel="noopener">@myclimatedefinition_</a></li>
             </ul>
           </div>
         </div>
 
-        <form class="card" id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+        <!-- Contact form: mailto fallback (works now); swap action to Formspree later if desired -->
+        <form class="card" id="contactForm"
+              action="mailto:info@myclimatedefinition.org?subject=New%20message%20from%20My%20Climate%20Definition"
+              method="POST" enctype="text/plain">
           <div class="form-field">
             <label for="name">Your name</label>
             <input id="name" name="name" type="text" autocomplete="name" required>
           </div>
+
           <div class="form-field">
             <label for="email">Your email</label>
             <input id="email" name="email" type="email" autocomplete="email" required>
           </div>
+
           <div class="form-field">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="6" required></textarea>
           </div>
+
+          <!-- Spam honeypot -->
           <div class="hidepot">
             <label for="website">Website</label>
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
+
           <div class="form-field">
             <label>
               <input type="checkbox" name="consent" required>
               I agree to be contacted about this inquiry.
             </label>
           </div>
+
           <div class="form-actions">
             <button class="btn btn-primary" type="submit">Send message</button>
             <span class="muted" id="formStatus" role="status" aria-live="polite"></span>
@@ -82,20 +132,64 @@
     </section>
   </main>
 
-  <!-- Same footer as index.html (copy/paste) -->
   <footer class="site-footer">
-    <!-- (copy your existing footer block here unchanged) -->
-    <div class="container footer-grid"> … (same as about.html) … </div>
+    <div class="container footer-grid">
+      <!-- Footer brand -->
+      <div class="f-brand">
+        <p class="f-tagline">
+          <a href="/" aria-label="My Climate Definition" class="footer-logo">
+            <img
+              id="footerLogoImg"
+              class="footer-logo-img"
+              src="/img/logo.png"
+              srcset="/img/logo@2x.png 2x, /img/logo.png 1x"
+              alt="My Climate Definition logo"
+              decoding="async">
+          </a>
+          <span>Short notes on climate, sustainability, and everyday choices.</span>
+        </p>
+      </div>
+
+      <div class="f-social">
+        <h4>Connect</h4>
+        <div class="socials">
+          <a class="icon email" href="mailto:info@myclimatedefinition.org" aria-label="Email">
+            <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
+            <svg viewBox="0 0 1044 593"><path d="M589 296c0 164-131 296-294 296S1 460 1 296 132 0 295 0s294 132 294 296zM873 296c0 154-66 280-147 280s-147-126-147-280S645 17 726 17s147 126 147 280zm171 0c0 142-23 256-52 256s-52-114-52-256S963 40 992 40s52 116 52 256z"/></svg>
+          </a>
+          <a class="icon twitter" href="https://x.com/cmdefinition" target="_blank" rel="noopener" aria-label="X">
+            <svg viewBox="0 0 24 24"><path d="M4 3h4.8l4.6 6.6L18.7 3H21l-6.8 9.5L21.3 21h-4.8l-5-7L9 21H6.7l6.8-9.5L4 3z"/></svg>
+          </a>
+          <a class="icon linkedin" href="https://www.linkedin.com/company/my-climate-definition" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
+          </a>
+          <a class="icon instagram" href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0z"/></svg>
+          </a>
+          <a class="icon tiktok" href="https://tiktok.com/@myclimatedefinition_" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.3 5.56c-.16-.1-.31-.2-.44-.26-.5-.27-.87-.57-1.14-.83C16.85 3.61 16.4 2.63 16.4 1.5V1h-3.55v14.7a2.16 2.16 0 1 1-4.31 0 2.16 2.16 0 0 1 2.78-2.06V9.93a5.75 5.75 0 0 0-.63-.03 5.78 5.78 0 1 0 5.78 5.78V8.51a9.8 9.8 0 0 0 4.07 1.27V6.18a3.65 3.65 0 0 1-2.55-.62z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="f-support">
+        <h4>Support us</h4>
+        <p>If our work helps you, consider supporting the project.</p>
+        <div class="support-row">
+          <a class="btn support-btn" href="https://www.buymeacoffee.com/korirjpatr1" target="_blank" rel="noopener">Buy Me a Coffee</a>
+        </div>
+      </div>
+    </div>
+
     <div class="container footer-bottom">
       <p>© <span id="year"></span> My Climate Definition</p>
       <a href="#" class="backtop">Back to top ↑</a>
     </div>
   </footer>
 
+  <!-- JS -->
   <script src="./js/main.js" defer></script>
-  <script>
-    (function(){var i=document.getElementById('logoImg');if(!i)return;var p=new Image();p.onerror=function(){i.removeAttribute('srcset');};p.src='/img/logo@2x.png?ts='+Date.now();})();
-    (function(){var i=document.getElementById('footerLogoImg');if(!i)return;var p=new Image();p.onerror=function(){i.removeAttribute('srcset');};p.src='/img/logo@2x.png?ts='+Date.now();})();
-  </script>
 </body>
 </html>
