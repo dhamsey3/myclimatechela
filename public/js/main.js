@@ -55,23 +55,24 @@ document.addEventListener('DOMContentLoaded', () => {
   go(0); start();
 })();
 
-/* ========= Render posts from posts.json (robust path) ========= */
+/* ========= Render posts from posts.json (pager optional & robust) ========= */
 (async function () {
   const POSTS_PER_PAGE = 3;
   let page = 0, posts = [];
 
   const list  = document.getElementById('posts');
+  if (!list) return; // only require the list container
+
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
-  if (!list || !pager || !older) return;
 
-  // Try URLs that work at root and in subfolders
+  // Try URLs that work at root and in subfolders; add cache-buster
   const candidates = [
     new URL('./posts.json', window.location.href),
     new URL('posts.json', window.location.href),
     new URL('/posts.json', window.location.origin),
   ];
-  candidates.forEach(u => u.searchParams.set('ts', Date.now())); // bust cache
+  candidates.forEach(u => u.searchParams.set('ts', Date.now()));
 
   async function fetchFirstOk(urls) {
     for (const u of urls) {
@@ -92,31 +93,34 @@ document.addEventListener('DOMContentLoaded', () => {
   posts = await fetchFirstOk(candidates);
 
   if (!posts || !posts.length) {
-    list.innerHTML = '<p style="color:#666">No posts yet. Check back soon.</p>';
-    pager.hidden = true;
+    list.innerHTML = '<p class="muted">No posts yet. Check back soon.</p>';
+    if (pager) pager.hidden = true;
     return;
   }
 
   const dateFmt = new Intl.DateTimeFormat(undefined, { year:'numeric', month:'short', day:'numeric' });
-  const esc = (s) => (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const esc = (s='') => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   function card(p) {
-    const url = p.external_url || p.permalink || '#';
+    const url = p.url || p.external_url || p.permalink || '#';
     const title = esc(p.title || 'Untitled');
-    const img = p.image
-      ? `<a class="hcard-media" href="${url}" target="_blank" rel="noopener nofollow">
-           <img src="${p.image}" alt="${title}" loading="lazy">
+    const imgHTML = p.image
+      ? `<a class="hcard-media" href="${esc(url)}" target="_blank" rel="noopener nofollow">
+           <img src="${esc(p.image)}" alt="" loading="lazy" decoding="async">
          </a>`
-      : `<a class="hcard-media placeholder" href="${url}" target="_blank" rel="noopener nofollow"><div></div></a>`;
+      : `<a class="hcard-media placeholder" href="${esc(url)}" target="_blank" rel="noopener nofollow"><div></div></a>`;
+
+    const dt = p.date ? dateFmt.format(new Date(p.date)) : '';
+    const excerpt = esc(p.summary || p.excerpt || '');
 
     return `
       <article class="hcard">
-        ${img}
+        ${imgHTML}
         <div class="hcard-body">
-          <h3 class="hcard-title"><a href="${url}" target="_blank" rel="noopener nofollow">${title}</a></h3>
-          <small class="hcard-meta">${p.date ? dateFmt.format(new Date(p.date)) : ''}</small>
-          <p class="hcard-text">${esc(p.summary || '')}</p>
-          ${url && url !== '#' ? `<p><a class="btn" href="${url}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
+          <h3 class="hcard-title"><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${title}</a></h3>
+          ${dt ? `<small class="hcard-meta">${dt}</small>` : ''}
+          ${excerpt ? `<p class="hcard-text">${excerpt}</p>` : ''}
+          ${url && url !== '#' ? `<p><a class="btn" href="${esc(url)}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
         </div>
       </article>`;
   }
@@ -124,14 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderPage() {
     const start = page * POSTS_PER_PAGE;
     const slice = posts.slice(start, start + POSTS_PER_PAGE);
-    if (!slice.length) { pager.hidden = true; return; }
+    if (!slice.length) { if (pager) pager.hidden = true; return; }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
-    pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
+    if (pager) pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
   }
 
-  pager.hidden = posts.length <= POSTS_PER_PAGE;
-  older.addEventListener('click', renderPage, { passive: true });
+  if (pager) pager.hidden = posts.length <= POSTS_PER_PAGE;
+  if (older) older.addEventListener('click', renderPage, { passive: true });
   renderPage();
 })();
 
@@ -222,14 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch(_) {}
 })();
 
-/* ========= Contact form (works with mailto: or Formspree) ========= */
+/* ========= Contact form (FormSubmit or mailto) ========= */
 (() => {
   const form = document.getElementById('contactForm');
   if (!form) return;
 
   const status = document.getElementById('formStatus');
   const submitBtn = form.querySelector('[type="submit"]');
-  const honeypot = form.querySelector('#website'); // hidden anti-spam
+  const honeypot = form.querySelector('#_honey'); // hidden anti-spam
 
   const setStatus = (text, kind = 'polite') => {
     if (!status) return;
@@ -250,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return; // do not preventDefault
     }
 
-    // Otherwise (e.g., Formspree), POST via fetch
+    // Otherwise POST via fetch (FormSubmit, Formspree, etc.)
     e.preventDefault();
     setStatus('Sending…', 'polite');
     if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute('aria-busy', 'true'); }
