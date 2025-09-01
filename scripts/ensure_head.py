@@ -28,7 +28,7 @@ block = f"""<!-- BEGIN AUTO-HEAD -->
 <link rel="icon" type="image/png" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#00c4cc">
 <!-- END AUTO-HEAD -->"""
 
 # Remove any previous AUTO-HEAD block (idempotent)
