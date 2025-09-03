@@ -17,8 +17,8 @@
   :root{
     --bg:#0b0d17;
     --surface:#1f2937;
-    --text:#f1f5f9;
-    --muted:#9ca3af;
+    --text:#f8f9fa;
+    --muted:#adb5bd;
     --border:#374151;
     --shadow:0 2px 10px rgba(0,0,0,.5);
     --brand:#00c4cc;
@@ -183,8 +183,8 @@ body{
 .hcard-media.placeholder div{width:100%; height:100%; min-height:120px; border-radius:10px; background:#f1f3f5}
 .hcard a{text-decoration:none; color:inherit}
 .hcard-title{margin:0 0 .25rem; font-size:1.1rem}
-.hcard-meta{color:#666; display:block; margin-bottom:.4rem}
-.hcard-text{margin:0 0 .5rem; color:#333; line-height:1.6}
+.hcard-meta{color:var(--muted); display:block; margin-bottom:.4rem}
+.hcard-text{margin:0 0 .5rem; color:var(--text); line-height:1.6}
 .hcard-share{display:flex; gap:.5rem; margin-top:.5rem; flex-wrap:wrap}
 .hcard-share .icon{width:32px; height:32px; border-radius:8px}
 .icon.share-btn:hover{background:var(--brand); color:var(--brand-ink); border-color:var(--brand)}
