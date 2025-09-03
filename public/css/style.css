@@ -185,6 +185,9 @@ body{
 .hcard-title{margin:0 0 .25rem; font-size:1.1rem}
 .hcard-meta{color:#666; display:block; margin-bottom:.4rem}
 .hcard-text{margin:0 0 .5rem; color:#333; line-height:1.6}
+.hcard-share{display:flex; gap:.5rem; margin-top:.5rem; flex-wrap:wrap}
+.hcard-share .icon{width:32px; height:32px; border-radius:8px}
+.icon.share-btn:hover{background:var(--brand); color:var(--brand-ink); border-color:var(--brand)}
 @media (max-width:700px){ .hcard{grid-template-columns:1fr} }
 
 /* Pager */
