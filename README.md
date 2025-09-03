@@ -200,6 +200,25 @@ Then `public/js/main.js`:
 * Use **absolute paths** for production assets (e.g. `/css/style.css`, `/js/main.js`, `/img/logo.png`) — best for Pages + custom domains.
 * For quick local checks, relative paths also work if you serve from `public/`.
 
+### Spacing utilities
+
+`public/css/style.css` includes margin-top helpers in 0.25&nbsp;rem increments.
+Use these classes instead of inline styles to keep layouts consistent:
+
+| Class | Margin top |
+|-------|------------|
+| `.mt-0` | `0` |
+| `.mt-1` | `0.25rem` |
+| `.mt-2` | `0.5rem` |
+| `.mt-3` | `0.75rem` |
+| `.mt-4` | `1rem` |
+| `.mt-5` | `1.25rem` |
+| `.mt-6` | `1.5rem` |
+| `.mt-7` | `1.75rem` |
+| `.mt-8` | `2rem` |
+
+Extend the scale as needed following the same pattern.
+
 ---
 
 ## Requirements
