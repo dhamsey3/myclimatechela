@@ -4,6 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (y) y.textContent = new Date().getFullYear();
 });
 
+/* ========= Theme: track system preference ========= */
+(() => {
+  const mql = window.matchMedia('(prefers-color-scheme: dark)');
+  const root = document.documentElement;
+  const apply = (e) => {
+    root.dataset.theme = e.matches ? 'dark' : 'light';
+    root.style.colorScheme = e.matches ? 'dark' : 'light';
+  };
+  apply(mql);
+  if (mql.addEventListener) mql.addEventListener('change', apply); else mql.addListener(apply);
+})();
+
 /* ========= Slider (automatic, one at a time) ========= */
 (function () {
   const slider = document.querySelector('.slider');
