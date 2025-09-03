@@ -84,6 +84,20 @@ if ('serviceWorker' in navigator) {
   const list  = document.getElementById('posts');
   if (!list) return; // only require the list container
 
+  // Share button handler (Web Share API with fallback)
+  list.addEventListener('click', (e) => {
+    const btn = e.target.closest('.share-btn');
+    if (!btn) return;
+    const url = btn.dataset.url;
+    const title = btn.dataset.title || document.title;
+    if (navigator.share) {
+      navigator.share({ title, url }).catch(err => console.warn('[share] failed:', err));
+    } else {
+      const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+      window.open(shareUrl, '_blank', 'noopener');
+    }
+  });
+
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
   const search = document.getElementById('search');
@@ -129,7 +143,8 @@ if ('serviceWorker' in navigator) {
 
   function card(p) {
     const url = p.url || p.external_url || p.permalink || '#';
-    const title = esc(p.title || 'Untitled');
+    const rawTitle = p.title || 'Untitled';
+    const title = esc(rawTitle);
     const imgHTML = p.image
       ? `<a class="hcard-media" href="${esc(url)}" target="_blank" rel="noopener nofollow">
            <img src="${esc(p.image)}" alt="" loading="lazy" decoding="async">
@@ -147,6 +162,18 @@ if ('serviceWorker' in navigator) {
           ${dt ? `<small class="hcard-meta">${dt}</small>` : ''}
           ${excerpt ? `<p class="hcard-text">${excerpt}</p>` : ''}
           ${url && url !== '#' ? `<p><a class="btn" href="${esc(url)}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
+          ${url && url !== '#' ? `
+            <div class="hcard-share">
+              <button type="button" class="icon share-btn" data-url="${esc(url)}" data-title="${esc(rawTitle)}" aria-label="Share this post">
+                <svg viewBox="0 0 24 24"><path d="M4 12v8h16v-8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M16 6l-4-4-4 4" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M12 2v13" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              </button>
+              <a class="icon twitter" href="https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(rawTitle)}" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                <svg viewBox="0 0 24 24"><path d="M4 3h4.8l4.6 6.6L18.7 3H21l-6.8 9.5L21.3 21h-4.8l-5-7L9 21H6.7l6.8-9.5L4 3z"/></svg>
+              </a>
+              <a class="icon linkedin" href="https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(rawTitle)}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
+              </a>
+            </div>` : ''}
         </div>
       </article>`;
   }
