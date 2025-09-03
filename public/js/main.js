@@ -70,13 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ========= Render posts from posts.json (pager optional & robust) ========= */
 (async function () {
   const POSTS_PER_PAGE = 3;
-  let page = 0, posts = [];
+  let page = 0, posts = [], filtered = [];
 
   const list  = document.getElementById('posts');
   if (!list) return; // only require the list container
 
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
+  const search = document.getElementById('search');
+
+  const params = new URLSearchParams(window.location.search);
+  const initialQuery = params.get('q') || '';
+  if (search && initialQuery) search.value = initialQuery;
 
   // Try URLs that work at root and in subfolders; add cache-buster
   const candidates = [
@@ -137,18 +142,40 @@ document.addEventListener('DOMContentLoaded', () => {
       </article>`;
   }
 
-  function renderPage() {
+  function renderPage(reset = false) {
+    if (reset) { page = 0; list.innerHTML = ''; }
     const start = page * POSTS_PER_PAGE;
-    const slice = posts.slice(start, start + POSTS_PER_PAGE);
-    if (!slice.length) { if (pager) pager.hidden = true; return; }
+    const slice = filtered.slice(start, start + POSTS_PER_PAGE);
+    if (!slice.length) {
+      if (pager) pager.hidden = true;
+      if (reset) list.innerHTML = '<p class="muted">No posts found.</p>';
+      return;
+    }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
-    if (pager) pager.hidden = !(page * POSTS_PER_PAGE < posts.length);
+    if (pager) pager.hidden = !(page * POSTS_PER_PAGE < filtered.length);
   }
 
-  if (pager) pager.hidden = posts.length <= POSTS_PER_PAGE;
-  if (older) older.addEventListener('click', renderPage, { passive: true });
-  renderPage();
+  function applyFilters() {
+    const q = search ? search.value.trim().toLowerCase() : '';
+    const p = new URLSearchParams(window.location.search);
+    const t = p.get('tags');
+    const tags = t ? t.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : [];
+
+    filtered = posts.filter(post => {
+      const text = `${post.title || ''} ${(post.summary || post.excerpt || '')}`.toLowerCase();
+      const matchesQuery = !q || text.includes(q);
+      const postTags = (post.tags || []).map(tag => tag.toLowerCase());
+      const matchesTags = !tags.length || tags.every(tag => postTags.includes(tag));
+      return matchesQuery && matchesTags;
+    });
+
+    renderPage(true);
+  }
+
+  if (search) search.addEventListener('input', applyFilters, { passive: true });
+  if (older) older.addEventListener('click', () => renderPage(), { passive: true });
+  applyFilters();
 })();
 
 /* ========= Smooth back-to-top ========= */
