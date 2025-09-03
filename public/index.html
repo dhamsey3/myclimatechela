@@ -45,43 +45,6 @@
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- Page-local styles for collapsible menu -->
-  <style>
-    .nav-toggle{
-      display:none;
-      appearance:none; border:1px solid var(--border); background:#fff; color:#111;
-      width:40px; height:40px; border-radius:10px; cursor:pointer;
-      align-items:center; justify-content:center; line-height:0;
-      transition:transform .06s ease, box-shadow .12s ease, background .15s ease;
-    }
-    .nav-toggle:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.06); }
-    .nav-toggle .close{ display:none; }
-    .nav-toggle.is-open .hamb{ display:none; }
-    .nav-toggle.is-open .close{ display:block; }
-
-    @media (max-width: 860px){
-      .header-inner{ position:relative; }
-      .nav-toggle{ display:inline-flex; }
-      .nav{
-        position:absolute; top:calc(100% + 8px); right:0;
-        background:#fff; border:1px solid var(--border); border-radius:12px;
-        box-shadow:var(--shadow);
-        padding:.5rem; min-width: 180px;
-        display:flex; flex-direction:column; gap:.25rem;
-      }
-      .nav[aria-hidden="true"]{ display:none; }
-      .nav[aria-hidden="false"]{ display:flex; }
-      .nav a{
-        color:#111; padding:.55rem .65rem; border-radius:8px; text-decoration:none;
-      }
-      .nav a:hover{ background:#f7f8fa; }
-    }
-    @media (min-width: 861px){
-      .nav{ display:flex !important; position:static; background:transparent; border:0; box-shadow:none; padding:0; flex-direction:row; gap:1rem; }
-      .nav a{ padding:.25rem .2rem; }
-      .nav-toggle{ display:none !important; }
-    }
-  </style>
 </head>
 
 <body>
