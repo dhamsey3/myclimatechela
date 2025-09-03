@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
+import argparse
 import re, html, textwrap, time, datetime, json, pathlib, sys, random
 import feedparser, requests
-
-FEED = "https://medium.com/feed/@myclimatedefinition"
-out = pathlib.Path("public/posts.json")
-out.parent.mkdir(parents=True, exist_ok=True)
 
 def clean(s):
     return html.unescape(re.sub("<.*?>","", s or "")).strip()
@@ -54,7 +51,10 @@ def fetch_feed_with_retries(url, headers, attempts=5, base_delay=3):
                     wait = base_delay * i
                 jitter = random.uniform(0, 1.5)
                 wait = min(60, wait + jitter)
-                print(f"[build_posts] Got {r.status_code}. Backing off {wait:.1f}s (attempt {i}/{attempts})...", file=sys.stderr)
+                print(
+                    f"[build_posts] Got {r.status_code}. Backing off {wait:.1f}s (attempt {i}/{attempts})...",
+                    file=sys.stderr,
+                )
                 time.sleep(wait)
                 continue
             r.raise_for_status()
@@ -62,51 +62,87 @@ def fetch_feed_with_retries(url, headers, attempts=5, base_delay=3):
         except Exception as e:
             last_exc = e
             wait = min(60, base_delay * i + random.uniform(0, 1.5))
-            print(f"[build_posts] Fetch failed: {e} — retrying in {wait:.1f}s (attempt {i}/{attempts})", file=sys.stderr)
+            print(
+                f"[build_posts] Fetch failed: {e} — retrying in {wait:.1f}s (attempt {i}/{attempts})",
+                file=sys.stderr,
+            )
             time.sleep(wait)
     if last_exc:
         raise last_exc
     raise RuntimeError("Unknown fetch failure")
 
-items = []
-try:
-    content = fetch_feed_with_retries(FEED, headers)
-    feed = feedparser.parse(content)
-    for e in getattr(feed, "entries", []):
-        link = e.get("link", "#")
-        summary_txt = textwrap.shorten(clean(e.get("summary","")), 220)
-        items.append({
-            "title": e.get("title","Untitled"),
-            "permalink": link,
-            "external_url": link,
-            "url": link,                 # alias many frontends expect
-            "excerpt": summary_txt,      # alias of summary
-            "summary": summary_txt,
-            "date": to_iso(e.get("published_parsed") or e.get("updated_parsed")),
-            "image": extract_image(e),
-        })
 
-except requests.HTTPError as e:
-    # If we hit a hard HTTP error (e.g., 429) after retries, preserve the last good file
-    print(f"[build_posts] ERROR fetching feed: {e}", file=sys.stderr)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--feed",
+        default="https://medium.com/feed/@myclimatedefinition",
+        help="RSS feed URL",
+    )
+    parser.add_argument(
+        "--out",
+        default="public/posts.json",
+        help="Output file path",
+    )
+    args = parser.parse_args()
 
-except Exception as e:
-    print(f"[build_posts] ERROR: {e}", file=sys.stderr)
+    out = pathlib.Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
 
-# If nothing fetched, try to keep previous file to avoid empty homepage
-if not items:
-    if out.exists() and out.stat().st_size > 2:
-        print("[build_posts] No new items; keeping previous posts.json", file=sys.stderr)
-        # Touch file to update mtime so downstream steps see it's present
-        ts = json.loads(out.read_text(encoding="utf-8"))
-        print(f"[build_posts] Previous posts count: {len(ts) if isinstance(ts, list) else 'unknown'}")
-        sys.exit(0)
-    else:
-        # Absolute fallback: write empty list (homepage will show no posts, but build won’t crash)
-        out.write_text("[]", encoding="utf-8")
-        print(f"[build_posts] Wrote 0 posts to {out}")
-        sys.exit(0)
+    items = []
+    try:
+        content = fetch_feed_with_retries(args.feed, headers)
+        feed = feedparser.parse(content)
+        for e in getattr(feed, "entries", []):
+            link = e.get("link", "#")
+            summary_txt = textwrap.shorten(clean(e.get("summary", "")), 220)
+            items.append(
+                {
+                    "title": e.get("title", "Untitled"),
+                    "permalink": link,
+                    "external_url": link,
+                    "url": link,  # alias many frontends expect
+                    "excerpt": summary_txt,  # alias of summary
+                    "summary": summary_txt,
+                    "date": to_iso(
+                        e.get("published_parsed") or e.get("updated_parsed")
+                    ),
+                    "image": extract_image(e),
+                }
+            )
 
-# Write fresh file
-out.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8")
-print(f"[build_posts] Wrote {len(items)} posts to {out}")
+    except requests.HTTPError as e:
+        # If we hit a hard HTTP error (e.g., 429) after retries, preserve the last good file
+        print(f"[build_posts] ERROR fetching feed: {e}", file=sys.stderr)
+
+    except Exception as e:
+        print(f"[build_posts] ERROR: {e}", file=sys.stderr)
+
+    # If nothing fetched, try to keep previous file to avoid empty homepage
+    if not items:
+        if out.exists() and out.stat().st_size > 2:
+            print(
+                "[build_posts] No new items; keeping previous posts.json",
+                file=sys.stderr,
+            )
+            # Touch file to update mtime so downstream steps see it's present
+            ts = json.loads(out.read_text(encoding="utf-8"))
+            print(
+                f"[build_posts] Previous posts count: {len(ts) if isinstance(ts, list) else 'unknown'}"
+            )
+            sys.exit(0)
+        else:
+            # Absolute fallback: write empty list (homepage will show no posts, but build won’t crash)
+            out.write_text("[]", encoding="utf-8")
+            print(f"[build_posts] Wrote 0 posts to {out}")
+            sys.exit(0)
+
+    # Write fresh file
+    out.write_text(
+        json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(f"[build_posts] Wrote {len(items)} posts to {out}")
+
+
+if __name__ == "__main__":
+    main()
