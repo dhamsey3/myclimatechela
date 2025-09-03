@@ -87,6 +87,20 @@ body{
 .slider-dots button{width:8px; height:8px; border-radius:50%; border:0; background:#cfcfcf; cursor:pointer}
 .slider-dots button.active{background:var(--brand)}
 
+@media (prefers-color-scheme: dark){
+  .hero{
+    background: radial-gradient(1200px 600px at 10% -10%, rgba(82,132,255,.15), transparent 60%),
+                radial-gradient(900px 900px at 100% 0%, rgba(108,230,180,.1), transparent 40%),
+                linear-gradient(180deg, #1e293b, #0f172a);
+  }
+  .hero-sub{color:var(--muted);}
+  .slider-btn{
+    background:rgba(0,0,0,.55);
+    box-shadow:0 2px 8px rgba(0,0,0,.4);
+    color:var(--text);
+  }
+}
+
 /* Posts list */
 .hlist{display:grid; gap:1rem}
 .hcard{display:grid; grid-template-columns:180px 1fr; gap:1rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); padding:1rem; box-shadow:0 2px 6px rgba(0,0,0,.03)}
