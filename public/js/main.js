@@ -4,6 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (y) y.textContent = new Date().getFullYear();
 });
 
+/* ========= Service Worker registration ========= */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => {
+      console.warn('[sw] registration failed:', err);
+    });
+  });
+}
+
 /* ========= Theme: track system preference ========= */
 (() => {
   const mql = window.matchMedia('(prefers-color-scheme: dark)');
