@@ -211,23 +211,5 @@
 
   <!-- JS -->
   <script src="./js/main.js" defer></script>
-
-  <!-- Retina safeguards: if @2x is missing, keep base logo -->
-  <script>
-    (function(){
-      var img = document.getElementById('logoImg');
-      if (!img) return;
-      var probe = new Image();
-      probe.onerror = function(){ img.removeAttribute('srcset'); };
-      probe.src = '/img/logo@2x.png?ts=' + Date.now();
-    })();
-    (function(){
-      var img = document.getElementById('footerLogoImg');
-      if (!img) return;
-      var probe = new Image();
-      probe.onerror = function(){ img.removeAttribute('srcset'); };
-      probe.src = '/img/logo@2x.png?ts=' + Date.now();
-    })();
-  </script>
 </body>
 </html>
