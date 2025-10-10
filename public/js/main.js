@@ -13,16 +13,57 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-/* ========= Theme: track system preference ========= */
+/* ========= Theme preference (system/light/dark with persistence) ========= */
 (() => {
-  const mql = window.matchMedia('(prefers-color-scheme: dark)');
   const root = document.documentElement;
-  const apply = (e) => {
-    root.dataset.theme = e.matches ? 'dark' : 'light';
-    root.style.colorScheme = e.matches ? 'dark' : 'light';
-  };
-  apply(mql);
-  if (mql.addEventListener) mql.addEventListener('change', apply); else mql.addListener(apply);
+  const storageKey = 'theme-preference';
+  const systemQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function getStoredMode() {
+    const stored = localStorage.getItem(storageKey);
+    return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
+  }
+
+  function effectiveTheme(mode) {
+    if (mode === 'light' || mode === 'dark') return mode;
+    return systemQuery.matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(mode) {
+    const theme = effectiveTheme(mode);
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.dataset.mode = mode;
+      const label = `Theme: ${mode[0].toUpperCase()}${mode.slice(1)}`;
+      btn.setAttribute('aria-label', label);
+      btn.title = label;
+    });
+  }
+
+  function setMode(mode) {
+    localStorage.setItem(storageKey, mode);
+    applyTheme(mode);
+  }
+
+  // Sync on system change if in system mode
+  const onSystemChange = () => { if (getStoredMode() === 'system') applyTheme('system'); };
+  systemQuery.addEventListener ? systemQuery.addEventListener('change', onSystemChange) : systemQuery.addListener(onSystemChange);
+
+  // Initialize
+  applyTheme(getStoredMode());
+
+  // Wire up buttons (supports multiple pages)
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const order = ['system', 'light', 'dark'];
+        const current = getStoredMode();
+        const next = order[(order.indexOf(current) + 1) % order.length];
+        setMode(next);
+      }, { passive: true });
+    });
+  });
 })();
 
 /* ========= Slider (automatic, one at a time) ========= */
@@ -73,13 +114,62 @@ if ('serviceWorker' in navigator) {
   slider.addEventListener('mouseleave', start, { passive: true });
   window.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
 
+  // Pointer swipe/drag support
+  const viewport = slider.querySelector('.slider-viewport');
+  if (viewport) {
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragDeltaX = 0;
+
+    function thresholdPx() { return viewport.clientWidth * 0.15; }
+
+    function onPointerDown(e) {
+      if (e.button !== undefined && e.button !== 0) return; // left/mouse only
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragDeltaX = 0;
+      viewport.setPointerCapture && viewport.setPointerCapture(e.pointerId);
+      slider.dataset.dragging = 'true';
+      track.style.transition = 'none';
+      stop();
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      dragDeltaX = e.clientX - dragStartX;
+      // Prevent image drag/scroll while swiping
+      if (Math.abs(dragDeltaX) > 2) e.preventDefault();
+      track.style.transform = `translateX(calc(${-i * 100}% + ${dragDeltaX}px))`;
+    }
+
+    function endDrag() {
+      if (!isDragging) return;
+      const dx = dragDeltaX;
+      isDragging = false;
+      slider.dataset.dragging = 'false';
+      track.style.transition = '';
+      if (Math.abs(dx) > thresholdPx()) {
+        go(i + (dx < 0 ? 1 : -1));
+      } else {
+        go(i);
+      }
+      start();
+    }
+
+    viewport.addEventListener('pointerdown', onPointerDown);
+    viewport.addEventListener('pointermove', onPointerMove);
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('pointerleave', () => { if (isDragging) endDrag(); });
+  }
+
   go(0); start();
 })();
 
 /* ========= Render posts from posts.json (pager optional & robust) ========= */
 (async function () {
   const POSTS_PER_PAGE = 3;
-  let page = 0, posts = [], filtered = [];
+  let page = 0, posts = [], filtered = [], isLoading = true;
 
   const list  = document.getElementById('posts');
   if (!list) return; // only require the list container
@@ -101,6 +191,8 @@ if ('serviceWorker' in navigator) {
   const pager = document.getElementById('pager');
   const older = document.getElementById('older');
   const search = document.getElementById('search');
+  const clearBtn = document.getElementById('clearSearch');
+  const resultCount = document.getElementById('resultCount');
 
   const params = new URLSearchParams(window.location.search);
   const initialQuery = params.get('q') || '';
@@ -130,13 +222,30 @@ if ('serviceWorker' in navigator) {
     return null;
   }
 
-  posts = await fetchFirstOk(candidates);
-
-  if (!posts || !posts.length) {
-    list.innerHTML = '<p class="muted">No posts yet. Check back soon.</p>';
+  // Skeleton loading placeholders while fetching
+  function renderSkeletonCards(count = 3) {
+    const s = [];
+    for (let k = 0; k < count; k++) {
+      s.push(`
+        <article class="hcard skeleton">
+          <a class="hcard-media placeholder"><div></div></a>
+          <div class="hcard-body">
+            <div class="skeleton-line" style="width:60%; height:18px; margin:4px 0 10px"></div>
+            <div class="skeleton-line" style="width:30%; height:12px; margin:6px 0 14px"></div>
+            <div class="skeleton-line" style="width:95%; margin:6px 0"></div>
+            <div class="skeleton-line" style="width:88%; margin:6px 0"></div>
+            <div class="skeleton-line" style="width:72%; margin:6px 0"></div>
+          </div>
+        </article>`);
+    }
+    list.innerHTML = s.join('');
     if (pager) pager.hidden = true;
-    return;
   }
+
+  renderSkeletonCards(3);
+
+  posts = (await fetchFirstOk(candidates)) || [];
+  isLoading = false;
 
   const dateFmt = new Intl.DateTimeFormat(undefined, { year:'numeric', month:'short', day:'numeric' });
   const esc = (s='') => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -178,21 +287,47 @@ if ('serviceWorker' in navigator) {
       </article>`;
   }
 
+  // Reveal-on-scroll
+  let cardObserver;
+  function getObserver() {
+    if (cardObserver) return cardObserver;
+    cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          entry.target.dataset.revealed = '1';
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
+    return cardObserver;
+  }
+
+  function observeNewCards() {
+    const obs = getObserver();
+    list.querySelectorAll('.hcard:not([data-revealed])').forEach(card => {
+      card.classList.add('will-reveal');
+      obs.observe(card);
+    });
+  }
+
   function renderPage(reset = false) {
     if (reset) { page = 0; list.innerHTML = ''; }
     const start = page * POSTS_PER_PAGE;
     const slice = filtered.slice(start, start + POSTS_PER_PAGE);
     if (!slice.length) {
       if (pager) pager.hidden = true;
-      if (reset) list.innerHTML = '<p class="muted">No posts found.</p>';
+      if (reset) list.innerHTML = `<p class="muted">${posts.length ? 'No posts found.' : 'No posts yet. Check back soon.'}</p>`;
       return;
     }
     list.insertAdjacentHTML('beforeend', slice.map(card).join(''));
     page++;
     if (pager) pager.hidden = !(page * POSTS_PER_PAGE < filtered.length);
+    observeNewCards();
   }
 
   function applyFilters() {
+    if (isLoading) return; // keep skeletons until data arrives
     const q = search ? search.value.trim().toLowerCase() : '';
     const p = new URLSearchParams(window.location.search);
     const t = p.get('tags');
@@ -205,12 +340,28 @@ if ('serviceWorker' in navigator) {
       const matchesTags = !tags.length || tags.every(tag => postTags.includes(tag));
       return matchesQuery && matchesTags;
     });
+    // Result count and clear visibility
+    if (resultCount) {
+      const count = filtered.length;
+      resultCount.textContent = q || tags.length ? (count ? `${count} result${count !== 1 ? 's' : ''}` : 'No results') : '';
+    }
+    if (clearBtn) { clearBtn.hidden = !q; }
 
     renderPage(true);
   }
 
   if (search) search.addEventListener('input', applyFilters, { passive: true });
+  if (clearBtn && search) clearBtn.addEventListener('click', () => { search.value = ''; applyFilters(); }, { passive: true });
   if (older) older.addEventListener('click', () => renderPage(), { passive: true });
+  // Keyboard shortcut: '/' to focus search
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      if (document.activeElement && (/input|textarea|select/i).test(document.activeElement.tagName)) return;
+      if (search) { e.preventDefault(); search.focus(); }
+    }
+  });
+
+  // Now that posts are loaded, apply filters to render first page
   applyFilters();
 })();
 
