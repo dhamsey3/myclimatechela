@@ -161,7 +161,7 @@ if ('serviceWorker' in navigator) {
           <h3 class="hcard-title"><a href="${esc(url)}" target="_blank" rel="noopener nofollow">${title}</a></h3>
           ${dt ? `<small class="hcard-meta">${dt}</small>` : ''}
           ${excerpt ? `<p class="hcard-text">${excerpt}</p>` : ''}
-          ${url && url !== '#' ? `<p><a class="btn" href="${esc(url)}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
+          ${url && url !== '#' ? `<p><a class="btn btn-secondary" href="${esc(url)}" target="_blank" rel="noopener nofollow">Read on Medium →</a></p>` : ''}
           ${url && url !== '#' ? `
             <div class="hcard-share">
               <button type="button" class="icon share-btn" data-url="${esc(url)}" data-title="${esc(rawTitle)}" aria-label="Share this post">
@@ -174,6 +174,9 @@ if ('serviceWorker' in navigator) {
                 <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
               </a>
             </div>` : ''}
+          ${(p.tags && p.tags.length) ? `
+            <div class="hcard-tags">${p.tags.map(t => `<span class="tag-badge">${esc(t)}</span>`).join('')}</div>
+          ` : ''}
         </div>
       </article>`;
   }
@@ -212,6 +215,43 @@ if ('serviceWorker' in navigator) {
   if (search) search.addEventListener('input', applyFilters, { passive: true });
   if (older) older.addEventListener('click', () => renderPage(), { passive: true });
   applyFilters();
+
+  // Reveal-on-scroll: observe inserted .hcard elements and add .revealed
+  (function setupReveal(){
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      // Immediately reveal all cards
+      const un = () => document.querySelectorAll('.hcard').forEach(el => el.classList.remove('reveal'));
+      // run once after initial render cycle
+      requestAnimationFrame(() => setTimeout(un, 60));
+      return;
+    }
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    // Observe any current and future cards
+    const watch = () => {
+      document.querySelectorAll('.hcard').forEach(el => {
+        if (!el.classList.contains('revealed')) {
+          el.classList.add('reveal');
+          obs.observe(el);
+        }
+      });
+    };
+
+    // Observe after each renderPage run (simple polling hook)
+    const mo = new MutationObserver(watch);
+    mo.observe(list, { childList: true, subtree: false });
+    // initial
+    watch();
+  })();
 })();
 
 /* ========= Smooth back-to-top ========= */

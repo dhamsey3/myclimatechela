@@ -62,8 +62,31 @@
 
   <main class="container">
     <section class="section contact" aria-labelledby="contact-title">
-      <h1 id="contact-title" class="section-title">Contact us</h1>
-      <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
+      <div class="page-hero">
+        <div>
+          <h1 id="contact-title" class="section-title">Contact us</h1>
+          <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
+        </div>
+        <div>
+          <a class="btn btn-secondary" href="/about.html">About →</a>
+        </div>
+        <div class="hero-graphic" aria-hidden="true">
+          <!-- Decorative inline SVG: globe motif for contact page -->
+          <svg width="220" height="180" viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="g2" x1="0" x2="1">
+                <stop offset="0%" stop-color="#3aa17e" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#2b9ea3" stop-opacity="0.9"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="220" height="180" rx="12" fill="url(#g2)" opacity="0.08"/>
+            <g transform="translate(26,14)">
+              <circle cx="70" cy="70" r="48" fill="#0b6b5a" opacity="0.85" />
+              <path d="M70 22 C88 38 92 60 70 80 C48 60 52 38 70 22 Z" fill="#29a37f" opacity="0.95" />
+            </g>
+          </svg>
+        </div>
+      </div>
 
       <!-- FormSubmit-powered contact form -->
       <form class="card" id="contactForm"
