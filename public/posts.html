@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All posts — My Climate Definition</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/" aria-label="My Climate Definition">
+        <img id="logoImg" class="header-logo-img" src="/img/logo.png" alt="logo">
+        <span class="brand-text">My Climate Definition</span>
+      </a>
+      <nav id="site-nav" class="nav" aria-hidden="false">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="section-title">All posts</h1>
+    <div class="search-bar">
+      <input id="search" type="search" placeholder="Search posts…" aria-label="Search posts" />
+    </div>
+    <div id="posts" class="hlist"></div>
+    <nav class="pager" id="pager" hidden>
+      <button id="older" class="btn">Older »</button>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> My Climate Definition</p>
+      <a href="/" class="backtop">Back to home</a>
+    </div>
+  </footer>
+
+  <script src="./js/main.js" defer></script>
+</body>
+</html>

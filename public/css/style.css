@@ -1,6 +1,7 @@
 :root{
   /* Base */
   --bg:#fbfdff;
+  --bg-alt: #f7fbfc;
   --surface:#ffffff;
   --text:#0f1720;
   --muted:#5b6b74;
@@ -25,6 +26,7 @@
 @media (prefers-color-scheme: dark){
   :root{
     --bg:#05060a;
+    --bg-alt: #07101a;
     --surface:#0f1720;
     --text:#e6eef6;
     --muted:#9aa7b2;
@@ -34,6 +36,20 @@
     --brand-ink:#001014;
     --brand-focus:color-mix(in srgb, var(--brand) 60%, white 40%);
   }
+}
+
+/* Also allow explicit JS-driven theme via data-theme on root */
+:root[data-theme='dark']{
+  --bg:#05060a;
+  --bg-alt: #07101a;
+  --surface:#0f1720;
+  --text:#e6eef6;
+  --muted:#9aa7b2;
+  --border:#11202a;
+  --shadow:0 8px 30px rgba(2,6,23,0.6);
+  --brand:#0fb9b8;
+  --brand-ink:#001014;
+  --brand-focus:color-mix(in srgb, var(--brand) 60%, white 40%);
 }
 *{box-sizing:border-box}
 body{
