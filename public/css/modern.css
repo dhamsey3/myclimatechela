@@ -119,3 +119,8 @@ html { scroll-behavior: smooth; }
 @media (max-width:900px){ .mc-backtop{right:12px; bottom:16px} }
 
 @media (prefers-reduced-motion: reduce){ .mc-backtop{ transition:none !important } }
+
+/* Toast for quick confirmations (share copy) */
+.mc-toast{position:fixed; left:50%; transform:translateX(-50%) translateY(8px); bottom:18px; background:rgba(0,0,0,0.85); color:#fff; padding:.5rem .9rem; border-radius:999px; font-size:.92rem; z-index:120; opacity:0; pointer-events:none; transition:opacity .18s ease, transform .18s ease}
+.mc-toast.show{opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto}
+@media (prefers-reduced-motion: reduce){ .mc-toast{ transition:none !important } }

@@ -50,16 +50,88 @@
 
   // Floating share container for desktop
   function initFloatingShare(){
+    // Remove existing if any
+    const existing = document.querySelector('.mc-share-float');
+    if (existing) existing.remove();
     if (window.innerWidth < 900) return;
-    if (document.querySelector('.mc-share-float')) return;
+
     const container = document.createElement('div');
     container.className = 'mc-share-float';
-    container.innerHTML = `
-      <button class="share-btn" aria-label="Share" title="Share">🔗</button>
-      <a class="share-btn" href="#" aria-label="Share on X" title="Share on X">X</a>
-      <a class="share-btn" href="#" aria-label="Share on LinkedIn" title="Share on LinkedIn">in</a>
-    `;
+
+    function makeShareButtons(){
+      container.innerHTML = '';
+      const pageUrl = window.location.href;
+      const pageTitle = document.title || '';
+
+      // main share button
+      const mainBtn = document.createElement('button');
+      mainBtn.className = 'share-btn';
+      mainBtn.type = 'button';
+      mainBtn.setAttribute('aria-label','Share');
+      mainBtn.title = 'Share';
+      mainBtn.textContent = '🔗';
+      mainBtn.addEventListener('click', async () => {
+        if (navigator.share) {
+          try { await navigator.share({ title: pageTitle, url: pageUrl }); return; } catch(e){}
+        }
+        try {
+          await navigator.clipboard.writeText(pageUrl);
+          mainBtn.title = 'Link copied';
+          showShareToast('Link copied to clipboard');
+          setTimeout(() => mainBtn.title = 'Share', 1400);
+        } catch {
+          window.open(pageUrl, '_blank', 'noopener');
+        }
+      });
+
+      const tw = document.createElement('a');
+      tw.className = 'share-btn'; tw.setAttribute('aria-label','Share on X'); tw.title = 'Share on X';
+      tw.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`;
+      tw.target = '_blank'; tw.rel = 'noopener'; tw.textContent = 'X';
+
+      const ln = document.createElement('a');
+      ln.className = 'share-btn'; ln.setAttribute('aria-label','Share on LinkedIn'); ln.title = 'Share on LinkedIn';
+      ln.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
+      ln.target = '_blank'; ln.rel = 'noopener'; ln.textContent = 'in';
+
+      container.appendChild(mainBtn);
+      container.appendChild(tw);
+      container.appendChild(ln);
+    }
+
+    makeShareButtons();
     try { document.body.appendChild(container); } catch(e) { /* ignore */ }
+
+    // Recreate on resize so it appears/disappears at the correct breakpoints
+    let resizeTimer;
+    function onResize(){
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth < 900){ const ex = document.querySelector('.mc-share-float'); if (ex) ex.remove(); }
+        else { if (!document.querySelector('.mc-share-float')) initFloatingShare(); }
+      }, 200);
+    }
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+  }
+
+  // Small toast for copy/share confirmations (re-usable)
+  function showShareToast(message){
+    try {
+      let toast = document.querySelector('.mc-toast');
+      if (!toast){
+        toast = document.createElement('div');
+        toast.className = 'mc-toast';
+        toast.setAttribute('role','status');
+        toast.setAttribute('aria-live','polite');
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      // ensure it's visible
+      toast.classList.add('show');
+      if (toast._hideTimer) clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(() => { toast.classList.remove('show'); }, 1700);
+    } catch(e){ /* non-fatal */ }
   }
 
   // Build a simple TOC for articles (h2/h3) and add accessible smooth focus behavior
