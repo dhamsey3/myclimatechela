@@ -1,0 +1,121 @@
+:root{
+  /* additional brand accents for modern theme */
+  --accent-saffron: #ffb554;
+  --accent-indigo: #3944ff;
+  --accent-earth: #2e6b4b;
+  --mc-hero-radius: 18px;
+
+  /* Motion timing tokens */
+  --motion-fast: 160ms;
+  --motion-medium: 320ms;
+  --motion-ease: cubic-bezier(.2,.9,.2,1);
+}
+
+/* Only apply when body opts into new theme */
+body.mc-theme-v2 {
+  --brand: var(--accent-indigo);
+  --brand-dark: color-mix(in srgb, var(--accent-indigo) 75%, black 25%);
+}
+
+/* Split hero (mobile-first) */
+.mc-hero{display:grid; gap:1rem; padding:1.25rem; border-radius:var(--mc-hero-radius); background:linear-gradient(180deg, rgba(57,68,255,0.04), rgba(15,185,184,0.03)); border:1px solid var(--border);}
+.mc-hero__inner{display:grid; gap:.75rem}
+.mc-hero__kicker{display:inline-block; font-weight:700; color:var(--accent-earth); background:rgba(46,107,75,0.06); padding:.15rem .5rem; border-radius:999px; font-size:.9rem}
+.mc-hero h1{font-family:'Merriweather', Georgia, serif; font-size:clamp(1.8rem,3.2vw,2.8rem); margin:0; color:var(--text)}
+.mc-hero p.lead{color:var(--muted); margin:0; font-size:1.05rem}
+.mc-hero__actions{display:flex; gap:.5rem; margin-top:.6rem}
+.mc-hero__visual{min-height:160px; border-radius:12px; background:linear-gradient(135deg, rgba(57,68,255,0.06), rgba(255,181,84,0.04)); display:flex; align-items:center; justify-content:center; overflow:hidden}
+
+/* Decorative hero graphic container (used on about/contact) */
+.hero-graphic{display:flex; align-items:center; justify-content:center; width:100%; max-width:220px; margin:0 auto}
+.hero-graphic svg{width:100%; height:auto; max-height:120px; display:block}
+
+@media (min-width:900px){
+  .hero-graphic{max-width:200px}
+  .hero-graphic svg{max-height:110px}
+}
+
+@media (max-width:520px){
+  .hero-graphic{max-width:180px}
+  .hero-graphic svg{max-height:90px; opacity:0.92}
+}
+
+/* Ensure the hero graphic doesn't overpower text on narrow viewports */
+@media (max-width:900px){
+  .mc-hero .hero-graphic{order:3; opacity:0.96}
+}
+
+@media(min-width:900px){
+  .mc-hero{grid-template-columns:1fr 40%; align-items:center}
+  .mc-hero__visual{min-height:220px}
+}
+
+/* Feature cards grid */
+.mc-grid{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr))}
+.mc-card{background:linear-gradient(180deg,var(--surface),var(--bg-alt)); border:1px solid var(--border); border-radius:14px; padding:1rem; transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;}
+.mc-card:hover,.mc-card:focus-within{transform:translateY(-6px); box-shadow:0 20px 40px rgba(16,24,40,0.08)}
+.mc-card .mc-thumb{width:100%; height:140px; border-radius:10px; object-fit:cover; display:block}
+.mc-card h3{margin:.5rem 0 0; font-size:1.05rem}
+.mc-card p{color:var(--muted); margin:.4rem 0 0}
+
+/* CTA band */
+.mc-cta-band{display:flex; gap:1rem; align-items:center; justify-content:space-between; padding:1rem; border-radius:14px; background:linear-gradient(90deg, rgba(255,181,84,0.12), rgba(57,68,255,0.04)); border:1px solid var(--border)}
+.mc-cta-band .mc-news{display:flex; gap:.5rem; width:100%; max-width:520px}
+.mc-cta-band input[type="email"]{flex:1; padding:.55rem .75rem; border-radius:10px; border:1px solid var(--border)}
+
+/* Chips */
+.chip{display:inline-flex; align-items:center; gap:.4rem; padding:.25rem .5rem; border-radius:999px; background:rgba(81,99,255,0.06); color:var(--muted); font-size:.85rem; border:1px solid transparent}
+.chip[aria-pressed="true"]{background:linear-gradient(90deg, rgba(57,68,255,0.12), rgba(15,185,184,0.04)); color:var(--text); font-weight:700}
+
+/* Floating share skeleton (desktop only) */
+.mc-share-float{position:fixed; right:18px; top:35%; display:flex; flex-direction:column; gap:.5rem; z-index:60}
+.mc-share-float .share-btn{width:44px; height:44px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; background:var(--surface); border:1px solid var(--border)}
+@media(max-width:900px){ .mc-share-float{display:none} }
+
+/* Micro hover / focus */
+.mc-card,
+.btn, .icon {
+  transition: transform var(--motion-fast) var(--motion-ease),
+              box-shadow var(--motion-fast) var(--motion-ease),
+              background-color var(--motion-fast) var(--motion-ease);
+}
+.mc-card:hover,
+.mc-card:focus-within { transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 34px rgba(16,24,40,0.10); }
+.btn:active, .icon:active { transform: translateY(-2px) scale(.995); }
+
+/* Focus-visible (keyboard) */
+:focus-visible { outline: 3px solid var(--brand-focus); outline-offset: 3px; }
+
+/* Reveal / stagger */
+.reveal-stagger { opacity: 0; transform: translateY(12px); transition: opacity .6s var(--motion-ease), transform .6s var(--motion-ease); }
+.revealed { opacity: 1; transform: none; }
+
+/* Chip press */
+.chip { transition: transform var(--motion-fast) var(--motion-ease), background-color var(--motion-fast) var(--motion-ease); }
+.chip:active { transform: translateY(1px) scale(.995); }
+
+/* Smooth anchor scrolling (native where supported) */
+html { scroll-behavior: smooth; }
+
+/* Hero ambient drift (very subtle) */
+@keyframes mc-hero-drift {
+  0% { transform: translateY(0) translateZ(0); }
+  50% { transform: translateY(-8px) translateZ(0); }
+  100% { transform: translateY(0) translateZ(0); }
+}
+.mc-hero__layer { animation: mc-hero-drift 18s linear infinite; opacity:.95; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mc-hero__layer, .reveal-stagger, .mc-card, .btn, .icon { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* Floating Back-to-top button */
+.mc-backtop{position:fixed; right:18px; bottom:22px; z-index:70; display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:12px; background:var(--surface); border:1px solid var(--border); box-shadow:0 6px 18px rgba(16,24,40,0.08); cursor:pointer; transform:translateY(8px); opacity:0; pointer-events:none; transition:opacity .22s ease, transform .22s ease}
+.mc-backtop.visible{opacity:1; transform:translateY(0); pointer-events:auto}
+.mc-backtop svg{width:18px; height:18px; display:block}
+.mc-backtop:focus{outline:3px solid var(--brand-focus); outline-offset:3px}
+@media (max-width:900px){ .mc-backtop{right:12px; bottom:16px} }
+
+@media (prefers-reduced-motion: reduce){ .mc-backtop{ transition:none !important } }

@@ -44,10 +44,12 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
+  <!-- Optional modern theme (enable by adding class="mc-theme-v2" to <body>) -->
+  <link rel="stylesheet" href="./css/modern.css" />
 
 </head>
 
-<body>
+<body class="mc-theme-v2">
   <header class="site-header">
     <div class="container header-inner">
       <!-- Brand -->
@@ -82,15 +84,28 @@
   </header>
 
   <main class="container">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-inner">
-        <h1>Climate & Everyday Choices</h1>
-        <p class="hero-sub">Stories, definitions, and experiments in sustainability.</p>
-        <p>
-          <a class="btn btn-primary" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener">Follow on Medium →</a>
-          <a class="btn btn-secondary" href="/about.html" style="margin-left:.5rem">About →</a>
-        </p>
+    <!-- HERO (modern theme opt-in: body.mc-theme-v2 activates mc-hero styles) -->
+    <section class="hero mc-hero">
+      <div class="mc-hero__inner">
+        <small class="mc-hero__kicker">New series</small>
+        <h1>What Climate Means to Everyday Life</h1>
+        <p class="lead hero-sub">Stories, definitions, and experiments in sustainability — practical, hopeful, and urgent.</p>
+        <div class="mc-hero__actions">
+          <a class="btn btn-primary" href="/posts.html">Explore stories</a>
+          <a class="btn btn-secondary" href="/about.html">About</a>
+        </div>
+      </div>
+      <div class="mc-hero__visual" aria-hidden="true">
+        <!-- Decorative layered SVG or image can go here; keep empty for progressive enhancement -->
+        <svg width="100%" height="100%" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0" stop-color="#3944ff" stop-opacity="0.12" />
+              <stop offset="1" stop-color="#ffb554" stop-opacity="0.06" />
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#g1)" rx="12"/>
+        </svg>
       </div>
     </section>
 
@@ -142,9 +157,7 @@
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
-          <a class="icon email" href="mailto:info@myclimatedefinition.org" aria-label="Email">
-            <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <!-- email contact removed per request -->
           <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
             <svg viewBox="0 0 1044 593"><path d="M589 296c0 164-131 296-294 296S1 460 1 296 132 0 295 0s294 132 294 296zM873 296c0 154-66 280-147 280s-147-126-147-280S645 17 726 17s147 126 147 280zm171 0c0 142-23 256-52 256s-52-114-52-256S963 40 992 40s52 116 52 256z"/></svg>
           </a>
@@ -180,5 +193,6 @@
 
   <!-- JS -->
   <script src="./js/main.js" defer></script>
+  <script src="./js/ui-enhancements.js" defer></script>
 </body>
 </html>

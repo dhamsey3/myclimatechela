@@ -28,9 +28,10 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/modern.css" />
 
 </head>
-<body>
+<body class="mc-theme-v2">
   <header class="site-header">
     <div class="container header-inner">
       <a class="logo" href="/" aria-label="My Climate Definition">
@@ -67,7 +68,7 @@
           <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
         </div>
         <div>
-          <a class="btn btn-secondary" href="/about.html">About →</a>
+          <a class="btn btn-primary" href="/about.html">About →</a>
         </div>
         <div class="hero-graphic" aria-hidden="true">
           <!-- Decorative inline SVG: globe motif for contact page -->
@@ -87,10 +88,10 @@
         </div>
       </div>
 
-      <!-- FormSubmit-powered contact form -->
-      <form class="card" id="contactForm"
-            action="https://formsubmit.co/ajax/info@myclimatedefinition.org"
-            method="POST" aria-describedby="privacy-note">
+  <!-- FormSubmit-powered contact form (non-AJAX) -->
+  <form class="card" id="contactForm"
+    action="https://formsubmit.co/info@myclimatedefinition.org"
+    method="POST" aria-describedby="privacy-note">
 
         <div class="form-field">
           <label for="name">Your name</label>
@@ -114,8 +115,10 @@
         </div>
 
         <!-- Optional metadata -->
-        <input type="hidden" name="_subject" value="New message from My Climate Definition">
-        <input type="hidden" name="_replyto" value="">
+  <input type="hidden" name="_subject" value="New message from My Climate Definition">
+  <input type="hidden" name="_replyto" value="">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="/thank-you.html">
 
         <div class="form-field">
           <label>
@@ -150,9 +153,7 @@
       <div class="f-social">
         <h4>Connect</h4>
         <div class="socials">
-          <a class="icon email" href="mailto:info@myclimatedefinition.org" aria-label="Email">
-            <svg viewBox="0 0 24 24"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm0 0l8 6 8-6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
+          <!-- email contact removed per request -->
           <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
             <svg viewBox="0 0 1044 593"><path d="M589 296c0 164-131 296-294 296S1 460 1 296 132 0 295 0s294 132 294 296zM873 296c0 154-66 280-147 280s-147-126-147-280S645 17 726 17s147 126 147 280zm171 0c0 142-23 256-52 256s-52-114-52-256S963 40 992 40s52 116 52 256z"/></svg>
           </a>
@@ -187,60 +188,7 @@
   </footer>
 
   <!-- JS -->
-  <script>
-    // Accessible, async FormSubmit submit
-    (function () {
-      const form = document.getElementById('contactForm');
-      const status = document.getElementById('formStatus');
-      const replyto = form.querySelector('input[name="_replyto"]');
-
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        status.textContent = 'Sending…';
-
-        // Keep _replyto in sync with user email for easier replying
-        const emailInput = document.getElementById('email');
-        if (replyto && emailInput) replyto.value = emailInput.value;
-
-        // Honeypot check
-        const pot = document.getElementById('_honey');
-        if (pot && pot.value) {
-          status.textContent = '';
-          return; // silently drop bots
-        }
-
-        const data = new FormData(form);
-
-        try {
-          const res = await fetch(form.action, {
-            method: 'POST',
-            body: data,
-            headers: { 'Accept': 'application/json' }
-          });
-
-          if (res.ok) {
-            form.reset();
-            status.classList.remove('error');
-            status.classList.add('success');
-            status.textContent = 'Thanks! Your message has been sent.';
-          } else {
-            const out = await res.json().catch(() => ({}));
-            const msg = out.message || (out.errors?.map(e => e.message).join(', ')) || 'Something went wrong. Please try again.';
-            status.classList.remove('success');
-            status.classList.add('error');
-            status.textContent = msg;
-          }
-        } catch {
-          status.classList.remove('success');
-          status.classList.add('error');
-          status.textContent = 'Network error. Please try again.';
-        }
-      });
-
-      // Auto-fill footer year
-      document.getElementById('year').textContent = new Date().getFullYear();
-    })();
-  </script>
+  <script src="./js/ui-enhancements.js" defer></script>
   <script src="./js/main.js" defer></script>
 </body>
 </html>

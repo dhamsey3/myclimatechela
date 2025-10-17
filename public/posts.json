@@ -1,7 +1,8 @@
 [
   {
     "title": "Welcome to My Climate Definition",
-    "url": "https://example.com/welcome",
+    "url": "/posts/welcome-to-my-climate-definition/",
+    "original_url": "https://example.com/welcome",
     "image": "/img/slide1.png",
     "date": "2023-10-01",
     "summary": "Introductory post for offline demo.",
@@ -9,7 +10,8 @@
   },
   {
     "title": "Sustainability Tips",
-    "url": "https://example.com/sustainability",
+    "url": "/posts/sustainability-tips/",
+    "original_url": "https://example.com/sustainability",
     "image": "/img/slide2.png",
     "date": "2023-11-15",
     "summary": "Practical sustainability tips.",
