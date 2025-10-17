@@ -174,37 +174,9 @@
 
   // Reduced-motion toggle persisted to localStorage
   function initReducedMotionToggle(){
-    const key = 'mc:reducedMotion';
-    const header = document.querySelector('.site-header');
-    if (!header) return;
-    const btn = document.createElement('button');
-    btn.className = 'mc-rm-toggle';
-    btn.type = 'button';
-    btn.setAttribute('aria-pressed', 'false');
-    btn.setAttribute('aria-label', 'Toggle reduced motion');
-    btn.title = 'Toggle reduced motion';
-    btn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2v4M12 18v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M2 12h4M18 12h4M4.2 19.8l2.8-2.8M17 7l2.8-2.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
-
-    btn.addEventListener('click', () => {
-      const cur = localStorage.getItem(key) === '1';
-      if (cur){
-        localStorage.removeItem(key);
-        document.documentElement.removeAttribute('data-reduced-motion');
-        btn.setAttribute('aria-pressed','false');
-      } else {
-        localStorage.setItem(key,'1');
-        document.documentElement.setAttribute('data-reduced-motion','1');
-        btn.setAttribute('aria-pressed','true');
-      }
-    });
-
-    if (localStorage.getItem(key) === '1'){
-      document.documentElement.setAttribute('data-reduced-motion','1');
-      btn.setAttribute('aria-pressed','true');
-    }
-
-    const inner = header.querySelector('.header-inner') || header;
-    inner.appendChild(btn);
+    // Reduced-motion toggle intentionally disabled for now to avoid adding an extra
+    // control in the header. Kept as a noop so the rest of the module can call it.
+    return;
   }
 
   function initAll(){ setupStaggerReveal(); initFloatingShare(); buildTOC(); initReducedMotionToggle(); }

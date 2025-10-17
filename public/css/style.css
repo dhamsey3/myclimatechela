@@ -145,6 +145,9 @@ body{
   .nav-toggle{display:none !important}
 }
 
+/* Hide the reduced-motion toggle control when present (small header icon) */
+.mc-rm-toggle{display:none !important}
+
 /* Hero */
 .hero{border-radius:20px; padding:3.25rem 1.5rem; margin:0 0 1.5rem;
   background: radial-gradient(900px 450px at 10% -10%, rgba(81,99,255,0.12), transparent 50%),
