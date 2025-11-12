@@ -29,22 +29,22 @@ const ClimateHomepage = () => {
   const carouselImages: CarouselImage[] = [
     {
       id: 1,
-      url: '/img/slide1.png',
+      url: './img/slide1.png',
       alt: 'Climate action slide 1',
     },
     {
       id: 2,
-      url: '/img/slide2.png',
+      url: './img/slide2.png',
       alt: 'Climate action slide 2',
     },
     {
       id: 3,
-      url: '/img/slide3.png',
+      url: './img/slide3.png',
       alt: 'Climate action slide 3',
     },
     {
       id: 4,
-      url: '/img/slide4.png',
+      url: './img/slide4.png',
       alt: 'Climate action slide 4',
     },
   ];
@@ -53,33 +53,24 @@ const ClimateHomepage = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
-    // Load posts from your existing posts.json file
-    fetch('/posts.json')
+    // Fetch blog posts from your Medium RSS or local JSON
+    fetch('./posts.json')
       .then(response => response.json())
-      .then(data => {
-        // Transform Medium feed data to match the interface
-        const transformedPosts = data.slice(0, 4).map((post: any, index: number) => {
-          // Format date from ISO string to readable format
-          let formattedDate = 'Recent';
-          if (post.date) {
-            try {
-              const dateObj = new Date(post.date);
-              formattedDate = dateObj.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              });
-            } catch (e) {
-              console.warn('Could not parse date:', post.date);
-            }
-          }
-
+      .then((posts: any[]) => {
+        const transformedPosts: BlogPost[] = posts.slice(0, 6).map((post, index) => {
+          const date = new Date(post.date);
+          const formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
           return {
             id: index + 1,
-            title: post.title || 'Climate Article',
+            title: post.title,
             date: formattedDate,
             preview: post.summary || post.excerpt || 'Discover insights about climate action and sustainability.',
-            image: post.image || `/img/slide${(index % 4) + 1}.png`, // Use your slide images as fallback
+            image: post.image || `./img/slide${(index % 4) + 1}.png`, // Use your slide images as fallback
             mediumLink: post.external_url || post.permalink || post.url || '#'
           };
         });
@@ -94,7 +85,7 @@ const ClimateHomepage = () => {
             title: 'Understanding Carbon Footprints in Daily Life',
             date: 'March 15, 2024',
             preview: 'Explore how everyday choices impact our carbon footprint and discover practical ways to reduce environmental impact through conscious living.',
-            image: '/img/slide1.png',
+            image: './img/slide1.png',
             mediumLink: '/posts/sustainability-tips/',
           },
           {
@@ -102,7 +93,7 @@ const ClimateHomepage = () => {
             title: 'Sustainable Living: Small Changes, Big Impact',
             date: 'March 10, 2024',
             preview: 'Learn about simple lifestyle adjustments that can make a significant difference in creating a more sustainable future for our planet.',
-            image: '/img/slide2.png',
+            image: './img/slide2.png',
             mediumLink: '/posts/welcome-to-my-climate-definition/',
           }
         ]);
