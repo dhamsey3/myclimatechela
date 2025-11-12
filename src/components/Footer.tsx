@@ -17,17 +17,19 @@ const Footer = () => {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
-  const handleInternalNavigation = (url: string) => {
-    console.log('Handling internal navigation to:', url);
-    navigate(url);
+  const handleHomeNavigation = () => {
+    console.log('Navigating to Home');
+    navigate('/');
   };
 
-  const handleLatestPosts = () => {
-    console.log('Navigating to latest posts');
-    navigate('/');
-    setTimeout(() => {
-      document.querySelector('#posts')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+  const handleAboutNavigation = () => {
+    console.log('Navigating to About');
+    navigate('/about');
+  };
+
+  const handleContactNavigation = () => {
+    console.log('Navigating to Contact');
+    navigate('/contact');
   };
 
   const handleExternalLink = (url: string) => {
@@ -72,7 +74,6 @@ const Footer = () => {
     {
       title: 'Resources',
       links: [
-        { label: 'Latest Posts', url: '/', type: 'internal' },
         { label: 'Medium Blog', url: 'https://medium.com/@myclimatedefinition', type: 'external' }
       ]
     }
@@ -139,13 +140,23 @@ const Footer = () => {
                       className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 text-left p-0 bg-transparent border-none cursor-pointer font-normal hover:underline transition-colors"
                       onClick={(e) => {
                         e.preventDefault();
+                        console.log('Footer link clicked:', link.label);
                         
-                        if (link.label === 'Latest Posts') {
-                          handleLatestPosts();
-                        } else if (link.type === 'internal') {
-                          handleInternalNavigation(link.url);
-                        } else if (link.url.startsWith('http')) {
-                          handleExternalLink(link.url);
+                        switch (link.label) {
+                          case 'Home':
+                            handleHomeNavigation();
+                            break;
+                          case 'About Us':
+                            handleAboutNavigation();
+                            break;
+                          case 'Contact':
+                            handleContactNavigation();
+                            break;
+                          case 'Medium Blog':
+                            handleExternalLink(link.url);
+                            break;
+                          default:
+                            console.log('Unknown link:', link.label);
                         }
                       }}
                     >
