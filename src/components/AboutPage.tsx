@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
+import Footer from './Footer';
+import BuyMeACoffee from './BuyMeACoffee';
 import { ArrowRight, Leaf, Globe, Users, Heart, Shield, Lightbulb } from 'lucide-react';
 
 const AboutPage = () => {
@@ -193,6 +195,15 @@ const AboutPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Support Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="max-w-md mx-auto">
+          <BuyMeACoffee variant="card" />
+        </div>
+      </section>
+      
+      <Footer />
     </div>
   );
 };

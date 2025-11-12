@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
+import Footer from './Footer';
+import BuyMeACoffee from './BuyMeACoffee';
 import { ArrowRight, Mail, MessageCircle, Send, Twitter, Globe, CheckCircle } from 'lucide-react';
 
 const ContactPage = () => {
@@ -305,7 +307,16 @@ const ContactPage = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Support Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-md mx-auto">
+            <BuyMeACoffee variant="card" />
+          </div>
+        </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };
