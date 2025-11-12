@@ -59,10 +59,17 @@ jobs:
 
       - name: Verify React build
         run: |
-          test -f dist/index.html
-          test -f dist/assets/index-*.css
-          test -f dist/assets/index-*.js
-          test -f public/posts.json
+          echo "=== Checking required files ==="
+          test -f dist/index.html && echo "✅ dist/index.html exists"
+          test -f public/posts.json && echo "✅ public/posts.json exists"
+          
+          echo "=== Checking CSS files ==="
+          ls -la dist/assets/*.css && echo "✅ CSS files found"
+          
+          echo "=== Checking JS files ==="
+          ls -la dist/assets/*.js && echo "✅ JS files found"
+          
+          echo "✅ All required files verified!"
 
       - name: Debug listing
         run: |
