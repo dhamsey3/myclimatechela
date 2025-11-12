@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LJZR6VLZK0"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js',new Date());
+    gtag('config','G-LJZR6VLZK0');
+  </script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact — My Climate Definition</title>
+  <meta name="description" content="Contact My Climate Definition with questions, ideas, or feedback." />
+  <link rel="canonical" href="https://myclimatedefinition.org/contact.html" />
+
+  <!-- Icons / Manifest -->
+  <link rel="icon" href="/img/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#00c4cc">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/modern.css" />
+
+</head>
+<body class="mc-theme-v2">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/" aria-label="My Climate Definition">
+     <img id="logoImg" class="header-logo-img"
+       src="/img/logo.png"
+       width="1250" height="1250" loading="eager" decoding="async" fetchpriority="high" alt="My Climate Definition logo">
+        <span class="brand-text">My Climate Definition</span>
+      </a>
+
+      <!-- Mobile menu button -->
+      <button class="nav-toggle" aria-label="Open menu" aria-controls="site-nav" aria-expanded="false">
+        <svg class="hamb" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="close" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6l-12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Collapsible nav -->
+      <nav id="site-nav" class="nav" aria-hidden="true">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html" class="active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section contact" aria-labelledby="contact-title">
+      <div class="page-hero">
+        <div>
+          <h1 id="contact-title" class="section-title">Contact us</h1>
+          <p class="lead">Questions, ideas, or feedback? Send us a note — we read every message.</p>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="/about.html">About →</a>
+        </div>
+        <div class="hero-graphic" aria-hidden="true">
+          <!-- Decorative inline SVG: globe motif for contact page -->
+          <svg width="220" height="180" viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="g2" x1="0" x2="1">
+                <stop offset="0%" stop-color="#3aa17e" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#2b9ea3" stop-opacity="0.9"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="220" height="180" rx="12" fill="url(#g2)" opacity="0.08"/>
+            <g transform="translate(26,14)">
+              <circle cx="70" cy="70" r="48" fill="#0b6b5a" opacity="0.85" />
+              <path d="M70 22 C88 38 92 60 70 80 C48 60 52 38 70 22 Z" fill="#29a37f" opacity="0.95" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+  <!-- FormSubmit-powered contact form (non-AJAX) -->
+  <form class="card" id="contactForm"
+    action="https://formsubmit.co/info@myclimatedefinition.org"
+    method="POST" aria-describedby="privacy-note">
+
+        <div class="form-field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+
+        <div class="form-field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
+
+        <!-- Spam honeypot (_honey is recognized by FormSubmit) -->
+        <div class="hidepot" aria-hidden="true">
+          <label for="_honey">Leave this field empty</label>
+          <input id="_honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <!-- Optional metadata -->
+  <input type="hidden" name="_subject" value="New message from My Climate Definition">
+  <input type="hidden" name="_replyto" value="">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="/thank-you.html">
+
+        <div class="form-field">
+          <label>
+            <input type="checkbox" name="consent" required>
+            I agree to be contacted about this inquiry.
+          </label>
+        </div>
+
+        <p id="privacy-note" class="muted">We only use your details to respond to your message.</p>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <span class="muted" id="formStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="f-brand">
+        <p class="f-tagline">
+          <a href="/" aria-label="My Climate Definition" class="footer-logo">
+      <img id="footerLogoImg" class="footer-logo-img"
+        src="/img/logo.png"
+        width="1250" height="1250" loading="lazy" decoding="async" alt="My Climate Definition logo">
+          </a>
+          <span>Short notes on climate, sustainability, and everyday choices.</span>
+        </p>
+      </div>
+
+      <div class="f-social">
+        <h4>Connect</h4>
+        <div class="socials">
+          <!-- email contact removed per request -->
+          <a class="icon medium" href="https://medium.com/@myclimatedefinition" target="_blank" rel="noopener" aria-label="Medium">
+            <svg viewBox="0 0 1044 593"><path d="M589 296c0 164-131 296-294 296S1 460 1 296 132 0 295 0s294 132 294 296zM873 296c0 154-66 280-147 280s-147-126-147-280S645 17 726 17s147 126 147 280zm171 0c0 142-23 256-52 256s-52-114-52-256S963 40 992 40s52 116 52 256z"/></svg>
+          </a>
+          <a class="icon twitter" href="https://x.com/cmdefinition" target="_blank" rel="noopener" aria-label="X">
+            <svg viewBox="0 0 24 24"><path d="M4 3h4.8l4.6 6.6L18.7 3H21l-6.8 9.5L21.3 21h-4.8l-5-7L9 21H6.7l6.8-9.5L4 3z"/></svg>
+          </a>
+          <a class="icon linkedin" href="https://www.linkedin.com/company/my-climate-definition" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M6.94 8.5H3.56V21h3.38V8.5zM5.25 3a2.02 2.02 0 100 4.04 2.02 2.02 0 000-4.04zM20.44 21h-3.37v-6.5c0-1.55-.03-3.53-2.15-3.53-2.15 0-2.48 1.67-2.48 3.41V21h-3.37V8.5h3.23v1.71h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.17V21z"/></svg>
+          </a>
+          <a class="icon instagram" href="https://instagram.com/myclimatedefinition" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0z"/></svg>
+          </a>
+          <a class="icon tiktok" href="https://tiktok.com/@myclimatedefinition_" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M19.3 5.56c-.16-.1-.31-.2-.44-.26-.5-.27-.87-.57-1.14-.83C16.85 3.61 16.4 2.63 16.4 1.5V1h-3.55v14.7a2.16 2.16 0 1 1-4.31 0 2.16 2.16 0 0 1 2.78-2.06V9.93a5.75 5.75 0 0 0-.63-.03 5.78 5.78 0 1 0 5.78 5.78V8.51a9.8 9.8 0 0 0 4.07 1.27V6.18a3.65 3.65 0 0 1-2.55-.62z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="f-support">
+        <h4>Support us</h4>
+        <p>If our work helps you, consider supporting the project.</p>
+        <div class="support-row">
+          <a class="btn support-btn" href="https://www.buymeacoffee.com/korirjpatr1" target="_blank" rel="noopener">Buy Me a Coffee</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> My Climate Definition</p>
+      <a href="#" class="backtop">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="./js/ui-enhancements.js" defer></script>
+  <script src="./js/main.js" defer></script>
+</body>
+</html>

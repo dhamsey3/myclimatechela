@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/components/AboutPage.tsx","./src/components/ClimateHomepage.tsx","./src/components/ContactPage.tsx","./src/components/Navigation.tsx","./src/components/ui/badge.tsx","./src/components/ui/button.tsx","./src/components/ui/card.tsx","./src/lib/utils.ts"],"version":"5.6.3"}
