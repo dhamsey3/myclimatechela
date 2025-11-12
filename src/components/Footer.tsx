@@ -17,25 +17,7 @@ const Footer = () => {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
-  const handleHomeNavigation = () => {
-    console.log('Navigating to Home');
-    navigate('/');
-  };
 
-  const handleAboutNavigation = () => {
-    console.log('Navigating to About');
-    navigate('/about');
-  };
-
-  const handleContactNavigation = () => {
-    console.log('Navigating to Contact');
-    navigate('/contact');
-  };
-
-  const handleExternalLink = (url: string) => {
-    console.log('Opening external link:', url);
-    window.open(url, '_blank');
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -136,32 +118,30 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link: FooterLink) => (
                   <li key={link.label}>
-                    <button
-                      className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 text-left p-0 bg-transparent border-none cursor-pointer font-normal hover:underline transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        console.log('Footer link clicked:', link.label);
+                    <span
+                      className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 font-normal hover:underline transition-colors cursor-pointer"
+                      onClick={() => {
+                        console.log('Footer navigation:', link.label);
                         
-                        switch (link.label) {
-                          case 'Home':
-                            handleHomeNavigation();
-                            break;
-                          case 'About Us':
-                            handleAboutNavigation();
-                            break;
-                          case 'Contact':
-                            handleContactNavigation();
-                            break;
-                          case 'Medium Blog':
-                            handleExternalLink(link.url);
-                            break;
-                          default:
-                            console.log('Unknown link:', link.label);
+                        if (link.label === 'Home') {
+                          navigate('/');
+                        } else if (link.label === 'About Us') {
+                          navigate('/about');
+                        } else if (link.label === 'Contact') {
+                          console.log('Attempting Contact navigation...');
+                          try {
+                            navigate('/contact');
+                          } catch (error) {
+                            console.log('Navigate failed, using window.location');
+                            window.location.href = '/contact';
+                          }
+                        } else if (link.label === 'Medium Blog') {
+                          window.open(link.url, '_blank');
                         }
                       }}
                     >
                       {link.label}
-                    </button>
+                    </span>
                   </li>
                 ))}
               </ul>
