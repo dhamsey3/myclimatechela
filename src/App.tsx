@@ -6,7 +6,7 @@ import './index.css'
 
 function App() {
   return (
-    <Router>
+    <Router basename="/myclimatechela-st">
       <div className="App">
         <Routes>
           <Route path="/" element={<ClimateHomepage />} />

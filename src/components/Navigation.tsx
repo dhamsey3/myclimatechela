@@ -16,7 +16,7 @@ const Navigation = () => {
             onClick={() => navigate('/')}
           >
             <img 
-              src="/img/logo.png" 
+              src="./img/logo.png" 
               alt="My Climate Definition" 
               className="h-10 w-10 rounded-full object-cover"
             />
