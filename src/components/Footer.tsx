@@ -1,7 +1,20 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Coffee, Heart, Twitter, Linkedin, Globe, ArrowUp } from 'lucide-react';
 
+interface FooterLink {
+  label: string;
+  url: string;
+  type: 'internal' | 'external';
+}
+
+interface FooterSection {
+  title: string;
+  links: FooterLink[];
+}
+
 const Footer = () => {
+  const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
   const scrollToTop = () => {
@@ -29,23 +42,23 @@ const Footer = () => {
     }
   ];
 
-  const footerLinks = [
+  const footerLinks: FooterSection[] = [
     {
       title: 'Navigation',
       links: [
-        { label: 'Home', url: '/' },
-        { label: 'About Us', url: '/about' },
-        { label: 'Contact', url: '/contact' },
-        { label: 'All Posts', url: '/posts.html' }
+        { label: 'Home', url: '/', type: 'internal' },
+        { label: 'About Us', url: '/about', type: 'internal' },
+        { label: 'Contact', url: '/contact', type: 'internal' },
+        { label: 'All Posts', url: './posts.html', type: 'external' }
       ]
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Climate Stories', url: '/posts.html' },
-        { label: 'Sustainability Tips', url: '/posts/sustainability-tips/' },
-        { label: 'Climate Definition', url: '/posts/welcome-to-my-climate-definition/' },
-        { label: 'Medium Blog', url: 'https://medium.com/@myclimatedefinition' }
+        { label: 'Climate Stories', url: './posts.html', type: 'external' },
+        { label: 'Sustainability Tips', url: './posts/sustainability-tips/', type: 'external' },
+        { label: 'Climate Definition', url: './posts/welcome-to-my-climate-definition/', type: 'external' },
+        { label: 'Medium Blog', url: 'https://medium.com/@myclimatedefinition', type: 'external' }
       ]
     }
   ];
@@ -105,16 +118,18 @@ const Footer = () => {
             <div key={section.title}>
               <h4 className="font-semibold text-foreground mb-4">{section.title}</h4>
               <ul className="space-y-2">
-                {section.links.map((link) => (
+                {section.links.map((link: FooterLink) => (
                   <li key={link.label}>
                     <Button
                       variant="ghost"
                       className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 justify-start p-0 h-auto font-normal"
                       onClick={() => {
-                        if (link.url.startsWith('http')) {
+                        if (link.type === 'internal') {
+                          navigate(link.url);
+                        } else if (link.url.startsWith('http')) {
                           window.open(link.url, '_blank');
                         } else {
-                          window.location.href = link.url;
+                          window.open(link.url, '_self');
                         }
                       }}
                     >
