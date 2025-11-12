@@ -55,7 +55,7 @@ jobs:
         run: python scripts/gen_sitemap.py
 
       - name: Build React application
-        run: npm run build
+        run: NODE_ENV=production GITHUB_PAGES_CUSTOM_DOMAIN=true npm run build
 
       - name: Verify React build
         run: |
