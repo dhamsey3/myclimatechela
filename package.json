@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sync:posts && tsc -b && vite build",
+    "build": "tsc -b && vite build",
+    "build:full": "npm run sync:posts && npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "sync:posts": "python3 scripts/build_posts.py --feed https://medium.com/feed/@myclimatedefinition --out public/posts.json"
