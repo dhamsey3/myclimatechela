@@ -17,6 +17,24 @@ const Footer = () => {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
+  const handleInternalNavigation = (url: string) => {
+    console.log('Handling internal navigation to:', url);
+    navigate(url);
+  };
+
+  const handleLatestPosts = () => {
+    console.log('Navigating to latest posts');
+    navigate('/');
+    setTimeout(() => {
+      document.querySelector('#posts')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleExternalLink = (url: string) => {
+    console.log('Opening external link:', url);
+    window.open(url, '_blank');
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -117,25 +135,22 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link: FooterLink) => (
                   <li key={link.label}>
-                    <Button
-                      variant="ghost"
-                      className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 justify-start p-0 h-auto font-normal"
-                      onClick={() => {
+                    <button
+                      className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 text-left p-0 bg-transparent border-none cursor-pointer font-normal hover:underline transition-colors"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        
                         if (link.label === 'Latest Posts') {
-                          // Navigate to homepage and scroll to posts section
-                          navigate('/');
-                          setTimeout(() => {
-                            document.querySelector('#posts')?.scrollIntoView({ behavior: 'smooth' });
-                          }, 100);
+                          handleLatestPosts();
                         } else if (link.type === 'internal') {
-                          navigate(link.url);
+                          handleInternalNavigation(link.url);
                         } else if (link.url.startsWith('http')) {
-                          window.open(link.url, '_blank');
+                          handleExternalLink(link.url);
                         }
                       }}
                     >
                       {link.label}
-                    </Button>
+                    </button>
                   </li>
                 ))}
               </ul>
