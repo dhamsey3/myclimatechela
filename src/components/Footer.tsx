@@ -48,16 +48,13 @@ const Footer = () => {
       links: [
         { label: 'Home', url: '/', type: 'internal' },
         { label: 'About Us', url: '/about', type: 'internal' },
-        { label: 'Contact', url: '/contact', type: 'internal' },
-        { label: 'All Posts', url: './posts.html', type: 'external' }
+        { label: 'Contact', url: '/contact', type: 'internal' }
       ]
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Climate Stories', url: './posts.html', type: 'external' },
-        { label: 'Sustainability Tips', url: './posts/sustainability-tips/', type: 'external' },
-        { label: 'Climate Definition', url: './posts/welcome-to-my-climate-definition/', type: 'external' },
+        { label: 'Latest Posts', url: '/', type: 'internal' },
         { label: 'Medium Blog', url: 'https://medium.com/@myclimatedefinition', type: 'external' }
       ]
     }
@@ -124,12 +121,16 @@ const Footer = () => {
                       variant="ghost"
                       className="text-muted-foreground hover:text-green-600 dark:hover:text-green-400 justify-start p-0 h-auto font-normal"
                       onClick={() => {
-                        if (link.type === 'internal') {
+                        if (link.label === 'Latest Posts') {
+                          // Navigate to homepage and scroll to posts section
+                          navigate('/');
+                          setTimeout(() => {
+                            document.querySelector('#posts')?.scrollIntoView({ behavior: 'smooth' });
+                          }, 100);
+                        } else if (link.type === 'internal') {
                           navigate(link.url);
                         } else if (link.url.startsWith('http')) {
                           window.open(link.url, '_blank');
-                        } else {
-                          window.open(link.url, '_self');
                         }
                       }}
                     >
