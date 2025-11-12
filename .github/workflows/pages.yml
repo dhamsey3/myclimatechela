@@ -55,7 +55,7 @@ jobs:
         run: python scripts/gen_sitemap.py
 
       - name: Build React application
-        run: NODE_ENV=production GITHUB_PAGES_CUSTOM_DOMAIN=true npm run build
+        run: npm run build
 
       - name: Verify React build
         run: |
@@ -79,6 +79,9 @@ jobs:
           awk 'NR<=30{printf "%03d| %s\n", NR, $0}' dist/index.html
           echo "=== posts.json (first 10 lines) ==="
           head -10 public/posts.json
+
+      - name: Create 404.html for SPA routing
+        run: cp dist/index.html dist/404.html
 
       - name: Add CNAME (apex domain)
         run: echo 'myclimatedefinition.org' > dist/CNAME

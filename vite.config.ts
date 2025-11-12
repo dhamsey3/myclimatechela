@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_PAGES_CUSTOM_DOMAIN ? '/' : process.env.NODE_ENV === 'production' ? '/myclimatechela-st/' : '/',
+  base: '/myclimatechela-st/',
   plugins: [react()],
   resolve: {
     alias: {
