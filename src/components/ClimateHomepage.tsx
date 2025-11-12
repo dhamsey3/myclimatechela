@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
+import Footer from './Footer';
+import BuyMeACoffee from './BuyMeACoffee';
 import { ChevronLeft, ChevronRight, Twitter, Linkedin, Calendar, ArrowRight, Leaf, Wind, Droplets } from 'lucide-react';
 
 interface BlogPost {
@@ -241,6 +243,13 @@ const ClimateHomepage = () => {
         </div>
       </section>
 
+      {/* Support Banner */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <BuyMeACoffee variant="banner" />
+        </div>
+      </section>
+
       {/* Latest Posts Section */}
       <section id="posts" className="container mx-auto px-4 py-16 pb-24">
         <div className="max-w-6xl mx-auto">
@@ -340,6 +349,8 @@ const ClimateHomepage = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };
