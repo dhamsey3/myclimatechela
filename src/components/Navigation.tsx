@@ -35,11 +35,8 @@ const Navigation = () => {
               alt="My Climate Definition" 
               className="h-10 w-10 rounded-full object-cover"
             />
-            <span className="text-lg sm:text-xl font-bold text-foreground hidden sm:block">
+            <span className="text-lg sm:text-xl font-bold text-foreground">
               My Climate Definition
-            </span>
-            <span className="text-lg font-bold text-foreground sm:hidden">
-              Climate
             </span>
           </div>
 
