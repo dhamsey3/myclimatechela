@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import BuyMeACoffee from './BuyMeACoffee';
-import PostPreviewModal from './PostPreviewModal';
-import { ChevronLeft, ChevronRight, Twitter, Linkedin, Calendar, ArrowRight, Leaf, Wind, Droplets } from 'lucide-react';
+
+import { ChevronLeft, ChevronRight, Twitter, Linkedin, Calendar, ArrowRight, Leaf, Wind, Droplets, ExternalLink } from 'lucide-react';
 
 interface BlogPost {
   id: number;
@@ -28,8 +28,7 @@ const ClimateHomepage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
 
   const carouselImages: CarouselImage[] = [
     {
@@ -133,16 +132,6 @@ const ClimateHomepage = () => {
   const shareOnLinkedIn = (post: BlogPost) => {
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + post.mediumLink)}`;
     window.open(url, '_blank');
-  };
-
-  const openPreview = (post: BlogPost) => {
-    setSelectedPost(post);
-    setIsPreviewOpen(true);
-  };
-
-  const closePreview = () => {
-    setIsPreviewOpen(false);
-    setSelectedPost(null);
   };
 
   return (
@@ -314,35 +303,42 @@ const ClimateHomepage = () => {
                   </p>
                 </CardContent>
                 
-                <CardFooter className="p-6 pt-0 flex justify-between items-center">
-                  <Button 
-                    variant="link" 
-                    className="text-green-600 dark:text-green-400 p-0 h-auto font-semibold group/btn"
-                    onClick={() => openPreview(post)}
-                  >
-                    Preview Post
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </Button>
-                  
-                  <div className="flex gap-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600"
-                      onClick={() => shareOnTwitter(post)}
-                      aria-label="Share on Twitter"
-                    >
-                      <Twitter className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-700"
-                      onClick={() => shareOnLinkedIn(post)}
-                      aria-label="Share on LinkedIn"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                    </Button>
+                <CardFooter className="p-6 pt-0">
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span>5 min read</span>
+                      <span>•</span>
+                      <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(post.mediumLink, '_blank')}
+                        className="flex items-center gap-2 hover:bg-green-50 hover:border-green-300 dark:hover:bg-green-950/30"
+                      >
+                        Read Article
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600"
+                        onClick={() => shareOnTwitter(post)}
+                        aria-label="Share on Twitter"
+                      >
+                        <Twitter className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-700"
+                        onClick={() => shareOnLinkedIn(post)}
+                        aria-label="Share on LinkedIn"
+                      >
+                        <Linkedin className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardFooter>
               </Card>
@@ -364,13 +360,6 @@ const ClimateHomepage = () => {
       </section>
       
       <Footer />
-      
-      {/* Post Preview Modal */}
-      <PostPreviewModal 
-        post={selectedPost}
-        isOpen={isPreviewOpen}
-        onClose={closePreview}
-      />
     </div>
   );
 };
