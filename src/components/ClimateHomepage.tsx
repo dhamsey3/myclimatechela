@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import BuyMeACoffee from './BuyMeACoffee';
+import PostPreviewModal from './PostPreviewModal';
 import { ChevronLeft, ChevronRight, Twitter, Linkedin, Calendar, ArrowRight, Leaf, Wind, Droplets } from 'lucide-react';
 
 interface BlogPost {
@@ -27,6 +28,8 @@ const ClimateHomepage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const carouselImages: CarouselImage[] = [
     {
@@ -130,6 +133,16 @@ const ClimateHomepage = () => {
   const shareOnLinkedIn = (post: BlogPost) => {
     const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + post.mediumLink)}`;
     window.open(url, '_blank');
+  };
+
+  const openPreview = (post: BlogPost) => {
+    setSelectedPost(post);
+    setIsPreviewOpen(true);
+  };
+
+  const closePreview = () => {
+    setIsPreviewOpen(false);
+    setSelectedPost(null);
   };
 
   return (
@@ -305,9 +318,9 @@ const ClimateHomepage = () => {
                   <Button 
                     variant="link" 
                     className="text-green-600 dark:text-green-400 p-0 h-auto font-semibold group/btn"
-                    onClick={() => window.location.href = post.mediumLink}
+                    onClick={() => openPreview(post)}
                   >
-                    Read More
+                    Preview Post
                     <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>
                   
@@ -351,6 +364,13 @@ const ClimateHomepage = () => {
       </section>
       
       <Footer />
+      
+      {/* Post Preview Modal */}
+      <PostPreviewModal 
+        post={selectedPost}
+        isOpen={isPreviewOpen}
+        onClose={closePreview}
+      />
     </div>
   );
 };
