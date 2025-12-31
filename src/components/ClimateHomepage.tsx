@@ -34,7 +34,6 @@ const ClimateHomepage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const heroAnimation = useScrollAnimation({ threshold: 0.2 });
   const postsAnimation = useScrollAnimation({ threshold: 0.1 });
 
 
