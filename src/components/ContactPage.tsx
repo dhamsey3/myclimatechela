@@ -134,9 +134,13 @@ const ContactPage = () => {
               <div className="relative">
                 <div className="w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
                   <img 
-                    src="https://images.pexels.com/photos/6615060/pexels-photo-6615060.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+                    src="https://images.pexels.com/photos/1072824/pexels-photo-1072824.jpeg?auto=compress&cs=tinysrgb&w=800"
                     alt="Hands holding a young plant - environmental care"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-transparent" />
                 </div>
