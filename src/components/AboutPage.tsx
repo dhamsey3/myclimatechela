@@ -1,14 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import BuyMeACoffee from './BuyMeACoffee';
+import PageTransition from './PageTransition';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { ArrowRight, Leaf, Globe, Users, Heart, Shield, Lightbulb } from 'lucide-react';
 
 const AboutPage = () => {
   const navigate = useNavigate();
+  const valuesAnimation = useScrollAnimation({ threshold: 0.1 });
 
   const coreValues = [
     {
@@ -34,8 +38,9 @@ const AboutPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-green-50/20 dark:to-green-950/20">
-      <Navigation />
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-b from-background via-background to-green-50/20 dark:to-green-950/20">
+        <Navigation />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
@@ -69,8 +74,8 @@ const AboutPage = () => {
               <div className="relative">
                 <div className="w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
                   <img 
-                    src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop"
-                    alt="Lush green landscape representing our planet"
+                    src="https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+                    alt="Lush green forest representing our planet"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-green-600/20 to-transparent" />
@@ -204,7 +209,8 @@ const AboutPage = () => {
       </section>
       
       <Footer />
-    </div>
+      </div>
+    </PageTransition>
   );
 };
 

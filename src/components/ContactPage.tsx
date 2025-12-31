@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import BuyMeACoffee from './BuyMeACoffee';
+import PageTransition from './PageTransition';
 import { ArrowRight, Mail, MessageCircle, Send, Twitter, Globe, CheckCircle } from 'lucide-react';
 
 const ContactPage = () => {
@@ -32,15 +34,32 @@ const ContactPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission (replace with actual FormSubmit or your preferred service)
     try {
+      // For static sites, use one of these options:
+      
+      // Option 1: FormSubmit (free, no registration needed)
+      // Just change the email to yours
+      const formElement = e.target as HTMLFormElement;
+      const formData = new FormData(formElement);
+      
       const response = await fetch('https://formsubmit.co/info@myclimatedefinition.org', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formData
       });
+      
+      // Option 2: Formspree (recommended - better features)
+      // Sign up at formspree.io and get your form endpoint
+      // const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      //   method: 'POST',
+      //   body: formData,
+      //   headers: {
+      //     'Accept': 'application/json'
+      //   }
+      // });
+      
+      // Option 3: Netlify Forms (if deploying to Netlify)
+      // Add data-netlify="true" to the form element
+      // Forms are automatically handled by Netlify
       
       if (response.ok) {
         setIsSubmitted(true);
@@ -48,6 +67,7 @@ const ContactPage = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      alert('There was an error submitting the form. Please try again or email us directly.');
     } finally {
       setIsSubmitting(false);
     }
@@ -78,8 +98,9 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-green-50/20 dark:to-green-950/20">
-      <Navigation />
+    <PageTransition>
+      <div className="min-h-screen bg-gradient-to-b from-background via-background to-green-50/20 dark:to-green-950/20">
+        <Navigation />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
@@ -114,8 +135,8 @@ const ContactPage = () => {
               <div className="relative">
                 <div className="w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
                   <img 
-                    src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop"
-                    alt="People connecting and collaborating"
+                    src="https://images.pexels.com/photos/6615060/pexels-photo-6615060.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
+                    alt="Hands holding a young plant - environmental care"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-transparent" />
@@ -207,6 +228,13 @@ const ContactPage = () => {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Hidden fields for FormSubmit configuration */}
+                  <input type="hidden" name="_subject" value="New contact form submission from My Climate Definition" />
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input type="hidden" name="_template" value="table" />
+                  {/* Redirect after submission - optional */}
+                  {/* <input type="hidden" name="_next" value="https://myclimatedefinition.org/thank-you.html" /> */}
+                  
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
@@ -317,7 +345,8 @@ const ContactPage = () => {
       </section>
       
       <Footer />
-    </div>
+      </div>
+    </PageTransition>
   );
 };
 
