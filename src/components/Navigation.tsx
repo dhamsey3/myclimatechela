@@ -43,10 +43,10 @@ const Navigation = () => {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <NavLink to="/" className="flex min-w-0 items-center gap-3" aria-label="My Climate Definition home">
-            <img src="/img/logo.png" alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
-            <span className="truncate font-editorial text-lg font-semibold sm:text-xl">My Climate Definition</span>
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-1 px-3 sm:px-6 lg:px-8">
+          <NavLink to="/" className="flex min-w-0 items-center gap-2 sm:gap-3" aria-label="My Climate Definition home">
+            <img src="/img/logo.png" alt="" className="h-8 w-8 shrink-0 rounded-full object-cover sm:h-9 sm:w-9" />
+            <span className="truncate font-editorial text-base font-semibold sm:text-xl">My Climate Definition</span>
           </NavLink>
 
           <nav aria-label="Primary navigation" className="hidden items-center gap-1 md:flex">
@@ -61,14 +61,15 @@ const Navigation = () => {
             <ThemeToggle />
           </nav>
 
-          <div className="flex items-center gap-1 md:hidden">
-            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)} aria-label="Search stories">
+          <div className="flex shrink-0 items-center md:hidden">
+            <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setIsSearchOpen(true)} aria-label="Search stories">
               <Search className="h-5 w-5" />
             </Button>
             <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
+              className="h-9 w-9"
               onClick={() => setIsMobileMenuOpen((open) => !open)}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"

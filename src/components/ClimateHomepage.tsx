@@ -100,9 +100,9 @@ const ClimateHomepage = () => {
         <main id="main-content">
           <section className="border-b">
             <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:px-8 lg:py-20">
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
+              <motion.div className="min-w-0" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
                 <p className="editorial-kicker">Independent climate publication</p>
-                <h1 className="mt-5 max-w-2xl font-editorial text-5xl font-semibold leading-[0.98] sm:text-6xl lg:text-7xl">
+                <h1 className="mt-5 max-w-2xl break-words font-editorial text-5xl font-semibold leading-[0.98] sm:text-6xl lg:text-7xl">
                   Climate is personal before it is abstract.
                 </h1>
                 <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
@@ -111,7 +111,7 @@ const ClimateHomepage = () => {
 
                 <div className="mt-10 border-l-2 border-primary pl-5">
                   <p className="editorial-kicker">Featured story</p>
-                  <h2 className="mt-3 font-editorial text-2xl font-semibold leading-tight sm:text-3xl">{featuredPost.title}</h2>
+                  <h2 className="mt-3 break-words font-editorial text-2xl font-semibold leading-tight sm:text-3xl">{featuredPost.title}</h2>
                   <div className="mt-3"><ArticleMeta date={featuredPost.date} /></div>
                   <a
                     href={featuredPost.mediumLink}

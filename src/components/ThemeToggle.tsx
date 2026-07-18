@@ -28,7 +28,7 @@ const ThemeToggle = () => {
   // Prevent hydration mismatch
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="relative w-10 h-10">
+      <Button variant="ghost" size="icon" className="relative w-9 h-9">
         <div className="w-5 h-5" />
       </Button>
     );
@@ -39,7 +39,7 @@ const ThemeToggle = () => {
       variant="ghost" 
       size="icon" 
       onClick={toggleTheme}
-      className="relative w-10 h-10 overflow-hidden"
+      className="relative w-9 h-9 overflow-hidden"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       <motion.div
