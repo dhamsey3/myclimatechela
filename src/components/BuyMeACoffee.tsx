@@ -1,74 +1,50 @@
+import { Coffee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Coffee, Heart } from 'lucide-react';
 
 interface BuyMeACoffeeProps {
   variant?: 'card' | 'button' | 'banner';
   className?: string;
 }
 
+const SUPPORT_URL = 'https://www.buymeacoffee.com/korirjpatr1';
+
+const SupportButton = ({ className = '' }: { className?: string }) => (
+  <Button asChild className={`bg-primary text-primary-foreground hover:bg-primary/90 ${className}`}>
+    <a href={SUPPORT_URL} target="_blank" rel="noreferrer">
+      <Coffee className="mr-2 h-4 w-4" aria-hidden="true" />
+      Support the journal
+    </a>
+  </Button>
+);
+
 const BuyMeACoffee = ({ variant = 'card', className = '' }: BuyMeACoffeeProps) => {
-  const buyMeCoffeeUrl = "https://www.buymeacoffee.com/korirjpatr1";
-
-  const handleClick = () => {
-    window.open(buyMeCoffeeUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  if (variant === 'button') {
-    return (
-      <Button
-        onClick={handleClick}
-        className={`bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 ${className}`}
-      >
-        <Coffee className="w-4 h-4 mr-2" />
-        Buy Me a Coffee
-      </Button>
-    );
-  }
+  if (variant === 'button') return <SupportButton className={className} />;
 
   if (variant === 'banner') {
     return (
-      <div className={`bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 ${className}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Coffee className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-            <div>
-              <h4 className="font-semibold text-foreground">Support Our Work</h4>
-              <p className="text-sm text-muted-foreground">Help us create more climate content</p>
-            </div>
-          </div>
-          <Button
-            onClick={handleClick}
-            size="sm"
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white"
-          >
-            <Heart className="w-4 h-4 mr-1" />
-            Support
-          </Button>
+      <div className={`flex flex-col gap-6 border-y border-foreground/20 py-8 sm:flex-row sm:items-center sm:justify-between ${className}`}>
+        <div className="max-w-2xl">
+          <p className="editorial-kicker">Keep independent stories moving</p>
+          <h2 className="mt-3 font-editorial text-2xl font-semibold sm:text-3xl">Help fund thoughtful climate publishing.</h2>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Contributions support the research, writing, and tools behind My Climate Definition.
+          </p>
         </div>
+        <SupportButton className="shrink-0" />
       </div>
     );
   }
 
-  // Default card variant
   return (
-    <Card className={`bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 border-yellow-200 dark:border-yellow-800 ${className}`}>
-      <CardContent className="p-6 text-center">
-        <div className="flex justify-center mb-3">
-          <Coffee className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-        </div>
-        <h4 className="font-semibold text-foreground mb-2">Support Our Mission</h4>
-        <p className="text-sm text-muted-foreground mb-4">
-          If our climate content helps you, consider supporting us with a coffee. Every contribution helps us create more valuable resources for the climate community.
+    <Card className={`border bg-card shadow-none ${className}`}>
+      <CardContent className="p-6">
+        <p className="editorial-kicker">Support the work</p>
+        <h2 className="mt-3 font-editorial text-2xl font-semibold">Independent climate stories take care and time.</h2>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          Your contribution helps fund the research, writing, and practical resources published here.
         </p>
-        <Button
-          onClick={handleClick}
-          className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 w-full"
-        >
-          <Coffee className="w-4 h-4 mr-2" />
-          Buy Me a Coffee
-          <Heart className="w-4 h-4 ml-2" />
-        </Button>
+        <SupportButton className="mt-5" />
       </CardContent>
     </Card>
   );

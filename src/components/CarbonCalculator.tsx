@@ -113,16 +113,16 @@ const CarbonCalculator = () => {
   const impact = getImpactLevel(totalCO2);
 
   return (
-    <Card className="w-full border-2 overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30 border-b">
+    <Card className="w-full overflow-hidden border bg-card shadow-none">
+      <CardHeader className="border-b bg-muted/35">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-600 text-white rounded-lg">
+          <div className="rounded-sm bg-primary p-2 text-primary-foreground">
             <Leaf className="w-6 h-6" />
           </div>
           <div>
             <CardTitle className="text-2xl">Carbon Footprint Calculator</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              Calculate your annual CO₂ emissions and discover ways to reduce your impact
+              A broad estimate based on category averages—not a precise personal audit.
             </p>
           </div>
         </div>
@@ -133,16 +133,12 @@ const CarbonCalculator = () => {
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {categories.map((category) => (
-                <motion.div
-                  key={category.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
+                <div key={category.id}>
                   <Button
                     variant={activeCategory === category.id ? 'default' : 'outline'}
                     className={`w-full h-auto flex flex-col gap-2 p-4 ${
                       activeCategory === category.id
-                        ? 'bg-green-600 hover:bg-green-700'
+                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                         : ''
                     }`}
                     onClick={() => setActiveCategory(category.id)}
@@ -150,7 +146,7 @@ const CarbonCalculator = () => {
                     {category.icon}
                     <span className="text-xs">{category.label}</span>
                   </Button>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -167,19 +163,20 @@ const CarbonCalculator = () => {
                     .filter(c => c.id === activeCategory)
                     .map(category => (
                       <div key={category.id} className="space-y-3">
-                        <label className="text-sm font-medium flex items-center gap-2">
+                        <label htmlFor={`carbon-${category.id}`} className="flex items-center gap-2 text-sm font-medium">
                           {category.icon}
                           {category.question}
                         </label>
                         <div className="flex gap-3">
                           <input
+                            id={`carbon-${category.id}`}
                             type="number"
                             min="0"
                             step="0.1"
                             value={inputs[category.id] || ''}
                             onChange={(e) => handleInputChange(category.id, e.target.value)}
                             placeholder="0"
-                            className="flex-1 px-4 py-3 text-lg border border-border rounded-lg bg-background focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                            className="min-w-0 flex-1 rounded-sm border border-input bg-background px-4 py-3 text-lg outline-none focus:border-primary"
                           />
                           <Badge variant="secondary" className="px-4 flex items-center">
                             {category.unit}
@@ -195,7 +192,7 @@ const CarbonCalculator = () => {
               <Button
                 onClick={() => setShowResults(true)}
                 disabled={Object.keys(inputs).length === 0}
-                className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700"
+                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                 size="lg"
               >
                 Calculate My Footprint
@@ -221,7 +218,7 @@ const CarbonCalculator = () => {
             className="space-y-6"
           >
             {/* Results Summary */}
-            <div className="text-center p-8 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30 rounded-xl">
+            <div className="rounded-sm border bg-muted/35 p-8 text-center">
               <div className={`text-6xl font-bold ${impact.color} mb-2`}>
                 {totalCO2.toLocaleString()}
               </div>
@@ -253,7 +250,7 @@ const CarbonCalculator = () => {
             </div>
 
             {/* Tips */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="rounded-sm border bg-muted/35 p-4">
               <h4 className="font-semibold mb-2 flex items-center gap-2">
                 <Leaf className="w-4 h-4 text-green-600" />
                 Tips to Reduce Your Footprint
