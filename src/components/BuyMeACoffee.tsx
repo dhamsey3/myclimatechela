@@ -13,7 +13,7 @@ const SupportButton = ({ className = '' }: { className?: string }) => (
   <Button asChild className={`bg-primary text-primary-foreground hover:bg-primary/90 ${className}`}>
     <a href={SUPPORT_URL} target="_blank" rel="noreferrer">
       <Coffee className="mr-2 h-4 w-4" aria-hidden="true" />
-      Support the journal
+      Support the work
     </a>
   </Button>
 );

@@ -1,214 +1,148 @@
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Heart, Lightbulb, Shield, Users } from 'lucide-react';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import BuyMeACoffee from './BuyMeACoffee';
 import PageTransition from './PageTransition';
-import { ArrowRight, Leaf, Globe, Users, Heart, Shield, Lightbulb } from 'lucide-react';
 
-const AboutPage = () => {
-  const navigate = useNavigate();
+const ABOUT_PHOTO_URL = 'https://www.pexels.com/photo/group-of-people-doing-a-demonstration-on-global-climate-and-environmental-issues-12111230/';
 
-  const coreValues = [
-    {
-      icon: <Users className="w-6 h-6 text-green-600 dark:text-green-400" />,
-      title: "Community",
-      description: "Change begins with people coming together, learning from each other, and supporting collective action."
-    },
-    {
-      icon: <Leaf className="w-6 h-6 text-green-600 dark:text-green-400" />,
-      title: "Sustainability",
-      description: "Our words and actions are guided by the need to protect the planet and build systems that nurture rather than harm."
-    },
-    {
-      icon: <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />,
-      title: "Justice",
-      description: "We stand for equity, recognizing that climate change affects communities differently, and that solutions must be fair and inclusive."
-    },
-    {
-      icon: <Lightbulb className="w-6 h-6 text-green-600 dark:text-green-400" />,
-      title: "Hope & Action",
-      description: "We share stories to raise awareness and inspire courage, creativity, and action toward a better future."
-    }
-  ];
+const values = [
+  {
+    icon: Users,
+    number: '01',
+    title: 'Community',
+    description: 'Change begins with people learning from one another and turning shared understanding into collective action.',
+  },
+  {
+    icon: Heart,
+    number: '02',
+    title: 'Sustainability',
+    description: 'Our stories examine choices and systems that nurture people and the places on which they depend.',
+  },
+  {
+    icon: Shield,
+    number: '03',
+    title: 'Justice',
+    description: 'Climate change is unequal. The responses we explore must be fair, inclusive, and grounded in lived realities.',
+  },
+  {
+    icon: Lightbulb,
+    number: '04',
+    title: 'Hope in action',
+    description: 'Hope matters most when it helps people imagine practical alternatives and take the next honest step.',
+  },
+];
 
-  return (
-    <PageTransition>
-      <div className="min-h-screen bg-gradient-to-b from-background via-background to-green-50/20 dark:to-green-950/20">
-        <Navigation />
-
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-blue-500/5 to-teal-500/5" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <Badge className="mb-4 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-4 py-1">
-                  About Us
-                </Badge>
-                <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-green-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-                  Our voices. Our planet. Our future.
-                </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  We believe climate change is part of our daily lives, shaping how we live, work, and connect with one another.
-                </p>
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-8 py-6 text-lg group"
-                  onClick={() => navigate('/contact')}
-                >
-                  Get in Touch
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
-              
-              <div className="relative">
-                <div className="w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
-                  <img 
-                    src="https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop"
-                    alt="Lush green forest representing our planet"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-green-600/20 to-transparent" />
-                </div>
-                <div className="absolute -bottom-6 -right-6 bg-white dark:bg-gray-900 p-4 rounded-full shadow-lg">
-                  <Globe className="w-8 h-8 text-green-600 dark:text-green-400" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto space-y-12">
-          
-          {/* About Description */}
-          <Card className="border-2 hover:border-green-500/20 transition-colors">
-            <CardContent className="p-8">
-              <div className="space-y-6 text-lg leading-relaxed">
-                <p>
-                  <strong>My Climate Definition</strong> is a space for stories and conversations about climate change through the lens of our lived experiences. We believe that climate change is part of our daily lives, shaping the way we live, work, and connect with one another.
-                </p>
-                <p>
-                  Here, we share how our values, choices, and everyday actions, along with the systems we create, impact our planet and, in turn, our communities. We hope to make climate change personal, relatable, and urgent by telling our stories.
-                </p>
-                <p>
-                  This platform is about learning together, inspiring change, and reimagining what's possible for our future. We want to spark conversations that empower individuals and communities to see their role in shaping a more sustainable, just, and resilient world for today and for generations to come.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Vision & Mission */}
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="border-2 hover:border-green-500/20 transition-colors hover:shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-2xl text-green-600 dark:text-green-400 flex items-center gap-3">
-                  <Lightbulb className="w-6 h-6" />
-                  Vision
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-lg leading-relaxed">
-                  A world where personal stories and collective experiences inspire action that builds sustainable, resilient, and just communities for present and future generations.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:border-green-500/20 transition-colors hover:shadow-xl">
-              <CardHeader>
-                <CardTitle className="text-2xl text-green-600 dark:text-green-400 flex items-center gap-3">
-                  <Heart className="w-6 h-6" />
-                  Mission
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-lg leading-relaxed">
-                  To create a platform that connects daily human choices to global climate impacts and inspires people to reimagine and act toward a more sustainable and resilient future.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Core Values */}
-          <Card className="border-2 hover:border-green-500/20 transition-colors">
-            <CardHeader>
-              <CardTitle className="text-3xl text-center mb-4">Our Core Values</CardTitle>
-              <p className="text-center text-muted-foreground text-lg">
-                The principles that guide our work and community
+const AboutPage = () => (
+  <PageTransition>
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <main id="main-content">
+        <section className="border-b">
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
+            <div className="min-w-0">
+              <p className="editorial-kicker">About the publication</p>
+              <h1 className="mt-5 max-w-2xl break-words font-editorial text-5xl font-semibold leading-[1.02] sm:text-6xl">
+                Climate stories begin with the lives people already lead.
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
+                My Climate Definition makes climate change personal, relatable, and urgent by connecting it to our homes, work, relationships, choices, and communities.
               </p>
-            </CardHeader>
-            <CardContent className="p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                {coreValues.map((value, index) => (
-                  <div 
-                    key={index} 
-                    className="flex gap-4 p-6 rounded-xl border hover:border-green-500/30 transition-all hover:shadow-md group"
-                  >
-                    <div className="flex-shrink-0 p-3 bg-green-100 dark:bg-green-900/30 rounded-full group-hover:bg-green-200 dark:group-hover:bg-green-800/50 transition-colors">
-                      {value.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-xl mb-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                        {value.title}
-                      </h3>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {value.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+              <Link to="/contact" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+                Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
 
-          {/* CTA Section */}
-          <div className="text-center py-12">
-            <h2 className="text-3xl font-bold mb-6">Ready to Join the Conversation?</h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Whether you have questions, ideas, or want to share your climate story, we'd love to hear from you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-8 py-6 text-lg group"
-                onClick={() => navigate('/contact')}
-              >
-                Get in Touch
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-2 px-8 py-6 text-lg"
-                onClick={() => navigate('/')}
-              >
-                Explore Stories
-              </Button>
+            <figure>
+              <img
+                src="/img/editorial/about-climate-action.jpg"
+                alt="A diverse crowd at a climate demonstration lifting a large globe together"
+                className="aspect-[16/10] w-full rounded-sm object-cover"
+              />
+              <figcaption className="mt-3 text-xs leading-5 text-muted-foreground">
+                Photo by{' '}
+                <a href={ABOUT_PHOTO_URL} target="_blank" rel="noreferrer" className="underline underline-offset-4 hover:text-foreground">
+                  skigh_tv on Pexels
+                </a>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="grid gap-8 md:grid-cols-[0.45fr_1.55fr]">
+            <p className="editorial-kicker">Why we exist</p>
+            <div className="space-y-6 font-editorial text-2xl leading-relaxed sm:text-3xl">
+              <p>
+                Climate change can feel distant when it appears only as data, policy, or disaster. Yet it is already shaping how people live, work, move, eat, build, and care for one another.
+              </p>
+              <p className="text-muted-foreground">
+                We publish stories and practical perspectives that connect those everyday experiences to the larger systems influencing our future. The aim is not perfection. It is clearer understanding, more honest conversation, and action rooted in reality.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Support Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="max-w-md mx-auto">
+        <section className="border-y bg-card">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8 lg:py-20">
+            <div className="border-t border-foreground/20 pt-5">
+              <p className="editorial-kicker">Our vision</p>
+              <h2 className="mt-4 font-editorial text-3xl font-semibold">A future people can imagine themselves inside.</h2>
+              <p className="mt-4 leading-7 text-muted-foreground">
+                A world where personal stories and collective experience inspire sustainable, resilient, and just communities for present and future generations.
+              </p>
+            </div>
+            <div className="border-t border-foreground/20 pt-5">
+              <p className="editorial-kicker">Our mission</p>
+              <h2 className="mt-4 font-editorial text-3xl font-semibold">Make the global personal—and the personal useful.</h2>
+              <p className="mt-4 leading-7 text-muted-foreground">
+                To connect daily human choices to wider climate impacts and help people reimagine what a more sustainable and resilient future could look like.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="max-w-2xl">
+            <p className="editorial-kicker">What guides us</p>
+            <h2 className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Values that shape the work.</h2>
+          </div>
+          <div className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-2">
+            {values.map(({ icon: Icon, number, title, description }) => (
+              <article key={title} className="grid grid-cols-[auto_1fr] gap-4 border-t border-foreground/20 pt-5">
+                <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-muted text-primary">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground">{number}</p>
+                  <h3 className="mt-2 font-editorial text-2xl font-semibold">{title}</h3>
+                  <p className="mt-3 leading-7 text-muted-foreground">{description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+          <div className="grid gap-8 border-y border-foreground/20 py-10 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <p className="editorial-kicker">Add your perspective</p>
+              <h2 className="mt-3 font-editorial text-3xl font-semibold">What does climate mean in your everyday life?</h2>
+            </div>
+            <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+              Share your story <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-lg px-4 pb-20 sm:px-6 lg:pb-28">
           <BuyMeACoffee variant="card" />
-        </div>
-      </section>
-      
+        </section>
+      </main>
       <Footer />
-      </div>
-    </PageTransition>
-  );
-};
+    </div>
+  </PageTransition>
+);
 
 export default AboutPage;

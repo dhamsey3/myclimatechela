@@ -149,7 +149,7 @@ const ClimateHomepage = () => {
           <section aria-labelledby="latest-stories-title" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
             <div className="flex flex-col gap-5 border-b border-foreground/20 pb-7 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="editorial-kicker">From the journal</p>
+                <p className="editorial-kicker">From the publication</p>
                 <h2 id="latest-stories-title" className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Latest stories</h2>
               </div>
               <p className="max-w-md text-sm leading-6 text-muted-foreground">
