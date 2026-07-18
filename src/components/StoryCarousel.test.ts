@@ -13,7 +13,7 @@ describe('original-image story carousel', () => {
     expect(carouselSource).toContain("matchMedia('(prefers-reduced-motion: reduce)')");
   });
 
-  it('places the carousel after latest stories and before the publication purpose', () => {
+  it('places the carousel after latest stories and before the purpose section', () => {
     const latestIndex = homepageSource.indexOf('Latest stories');
     const carouselIndex = homepageSource.indexOf('<StoryCarousel');
     const purposeIndex = homepageSource.indexOf('Our point of view');

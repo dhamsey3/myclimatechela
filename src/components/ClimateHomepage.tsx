@@ -102,7 +102,7 @@ const ClimateHomepage = () => {
           <section className="border-b">
             <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:px-8 lg:py-20">
               <motion.div className="min-w-0" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-                <p className="editorial-kicker">Independent climate publication</p>
+                <p className="editorial-kicker">Independent climate stories</p>
                 <h1 className="mt-5 max-w-2xl break-words font-editorial text-5xl font-semibold leading-[0.98] sm:text-6xl lg:text-7xl">
                   Climate is personal before it is abstract.
                 </h1>
@@ -150,7 +150,7 @@ const ClimateHomepage = () => {
           <section aria-labelledby="latest-stories-title" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
             <div className="flex flex-col gap-5 border-b border-foreground/20 pb-7 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="editorial-kicker">From the publication</p>
+                <p className="editorial-kicker">Latest from us</p>
                 <h2 id="latest-stories-title" className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Latest stories</h2>
               </div>
               <p className="max-w-md text-sm leading-6 text-muted-foreground">

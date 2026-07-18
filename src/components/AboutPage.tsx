@@ -42,7 +42,7 @@ const AboutPage = () => (
         <section className="border-b">
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
             <div className="min-w-0">
-              <p className="editorial-kicker">About the publication</p>
+              <p className="editorial-kicker">About us</p>
               <h1 className="mt-5 max-w-2xl break-words font-editorial text-5xl font-semibold leading-[1.02] sm:text-6xl">
                 Our voices. Our planet. Our future.
               </h1>

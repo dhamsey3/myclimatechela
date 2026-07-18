@@ -5,9 +5,10 @@ import aboutSource from './AboutPage.tsx?raw';
 import contactSource from './ContactPage.tsx?raw';
 
 describe('editorial secondary pages', () => {
-  it('uses approachable publication language instead of journal positioning', () => {
+  it('avoids overly formal brand positioning', () => {
     const userFacingSource = [homepageSource, supportSource, aboutSource, contactSource].join('\n').toLowerCase();
     expect(userFacingSource).not.toContain('journal');
+    expect(userFacingSource).not.toContain('publication');
   });
 
   it('uses local credited photography on About and Contact', () => {
