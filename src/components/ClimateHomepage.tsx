@@ -8,6 +8,7 @@ import BuyMeACoffee from './BuyMeACoffee';
 import PageTransition from './PageTransition';
 import SkeletonCard from './SkeletonCard';
 import CarbonCalculator from './CarbonCalculator';
+import StoryCarousel from './StoryCarousel';
 
 const articleTarget = (url: string) => url.startsWith('http') ? '_blank' : undefined;
 
@@ -172,6 +173,8 @@ const ClimateHomepage = () => {
               </div>
             )}
           </section>
+
+          <StoryCarousel />
 
           <section className="border-y bg-card">
             <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-[0.7fr_1.3fr] md:py-20 lg:px-8">

@@ -32,4 +32,13 @@ describe('editorial secondary pages', () => {
     expect(contactSource).toContain('submitError');
     expect(contactSource).not.toContain('<BuyMeACoffee');
   });
+
+  it('preserves the original About language inside the editorial layout', () => {
+    expect(aboutSource).toContain('Our voices. Our planet. Our future.');
+    expect(aboutSource).toContain('My Climate Definition</strong> is a space for stories and conversations about climate change through the lens of our lived experiences.');
+    expect(aboutSource).toContain('A world where personal stories and collective experiences inspire action');
+    expect(aboutSource).toContain('To create a platform that connects daily human choices to global climate impacts');
+    expect(aboutSource).toContain('Change begins with people coming together, learning from each other, and supporting collective action.');
+    expect(aboutSource).toContain('Ready to Join the Conversation?');
+  });
 });

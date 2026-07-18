@@ -12,25 +12,25 @@ const values = [
     icon: Users,
     number: '01',
     title: 'Community',
-    description: 'Change begins with people learning from one another and turning shared understanding into collective action.',
+    description: 'Change begins with people coming together, learning from each other, and supporting collective action.',
   },
   {
     icon: Heart,
     number: '02',
     title: 'Sustainability',
-    description: 'Our stories examine choices and systems that nurture people and the places on which they depend.',
+    description: 'Our words and actions are guided by the need to protect the planet and build systems that nurture rather than harm.',
   },
   {
     icon: Shield,
     number: '03',
     title: 'Justice',
-    description: 'Climate change is unequal. The responses we explore must be fair, inclusive, and grounded in lived realities.',
+    description: 'We stand for equity, recognizing that climate change affects communities differently, and that solutions must be fair and inclusive.',
   },
   {
     icon: Lightbulb,
     number: '04',
-    title: 'Hope in action',
-    description: 'Hope matters most when it helps people imagine practical alternatives and take the next honest step.',
+    title: 'Hope & Action',
+    description: 'We share stories to raise awareness and inspire courage, creativity, and action toward a better future.',
   },
 ];
 
@@ -44,13 +44,13 @@ const AboutPage = () => (
             <div className="min-w-0">
               <p className="editorial-kicker">About the publication</p>
               <h1 className="mt-5 max-w-2xl break-words font-editorial text-5xl font-semibold leading-[1.02] sm:text-6xl">
-                Climate stories begin with the lives people already lead.
+                Our voices. Our planet. Our future.
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-                My Climate Definition makes climate change personal, relatable, and urgent by connecting it to our homes, work, relationships, choices, and communities.
+                We believe climate change is part of our daily lives, shaping how we live, work, and connect with one another.
               </p>
               <Link to="/contact" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-                Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Get in Touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
 
@@ -73,12 +73,15 @@ const AboutPage = () => (
         <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="grid gap-8 md:grid-cols-[0.45fr_1.55fr]">
             <p className="editorial-kicker">Why we exist</p>
-            <div className="space-y-6 font-editorial text-2xl leading-relaxed sm:text-3xl">
+            <div className="space-y-6 text-lg leading-8">
               <p>
-                Climate change can feel distant when it appears only as data, policy, or disaster. Yet it is already shaping how people live, work, move, eat, build, and care for one another.
+                <strong>My Climate Definition</strong> is a space for stories and conversations about climate change through the lens of our lived experiences. We believe that climate change is part of our daily lives, shaping the way we live, work, and connect with one another.
               </p>
-              <p className="text-muted-foreground">
-                We publish stories and practical perspectives that connect those everyday experiences to the larger systems influencing our future. The aim is not perfection. It is clearer understanding, more honest conversation, and action rooted in reality.
+              <p>
+                Here, we share how our values, choices, and everyday actions, along with the systems we create, impact our planet and, in turn, our communities. We hope to make climate change personal, relatable, and urgent by telling our stories.
+              </p>
+              <p>
+                This platform is about learning together, inspiring change, and reimagining what's possible for our future. We want to spark conversations that empower individuals and communities to see their role in shaping a more sustainable, just, and resilient world for today and for generations to come.
               </p>
             </div>
           </div>
@@ -88,16 +91,16 @@ const AboutPage = () => (
           <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8 lg:py-20">
             <div className="border-t border-foreground/20 pt-5">
               <p className="editorial-kicker">Our vision</p>
-              <h2 className="mt-4 font-editorial text-3xl font-semibold">A future people can imagine themselves inside.</h2>
+              <h2 className="mt-4 font-editorial text-3xl font-semibold">Vision</h2>
               <p className="mt-4 leading-7 text-muted-foreground">
-                A world where personal stories and collective experience inspire sustainable, resilient, and just communities for present and future generations.
+                A world where personal stories and collective experiences inspire action that builds sustainable, resilient, and just communities for present and future generations.
               </p>
             </div>
             <div className="border-t border-foreground/20 pt-5">
               <p className="editorial-kicker">Our mission</p>
-              <h2 className="mt-4 font-editorial text-3xl font-semibold">Make the global personal—and the personal useful.</h2>
+              <h2 className="mt-4 font-editorial text-3xl font-semibold">Mission</h2>
               <p className="mt-4 leading-7 text-muted-foreground">
-                To connect daily human choices to wider climate impacts and help people reimagine what a more sustainable and resilient future could look like.
+                To create a platform that connects daily human choices to global climate impacts and inspires people to reimagine and act toward a more sustainable and resilient future.
               </p>
             </div>
           </div>
@@ -106,7 +109,7 @@ const AboutPage = () => (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="max-w-2xl">
             <p className="editorial-kicker">What guides us</p>
-            <h2 className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Values that shape the work.</h2>
+              <h2 className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Our Core Values</h2>
           </div>
           <div className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-2">
             {values.map(({ icon: Icon, number, title, description }) => (
@@ -127,11 +130,12 @@ const AboutPage = () => (
         <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
           <div className="grid gap-8 border-y border-foreground/20 py-10 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <p className="editorial-kicker">Add your perspective</p>
-              <h2 className="mt-3 font-editorial text-3xl font-semibold">What does climate mean in your everyday life?</h2>
+              <p className="editorial-kicker">Join the conversation</p>
+              <h2 className="mt-3 font-editorial text-3xl font-semibold">Ready to Join the Conversation?</h2>
+              <p className="mt-3 max-w-2xl text-muted-foreground">Whether you have questions, ideas, or want to share your climate story, we'd love to hear from you.</p>
             </div>
             <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-              Share your story <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Get in Touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </section>
