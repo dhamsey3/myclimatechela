@@ -22,14 +22,14 @@ describe('normalizePosts', () => {
     expect(posts[0].date).toContain('2026');
   });
 
-  it('removes incomplete entries and caps the homepage feed at six stories', () => {
+  it('removes incomplete entries and retains seven stories for the homepage', () => {
     const raw = Array.from({ length: 8 }, (_, index) => ({
       title: index === 0 ? '' : `Story ${index}`,
       date: '2026-07-01',
       permalink: `/stories/${index}`,
     }));
 
-    expect(normalizePosts(raw)).toHaveLength(6);
+    expect(normalizePosts(raw)).toHaveLength(7);
     expect(normalizePosts(raw)[0].title).toBe('Story 1');
   });
 });

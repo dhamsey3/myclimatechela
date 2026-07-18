@@ -59,7 +59,7 @@ export const normalizePosts = (rawPosts: unknown): BlogPost[] => {
   return rawPosts
     .filter(isRecord)
     .filter((post) => firstString(post, ['title']).length > 0)
-    .slice(0, 6)
+    .slice(0, 7)
     .map((post, index) => ({
       id: index + 1,
       title: firstString(post, ['title']),
