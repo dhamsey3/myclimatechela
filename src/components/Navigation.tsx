@@ -1,208 +1,112 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Menu, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Search } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 import SearchModal from './SearchModal';
+import ThemeToggle from './ThemeToggle';
+
+const navigationItems = [
+  { path: '/', label: 'Stories' },
+  { path: '/about', label: 'About' },
+  { path: '/contact', label: 'Contact' },
+];
 
 const Navigation = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
-
-  // Global keyboard shortcut for search
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Open search with '/' or Cmd/Ctrl + K
-      if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
-        e.preventDefault();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      const isTyping = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable;
+      if ((event.key === '/' && !isTyping) || ((event.metaKey || event.ctrlKey) && event.key === 'k')) {
+        event.preventDefault();
         setIsSearchOpen(true);
       }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setIsSearchOpen(true);
-      }
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const navigationItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/contact', label: 'Contact' }
-  ];
-
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
-  };
+  const navLinkClass = ({ isActive }: { isActive: boolean }) => (
+    `relative rounded-sm px-3 py-2 text-sm font-medium transition-colors ${
+      isActive
+        ? 'text-foreground after:absolute after:inset-x-3 after:-bottom-px after:h-0.5 after:bg-primary'
+        : 'text-muted-foreground hover:text-foreground'
+    }`
+  );
 
   return (
     <>
-    <motion.header 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.2, 0.9, 0.2, 1] }}
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    >
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <motion.div 
-            className="flex items-center gap-3 cursor-pointer" 
-            onClick={() => handleNavigation('/')}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <motion.img 
-              src="./img/logo.png" 
-              alt="My Climate Definition" 
-              className="h-10 w-10 rounded-full object-cover"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-            />
-            <span className="text-lg sm:text-xl font-bold text-foreground">
-              My Climate Definition
-            </span>
-          </motion.div>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <NavLink to="/" className="flex min-w-0 items-center gap-3" aria-label="My Climate Definition home">
+            <img src="/img/logo.png" alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+            <span className="truncate font-editorial text-lg font-semibold sm:text-xl">My Climate Definition</span>
+          </NavLink>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
-            {navigationItems.map((item, index) => (
-              <motion.div
-                key={item.path}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.4 }}
-              >
-                <Button 
-                  variant="ghost" 
-                  onClick={() => handleNavigation(item.path)}
-                  className={`px-4 py-2 transition-all duration-300 ${
-                    isActive(item.path) 
-                      ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950' 
-                      : 'hover:text-green-600 dark:hover:text-green-400'
-                  }`}
-                >
-                  {item.label}
-                </Button>
-              </motion.div>
+          <nav aria-label="Primary navigation" className="hidden items-center gap-1 md:flex">
+            {navigationItems.map((item) => (
+              <NavLink key={item.path} to={item.path} className={navLinkClass} end={item.path === '/'}>
+                {item.label}
+              </NavLink>
             ))}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSearchOpen(true)}
-                className="relative"
-                aria-label="Search"
-              >
-                <Search className="w-5 h-5" />
-                <kbd className="absolute -bottom-1 -right-1 px-1 text-[10px] bg-muted rounded border text-muted-foreground hidden xl:block">
-                  /
-                </kbd>
-              </Button>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
-            >
-              <ThemeToggle />
-            </motion.div>
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)} aria-label="Search stories">
+              <Search className="h-5 w-5" />
+            </Button>
+            <ThemeToggle />
           </nav>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsSearchOpen(true)}
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
+          <div className="flex items-center gap-1 md:hidden">
+            <Button variant="ghost" size="icon" onClick={() => setIsSearchOpen(true)} aria-label="Search stories">
+              <Search className="h-5 w-5" />
             </Button>
             <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle mobile menu"
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             >
-              <AnimatePresence mode="wait">
-                {isMobileMenuOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X className="w-6 h-6" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu className="w-6 h-6" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {isMobileMenuOpen && (
-            <motion.nav 
+            <motion.nav
+              id="mobile-navigation"
+              aria-label="Mobile navigation"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.2, 0.9, 0.2, 1] }}
-              className="md:hidden overflow-hidden border-t border-border"
+              className="overflow-hidden border-t bg-background md:hidden"
             >
-              <div className="flex flex-col gap-2 pt-4 pb-4">
-                {navigationItems.map((item, index) => (
-                  <motion.div
+              <div className="mx-auto flex max-w-7xl flex-col px-4 py-3">
+                {navigationItems.map((item) => (
+                  <NavLink
                     key={item.path}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                    to={item.path}
+                    className={navLinkClass}
+                    end={item.path === '/'}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleNavigation(item.path)}
-                      className={`justify-start w-full px-4 py-3 text-base transition-all duration-300 ${
-                        isActive(item.path)
-                          ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950'
-                          : 'hover:text-green-600 dark:hover:text-green-400'
-                      }`}
-                    >
-                      {item.label}
-                    </Button>
-                  </motion.div>
+                    {item.label}
+                  </NavLink>
                 ))}
               </div>
             </motion.nav>
           )}
         </AnimatePresence>
-      </div>
-    </motion.header>
-    <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      </header>
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };
