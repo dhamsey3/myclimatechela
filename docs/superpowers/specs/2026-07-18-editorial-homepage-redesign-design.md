@@ -52,7 +52,7 @@ Existing story images remain available, but images are presented as editorial as
 6. Single support prompt after readers have received value
 7. Compact footer
 
-The image carousel is removed. It has no editorial context and delays access to stories. The support prompt moves below stories and the calculator so it follows delivered value.
+The original four-image carousel remains, but it moves below the latest stories so it no longer delays access to reading. It uses a restrained editorial treatment, visible controls, slide-position dots, automatic advancement, pause on user interaction, and reduced-motion support. The support prompt moves below stories and the calculator so it follows delivered value.
 
 ## Components
 
@@ -119,7 +119,7 @@ Motion is limited to subtle content entrance and state changes. No continuously 
 - Ensure visible `:focus-visible` treatment across controls.
 - Use meaningful image alt text and empty alt text only for decorative images.
 - Do not rely on colour alone for active or selected states.
-- Carousel accessibility issues disappear with carousel removal.
+- Carousel controls remain visible and keyboard reachable, slide changes are labelled, and reduced-motion users do not receive automatic advancement.
 
 ## Data and failure handling
 
@@ -137,6 +137,6 @@ The homepage continues to fetch `./posts.json` on mount. Feed items are normaliz
 
 - A visitor can identify the site as an editorial climate publication and choose a story within the first viewport.
 - Latest stories appear before the calculator and donation prompt.
-- The homepage contains no decorative carousel, animated background orbs, gradient headline, duplicated publication dates, or hover-only reading affordance.
+- The homepage contains no oversized decorative carousel before the stories, animated background orbs, gradient headline, duplicated publication dates, or hover-only reading affordance.
 - The visual system uses a restrained editorial palette and consistent surfaces.
 - Changed components remain responsive, semantic, keyboard accessible, and build successfully.

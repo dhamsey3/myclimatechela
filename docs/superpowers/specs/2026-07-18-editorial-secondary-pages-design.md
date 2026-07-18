@@ -2,7 +2,7 @@
 
 ## Objective
 
-Bring the About and Contact pages into the homepage's credible editorial system, remove overly formal “journal” terminology, and replace generic symbolic stock imagery with locally stored, openly licensed documentary photographs.
+Bring the About and Contact pages into the homepage's credible editorial system, preserve the original About wording, remove overly formal “journal” terminology, and replace generic symbolic stock imagery with locally stored, openly licensed documentary photographs.
 
 ## Terminology
 
@@ -29,7 +29,8 @@ Each image includes a short visible credit beneath it with the photographer's na
 ## About page layout
 
 - Use the shared navigation, paper surface, serif headings, kicker, restrained borders, and footer.
-- Keep the existing mission, vision, values, and contact route.
+- Keep the original About introduction, description, vision, mission, value titles, value descriptions, and closing invitation verbatim; only layout and presentation may change.
+- Keep the existing contact route.
 - Replace the gradient hero and floating icon with a left-aligned editorial introduction and documentary image.
 - Replace the large nested-card composition with open sections separated by rules.
 - Present vision and mission as two simple columns.
