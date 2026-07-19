@@ -22,7 +22,7 @@ export const FALLBACK_POSTS: BlogPost[] = [
     id: 2,
     title: 'Welcome to My Climate Definition',
     date: 'March 5, 2024',
-    preview: 'Why personal stories can make climate change easier to understand—and harder to ignore.',
+    preview: 'Why personal stories can make climate change easier to understand and harder to ignore.',
     image: '/img/slide1.png',
     mediumLink: '/posts/welcome-to-my-climate-definition/',
   },

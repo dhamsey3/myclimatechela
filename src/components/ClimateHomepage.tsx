@@ -184,7 +184,7 @@ const ClimateHomepage = () => {
                   The climate story is also a story about home, work, food, movement, fairness, and hope.
                 </h2>
                 <p className="mt-5 max-w-2xl leading-7 text-muted-foreground">
-                  We use lived experience and practical inquiry to make climate change tangible—without reducing a complex challenge to slogans or perfect individual choices.
+                  We use lived experience and practical inquiry to make climate change tangible without reducing a complex challenge to slogans or perfect individual choices.
                 </p>
               </div>
             </div>

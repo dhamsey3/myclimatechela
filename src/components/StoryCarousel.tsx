@@ -44,7 +44,7 @@ const StoryCarousel = () => {
             <h2 id="carousel-title" className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Four ways of seeing a shared future.</h2>
           </div>
           <p className="max-w-xl leading-7 text-muted-foreground md:justify-self-end">
-            A visual pause between the stories—community, responsibility, possibility, and the everyday choices that connect them.
+            A visual pause between the stories: community, responsibility, possibility, and the everyday choices that connect them.
           </p>
         </div>
 

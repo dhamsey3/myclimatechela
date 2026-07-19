@@ -3,8 +3,19 @@ import homepageSource from './ClimateHomepage.tsx?raw';
 import supportSource from './BuyMeACoffee.tsx?raw';
 import aboutSource from './AboutPage.tsx?raw';
 import contactSource from './ContactPage.tsx?raw';
+import carouselSource from './StoryCarousel.tsx?raw';
+import calculatorSource from './CarbonCalculator.tsx?raw';
+import newsletterSource from './NewsletterSignup.tsx?raw';
+import postsSource from '../lib/posts.ts?raw';
 
 describe('editorial secondary pages', () => {
+  it('keeps visible application copy free of dash marks', () => {
+    const userFacingSource = [homepageSource, supportSource, aboutSource, contactSource, carouselSource, calculatorSource, newsletterSource, postsSource].join('\n');
+    expect(userFacingSource).not.toMatch(/[—–]/);
+    expect(userFacingSource).not.toContain('Meat-based');
+    expect(userFacingSource).not.toContain('climate-conscious');
+  });
+
   it('avoids overly formal brand positioning', () => {
     const userFacingSource = [homepageSource, supportSource, aboutSource, contactSource].join('\n').toLowerCase();
     expect(userFacingSource).not.toContain('journal');

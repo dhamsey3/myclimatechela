@@ -180,7 +180,7 @@ const NewsletterSignup = () => {
             </Button>
 
             <p className="text-xs text-center text-muted-foreground">
-              Join 1,000+ climate-conscious readers. Unsubscribe anytime. We respect your privacy.
+              Join 1,000+ climate conscious readers. Unsubscribe anytime. We respect your privacy.
             </p>
 
             {/* Social Proof */}

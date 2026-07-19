@@ -76,7 +76,7 @@ const ContactPage = () => {
               <div className="min-w-0">
                 <p className="editorial-kicker">Contact</p>
                 <h1 className="mt-5 break-words font-editorial text-5xl font-semibold leading-[1.02] sm:text-6xl">
-                  Every climate story starts with someone speaking—and someone listening.
+                  Every climate story starts with someone speaking and someone listening.
                 </h1>
                 <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
                   Send a question, share an idea, propose a collaboration, or tell us what climate change looks like where you live.

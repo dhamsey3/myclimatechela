@@ -49,7 +49,7 @@ const CarbonCalculator = () => {
       label: 'Diet',
       icon: <Utensils className="w-5 h-5" />,
       unit: 'meals/week',
-      question: 'Meat-based meals per week?',
+      question: 'Meat based meals per week?',
       factor: 2.5 // kg CO2 per meat meal
     },
     {
@@ -122,7 +122,7 @@ const CarbonCalculator = () => {
           <div>
             <CardTitle className="text-2xl">Carbon Footprint Calculator</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              A broad estimate based on category averages—not a precise personal audit.
+              A broad estimate based on category averages, not a precise personal audit.
             </p>
           </div>
         </div>
