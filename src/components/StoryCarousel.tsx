@@ -37,18 +37,16 @@ const StoryCarousel = () => {
 
   return (
     <section id="visual-stories" aria-labelledby="carousel-title" className="scroll-mt-16 border-y bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="grid gap-6 md:grid-cols-[0.7fr_1.3fr] md:items-end">
-          <div>
-            <p className="editorial-kicker">Climate in view</p>
-            <h2 id="carousel-title" className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Four ways of seeing a shared future.</h2>
-          </div>
-          <p className="max-w-xl leading-7 text-muted-foreground md:justify-self-end">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-14 lg:px-8 lg:py-20">
+        <div>
+          <p className="editorial-kicker">Climate in view</p>
+          <h2 id="carousel-title" className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Four ways of seeing a shared future.</h2>
+          <p className="mt-5 max-w-md leading-7 text-muted-foreground">
             A visual pause between the stories: community, responsibility, possibility, and the everyday choices that connect them.
           </p>
         </div>
 
-        <div className="mt-10 overflow-hidden rounded-sm border bg-background">
+        <div className="overflow-hidden rounded-sm border bg-background">
           <figure className="relative">
             <div className="relative aspect-[16/9] overflow-hidden" aria-live="polite">
               <AnimatePresence mode="wait" initial={false}>

@@ -9,8 +9,8 @@ except Exception:
     pass
 
 urls = [f"{base}/"]
-urls.append(f"{base}/about.html")
-urls.append(f"{base}/contact.html")
+urls.append(f"{base}/about")
+urls.append(f"{base}/contact")
 for p in posts:
     u = p.get("permalink") or p.get("external_url")
     if u and u.startswith("http"):

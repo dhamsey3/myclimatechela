@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, CalendarDays } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { FALLBACK_POSTS, getPostsOrFallback, type BlogPost } from '@/lib/posts';
 import Navigation from './Navigation';
 import Footer from './Footer';
@@ -12,11 +12,22 @@ import StoryCarousel from './StoryCarousel';
 
 const articleTarget = (url: string) => url.startsWith('http') ? '_blank' : undefined;
 
-const ArticleMeta = ({ date }: { date: string }) => (
-  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-    <CalendarDays className="h-4 w-4" aria-hidden="true" />
-    <time>{date}</time>
-  </div>
+const ArticleMeta = ({ post }: { post: BlogPost }) => (
+  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+    {post.author && (
+      <>
+        <span className="font-medium text-foreground">By {post.author}</span>
+        <span aria-hidden="true">·</span>
+      </>
+    )}
+    <time>{post.date}</time>
+    {post.readingMinutes > 0 && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span>{post.readingMinutes} min read</span>
+      </>
+    )}
+  </p>
 );
 
 const StoryCard = ({ post, index }: { post: BlogPost; index: number }) => (
@@ -42,8 +53,8 @@ const StoryCard = ({ post, index }: { post: BlogPost; index: number }) => (
       />
     </a>
     <div className="flex flex-1 flex-col pt-5">
-      <ArticleMeta date={post.date} />
-      <h3 className="mt-3 font-editorial text-2xl font-semibold leading-tight sm:text-[1.7rem]">
+      {post.topics[0] && <p className="editorial-kicker mb-3">{post.topics[0]}</p>}
+      <h3 className="font-editorial text-2xl font-semibold leading-tight sm:text-[1.7rem]">
         <a
           href={post.mediumLink}
           target={articleTarget(post.mediumLink)}
@@ -54,6 +65,7 @@ const StoryCard = ({ post, index }: { post: BlogPost; index: number }) => (
         </a>
       </h3>
       <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">{post.preview}</p>
+      <div className="mt-4"><ArticleMeta post={post} /></div>
       <a
         href={post.mediumLink}
         target={articleTarget(post.mediumLink)}
@@ -93,6 +105,15 @@ const ClimateHomepage = () => {
 
   const featuredPost = posts[0] ?? FALLBACK_POSTS[0];
   const latestPosts = posts.slice(1);
+  const [topic, setTopic] = useState<string | null>(null);
+
+  // The most common topics across the stories on the page, for the filter row.
+  const topics = useMemo(() => {
+    const counts = new Map<string, number>();
+    posts.flatMap((post) => post.topics).forEach((name) => counts.set(name, (counts.get(name) ?? 0) + 1));
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([name]) => name);
+  }, [posts]);
+  const shownPosts = topic ? posts.filter((post) => post.topics.includes(topic)) : latestPosts;
 
   return (
     <PageTransition>
@@ -113,7 +134,7 @@ const ClimateHomepage = () => {
                 <div className="mt-10 border-l-2 border-primary pl-5">
                   <p className="editorial-kicker">Featured story</p>
                   <h2 className="mt-3 break-words font-editorial text-2xl font-semibold leading-tight sm:text-3xl">{featuredPost.title}</h2>
-                  <div className="mt-3"><ArticleMeta date={featuredPost.date} /></div>
+                  <div className="mt-3"><ArticleMeta post={featuredPost} /></div>
                   <a
                     href={featuredPost.mediumLink}
                     target={articleTarget(featuredPost.mediumLink)}
@@ -158,13 +179,33 @@ const ClimateHomepage = () => {
               </p>
             </div>
 
+            {!isLoading && topics.length > 1 && (
+              <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Show stories by topic">
+                {[null, ...topics].map((name) => (
+                  <button
+                    key={name ?? 'all'}
+                    type="button"
+                    onClick={() => setTopic(name)}
+                    aria-pressed={topic === name}
+                    className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
+                      topic === name
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:border-foreground/40 hover:text-foreground'
+                    }`}
+                  >
+                    {name ?? 'All stories'}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {isLoading ? (
               <div className="mt-10 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading latest stories">
                 {[1, 2, 3].map((item) => <SkeletonCard key={item} />)}
               </div>
-            ) : latestPosts.length > 0 ? (
-              <div className="mt-10 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-                {latestPosts.map((post, index) => <StoryCard key={post.id} post={post} index={index} />)}
+            ) : shownPosts.length > 0 ? (
+              <div className="mt-10 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+                {shownPosts.map((post, index) => <StoryCard key={post.id} post={post} index={index} />)}
               </div>
             ) : (
               <div className="mt-10 border-l-2 border-primary pl-5">

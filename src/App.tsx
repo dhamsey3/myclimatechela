@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import ClimateHomepage from './components/ClimateHomepage'
 import AboutPage from './components/AboutPage'
@@ -15,6 +15,10 @@ function AnimatedRoutes() {
         <Route path="/" element={<ClimateHomepage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        {/* Addresses of the pre-redesign static pages, still in search results and old links */}
+        <Route path="/index.html" element={<Navigate to="/" replace />} />
+        <Route path="/about.html" element={<Navigate to="/about" replace />} />
+        <Route path="/contact.html" element={<Navigate to="/contact" replace />} />
       </Routes>
     </AnimatePresence>
   );

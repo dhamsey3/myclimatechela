@@ -70,10 +70,10 @@ const AboutPage = () => (
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="grid gap-8 md:grid-cols-[0.45fr_1.55fr]">
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="grid gap-8 md:grid-cols-[0.7fr_1.3fr]">
             <p className="editorial-kicker">Why we exist</p>
-            <div className="space-y-6 text-lg leading-8">
+            <div className="max-w-3xl space-y-6 text-lg leading-8">
               <p>
                 <strong>My Climate Definition</strong> is a space for stories and conversations about climate change through the lens of our lived experiences. We believe that climate change is part of our daily lives, shaping the way we live, work, and connect with one another.
               </p>
@@ -90,15 +90,13 @@ const AboutPage = () => (
         <section className="border-y bg-card">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:px-8 lg:py-20">
             <div className="border-t border-foreground/20 pt-5">
-              <p className="editorial-kicker">Our vision</p>
-              <h2 className="mt-4 font-editorial text-3xl font-semibold">Vision</h2>
+              <h2 className="font-editorial text-3xl font-semibold">Vision</h2>
               <p className="mt-4 leading-7 text-muted-foreground">
                 A world where personal stories and collective experiences inspire action that builds sustainable, resilient, and just communities for present and future generations.
               </p>
             </div>
             <div className="border-t border-foreground/20 pt-5">
-              <p className="editorial-kicker">Our mission</p>
-              <h2 className="mt-4 font-editorial text-3xl font-semibold">Mission</h2>
+              <h2 className="font-editorial text-3xl font-semibold">Mission</h2>
               <p className="mt-4 leading-7 text-muted-foreground">
                 To create a platform that connects daily human choices to global climate impacts and inspires people to reimagine and act toward a more sustainable and resilient future.
               </p>
@@ -109,7 +107,7 @@ const AboutPage = () => (
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="max-w-2xl">
             <p className="editorial-kicker">What guides us</p>
-              <h2 className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Our Core Values</h2>
+            <h2 className="mt-3 font-editorial text-4xl font-semibold sm:text-5xl">Our core values</h2>
           </div>
           <div className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-2">
             {values.map(({ icon: Icon, number, title, description }) => (
@@ -127,21 +125,16 @@ const AboutPage = () => (
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-          <div className="grid gap-8 border-y border-foreground/20 py-10 md:grid-cols-[1fr_auto] md:items-center">
-            <div>
-              <p className="editorial-kicker">Join the conversation</p>
-              <h2 className="mt-3 font-editorial text-3xl font-semibold">Ready to Join the Conversation?</h2>
-              <p className="mt-3 max-w-2xl text-muted-foreground">Whether you have questions, ideas, or want to share your climate story, we'd love to hear from you.</p>
-            </div>
-            <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+        <section className="mx-auto grid max-w-7xl gap-12 px-4 pb-20 sm:px-6 md:grid-cols-2 lg:px-8 lg:pb-28">
+          <div className="border-t border-foreground/20 pt-5">
+            <p className="editorial-kicker">Join the conversation</p>
+            <h2 className="mt-3 font-editorial text-3xl font-semibold">Ready to Join the Conversation?</h2>
+            <p className="mt-3 max-w-xl leading-7 text-muted-foreground">Whether you have questions, ideas, or want to share your climate story, we'd love to hear from you.</p>
+            <Link to="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
               Get in Touch <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-        </section>
-
-        <section className="mx-auto max-w-lg px-4 pb-20 sm:px-6 lg:pb-28">
-          <BuyMeACoffee variant="card" />
+          <BuyMeACoffee variant="column" />
         </section>
       </main>
       <Footer />

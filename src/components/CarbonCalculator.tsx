@@ -1,281 +1,252 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Car, Zap, Plane, ShoppingBag, Home, Utensils, TrendingDown, TrendingUp, Leaf } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Car, Zap, Flame, Plane, Utensils, ShoppingBag, RotateCcw } from 'lucide-react';
+import {
+  CATEGORIES,
+  US_AVERAGE_TONNES,
+  WORLD_AVERAGE_TONNES,
+  convertAmounts,
+  estimate,
+  formatTonnes,
+  type CategoryId,
+  type UnitSystem,
+} from '@/lib/carbon';
 
-interface CarbonCategory {
-  id: string;
-  label: string;
-  icon: JSX.Element;
-  unit: string;
-  question: string;
-  factor: number; // kg CO2 per unit
-}
+const ICONS: Record<CategoryId, typeof Car> = {
+  car: Car,
+  electricity: Zap,
+  gas: Flame,
+  flights: Plane,
+  diet: Utensils,
+  shopping: ShoppingBag,
+};
+
+const BAR_COLOURS: Record<CategoryId, string> = {
+  car: 'bg-chart-1',
+  electricity: 'bg-chart-4',
+  gas: 'bg-chart-5',
+  flights: 'bg-chart-3',
+  diet: 'bg-chart-2',
+  shopping: 'bg-muted-foreground',
+};
+
+const UNIT_SYSTEMS: { id: UnitSystem; label: string }[] = [
+  { id: 'metric', label: 'Metric' },
+  { id: 'us', label: 'US units' },
+];
 
 const CarbonCalculator = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('');
-  const [inputs, setInputs] = useState<Record<string, number>>({});
-  const [showResults, setShowResults] = useState(false);
+  const [system, setSystem] = useState<UnitSystem>('metric');
+  const [inputs, setInputs] = useState<Partial<Record<CategoryId, string>>>({});
+  // On phones the questions come one at a time; wider screens show them all.
+  const [step, setStep] = useState(0);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const lastStep = CATEGORIES.length - 1;
 
-  const categories: CarbonCategory[] = [
-    {
-      id: 'car',
-      label: 'Driving',
-      icon: <Car className="w-5 h-5" />,
-      unit: 'miles/week',
-      question: 'How many miles do you drive per week?',
-      factor: 0.411 // kg CO2 per mile (average car)
-    },
-    {
-      id: 'electricity',
-      label: 'Electricity',
-      icon: <Zap className="w-5 h-5" />,
-      unit: 'kWh/month',
-      question: 'Your monthly electricity usage (kWh)?',
-      factor: 0.92 // kg CO2 per kWh (US average)
-    },
-    {
-      id: 'flights',
-      label: 'Flights',
-      icon: <Plane className="w-5 h-5" />,
-      unit: 'hours/year',
-      question: 'Hours spent flying per year?',
-      factor: 90 // kg CO2 per hour of flight
-    },
-    {
-      id: 'diet',
-      label: 'Diet',
-      icon: <Utensils className="w-5 h-5" />,
-      unit: 'meals/week',
-      question: 'Meat based meals per week?',
-      factor: 2.5 // kg CO2 per meat meal
-    },
-    {
-      id: 'shopping',
-      label: 'Shopping',
-      icon: <ShoppingBag className="w-5 h-5" />,
-      unit: '$/month',
-      question: 'Monthly spending on new items ($)?',
-      factor: 0.5 // kg CO2 per dollar (rough estimate)
-    },
-    {
-      id: 'heating',
-      label: 'Heating/Cooling',
-      icon: <Home className="w-5 h-5" />,
-      unit: 'therms/month',
-      question: 'Monthly natural gas usage (therms)?',
-      factor: 5.3 // kg CO2 per therm
-    }
+  const goToStep = (next: number) => {
+    setStep(next);
+    requestAnimationFrame(() => document.getElementById(`carbon-${CATEGORIES[next].id}`)?.focus());
+  };
+
+  const amounts = Object.fromEntries(
+    Object.entries(inputs).map(([id, value]) => [id, parseFloat(value ?? '') || 0]),
+  ) as Partial<Record<CategoryId, number>>;
+  const { parts, totalKg, largest } = estimate(amounts, system);
+  const filledParts = parts.filter((part) => part.kg > 0).sort((a, b) => b.kg - a.kg);
+  const totalTonnes = totalKg / 1000;
+  const comparisonScale = Math.max(totalTonnes, US_AVERAGE_TONNES);
+  const comparisons = [
+    { label: 'Your six sources', tonnes: totalTonnes, colour: 'bg-primary' },
+    { label: 'World average, all sources', tonnes: WORLD_AVERAGE_TONNES, colour: 'bg-foreground/30' },
+    { label: 'US average, all sources', tonnes: US_AVERAGE_TONNES, colour: 'bg-foreground/30' },
   ];
 
-  const handleInputChange = (categoryId: string, value: string) => {
-    const numValue = parseFloat(value) || 0;
-    setInputs(prev => ({ ...prev, [categoryId]: numValue }));
+  const switchSystem = (next: UnitSystem) => {
+    if (next === system) return;
+    setInputs((current) => convertAmounts(current, next));
+    setSystem(next);
   };
-
-  const calculateTotal = () => {
-    let yearlyTotal = 0;
-
-    categories.forEach(category => {
-      const input = inputs[category.id] || 0;
-      let yearlyAmount = 0;
-
-      // Convert to yearly kg CO2
-      if (category.unit.includes('week')) {
-        yearlyAmount = input * 52 * category.factor;
-      } else if (category.unit.includes('month')) {
-        yearlyAmount = input * 12 * category.factor;
-      } else if (category.unit.includes('year')) {
-        yearlyAmount = input * category.factor;
-      }
-
-      yearlyTotal += yearlyAmount;
-    });
-
-    return yearlyTotal;
-  };
-
-  const totalCO2 = calculateTotal();
-  const usAverage = 16000; // kg CO2 per year (US average)
-  const globalAverage = 4000; // kg CO2 per year (global average)
-  const comparisonToUS = ((totalCO2 / usAverage) * 100).toFixed(0);
-  const comparisonToGlobal = ((totalCO2 / globalAverage) * 100).toFixed(0);
-
-  const getImpactLevel = (total: number) => {
-    if (total < 3000) return { label: 'Excellent', color: 'text-green-600', icon: <TrendingDown className="w-5 h-5" /> };
-    if (total < 8000) return { label: 'Good', color: 'text-blue-600', icon: <Leaf className="w-5 h-5" /> };
-    if (total < 15000) return { label: 'Average', color: 'text-yellow-600', icon: <TrendingUp className="w-5 h-5" /> };
-    return { label: 'High', color: 'text-red-600', icon: <TrendingUp className="w-5 h-5" /> };
-  };
-
-  const impact = getImpactLevel(totalCO2);
 
   return (
-    <Card className="w-full overflow-hidden border bg-card shadow-none">
-      <CardHeader className="border-b bg-muted/35">
-        <div className="flex items-center gap-3">
-          <div className="rounded-sm bg-primary p-2 text-primary-foreground">
-            <Leaf className="w-6 h-6" />
-          </div>
-          <div>
-            <CardTitle className="text-2xl">Carbon Footprint Calculator</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
-              A broad estimate based on category averages, not a precise personal audit.
-            </p>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-6">
-        {!showResults ? (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {categories.map((category) => (
-                <div key={category.id}>
-                  <Button
-                    variant={activeCategory === category.id ? 'default' : 'outline'}
-                    className={`w-full h-auto flex flex-col gap-2 p-4 ${
-                      activeCategory === category.id
-                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                        : ''
-                    }`}
-                    onClick={() => setActiveCategory(category.id)}
-                  >
-                    {category.icon}
-                    <span className="text-xs">{category.label}</span>
-                  </Button>
-                </div>
+    <div className="overflow-hidden rounded-sm border bg-card">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <form className="p-6 sm:p-8" onSubmit={(event) => event.preventDefault()} aria-label="Carbon footprint questions">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">Answer any of these. Leave the rest blank.</p>
+            <div className="inline-flex rounded-sm border p-0.5 text-sm" role="group" aria-label="Units">
+              {UNIT_SYSTEMS.map(({ id, label }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => switchSystem(id)}
+                  aria-pressed={system === id}
+                  className={`rounded-[0.25rem] px-3 py-1.5 font-medium transition-colors ${
+                    system === id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {label}
+                </button>
               ))}
             </div>
+          </div>
 
-            <AnimatePresence mode="wait">
-              {activeCategory && (
-                <motion.div
-                  key={activeCategory}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="space-y-4 p-6 bg-muted/50 rounded-xl"
-                >
-                  {categories
-                    .filter(c => c.id === activeCategory)
-                    .map(category => (
-                      <div key={category.id} className="space-y-3">
-                        <label htmlFor={`carbon-${category.id}`} className="flex items-center gap-2 text-sm font-medium">
-                          {category.icon}
-                          {category.question}
-                        </label>
-                        <div className="flex gap-3">
-                          <input
-                            id={`carbon-${category.id}`}
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            value={inputs[category.id] || ''}
-                            onChange={(e) => handleInputChange(category.id, e.target.value)}
-                            placeholder="0"
-                            className="min-w-0 flex-1 rounded-sm border border-input bg-background px-4 py-3 text-lg outline-none focus:border-primary"
-                          />
-                          <Badge variant="secondary" className="px-4 flex items-center">
-                            {category.unit}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="flex gap-3">
-              <Button
-                onClick={() => setShowResults(true)}
-                disabled={Object.keys(inputs).length === 0}
-                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-                size="lg"
-              >
-                Calculate My Footprint
-              </Button>
-              {Object.keys(inputs).length > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setInputs({});
-                    setActiveCategory('');
-                  }}
-                  size="lg"
-                >
-                  Reset
-                </Button>
-              )}
+          <div className="mt-6 sm:hidden">
+            <p className="text-xs text-muted-foreground">Question {step + 1} of {CATEGORIES.length}</p>
+            <div className="mt-2 grid grid-cols-6 gap-1" aria-hidden="true">
+              {CATEGORIES.map((category, index) => (
+                <span key={category.id} className={`h-1 rounded-full ${index <= step ? 'bg-primary' : 'bg-border'}`} />
+              ))}
             </div>
           </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="space-y-6"
-          >
-            {/* Results Summary */}
-            <div className="rounded-sm border bg-muted/35 p-8 text-center">
-              <div className={`text-6xl font-bold ${impact.color} mb-2`}>
-                {totalCO2.toLocaleString()}
-              </div>
-              <div className="text-sm text-muted-foreground mb-4">
-                kg CO₂ per year
-              </div>
-              <div className={`flex items-center justify-center gap-2 ${impact.color}`}>
-                {impact.icon}
-                <span className="text-lg font-semibold">{impact.label} Impact</span>
-              </div>
-            </div>
 
-            {/* Comparison */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg">
-                <div className="text-sm text-muted-foreground mb-1">vs. US Average</div>
-                <div className="text-2xl font-bold">{comparisonToUS}%</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  US avg: {usAverage.toLocaleString()} kg/year
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+            {CATEGORIES.map((category, index) => {
+              const measure = category.measures[system];
+              const Icon = ICONS[category.id];
+              return (
+                <div key={category.id} className={index === step ? '' : 'hidden sm:block'}>
+                  <label htmlFor={`carbon-${category.id}`} className="flex items-center gap-2 text-sm font-semibold">
+                    <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+                    {category.label}
+                  </label>
+                  <p id={`carbon-${category.id}-hint`} className="mt-1 min-h-[2.5rem] text-xs leading-5 text-muted-foreground">
+                    {measure.question}
+                  </p>
+                  <div className="mt-2 flex rounded-sm border border-input bg-background focus-within:border-primary focus-within:ring-1 focus-within:ring-ring">
+                    <input
+                      id={`carbon-${category.id}`}
+                      type="number"
+                      inputMode="decimal"
+                      min="0"
+                      step="any"
+                      value={inputs[category.id] ?? ''}
+                      onChange={(event) => setInputs((current) => ({ ...current, [category.id]: event.target.value }))}
+                      placeholder="0"
+                      aria-describedby={`carbon-${category.id}-hint`}
+                      className="min-w-0 flex-1 bg-transparent px-3 py-2.5 text-base outline-none"
+                    />
+                    <span className="flex items-center whitespace-nowrap border-l px-3 text-xs text-muted-foreground">
+                      {measure.unit}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <div className="text-sm text-muted-foreground mb-1">vs. Global Average</div>
-                <div className="text-2xl font-bold">{comparisonToGlobal}%</div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  Global avg: {globalAverage.toLocaleString()} kg/year
-                </div>
-              </div>
-            </div>
+              );
+            })}
+          </div>
 
-            {/* Tips */}
-            <div className="rounded-sm border bg-muted/35 p-4">
-              <h4 className="font-semibold mb-2 flex items-center gap-2">
-                <Leaf className="w-4 h-4 text-green-600" />
-                Tips to Reduce Your Footprint
-              </h4>
-              <ul className="text-sm space-y-1 text-muted-foreground">
-                <li>• Switch to renewable energy sources</li>
-                <li>• Use public transport or carpool when possible</li>
-                <li>• Reduce meat consumption (try Meatless Mondays)</li>
-                <li>• Buy local and seasonal produce</li>
-                <li>• Reduce, reuse, recycle whenever possible</li>
-              </ul>
-            </div>
-
-            <Button
-              onClick={() => setShowResults(false)}
-              variant="outline"
-              className="w-full"
-              size="lg"
+          <div className="mt-6 flex gap-3 sm:hidden">
+            <button
+              type="button"
+              onClick={() => goToStep(step - 1)}
+              disabled={step === 0}
+              className="rounded-sm border px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
             >
-              Recalculate
-            </Button>
-          </motion.div>
-        )}
-      </CardContent>
-    </Card>
+              Back
+            </button>
+            {step < lastStep ? (
+              <button
+                type="button"
+                onClick={() => goToStep(step + 1)}
+                className="flex-1 rounded-sm bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                className="flex-1 rounded-sm bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                See my estimate
+              </button>
+            )}
+          </div>
+        </form>
+
+        <div ref={resultsRef} className="scroll-mt-20 border-t bg-muted/35 p-6 sm:p-8 lg:border-l lg:border-t-0" aria-live="polite">
+          <p className="editorial-kicker">Your estimate</p>
+          {largest ? (
+            <>
+              <p className="mt-4 font-editorial text-6xl font-semibold leading-none">{formatTonnes(totalKg)}</p>
+              <p className="mt-2 text-sm text-muted-foreground">tonnes of CO₂ a year</p>
+
+              <ul className="mt-7 space-y-3" aria-label="Where it comes from">
+                {filledParts.map(({ category, kg }) => (
+                  <li key={category.id}>
+                    <div className="flex justify-between gap-4 text-sm">
+                      <span>{category.label}</span>
+                      <span className="tabular-nums text-muted-foreground">{formatTonnes(kg)} t</span>
+                    </div>
+                    <div className="mt-1.5 h-2 rounded-full bg-border/70">
+                      <div
+                        className={`h-2 rounded-full ${BAR_COLOURS[category.id]}`}
+                        style={{ width: `${Math.max(2, (kg / totalKg) * 100)}%` }}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-7 border-t border-foreground/15 pt-5">
+                <p className="text-sm font-semibold">
+                  {largest.category.label} is your largest source, at {Math.round((largest.kg / totalKg) * 100)}%.
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">{largest.category.tip}</p>
+              </div>
+
+              <div className="mt-7 border-t border-foreground/15 pt-5">
+                <p className="text-sm font-semibold">For context</p>
+                <ul className="mt-3 space-y-2.5">
+                  {comparisons.map(({ label, tonnes, colour }) => (
+                    <li key={label} className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                      <span>{label}</span>
+                      <span className="tabular-nums">{tonnes.toFixed(1)} t</span>
+                      <div className="col-span-2 h-1.5 rounded-full bg-border/70">
+                        <div className={`h-1.5 rounded-full ${colour}`} style={{ width: `${(tonnes / comparisonScale) * 100}%` }} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  Averages include every source, from industry to public services, so a full footprint is higher than these six answers.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => { setInputs({}); setStep(0); }}
+                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                Start again
+              </button>
+            </>
+          ) : (
+            <p className="mt-4 max-w-xs leading-7 text-muted-foreground">
+              Fill in any question and your estimate appears here, with where it comes from.
+            </p>
+          )}
+        </div>
+      </div>
+
+      <details className="border-t px-6 py-4 text-sm sm:px-8">
+        <summary className="cursor-pointer font-semibold">How this is calculated</summary>
+        <div className="mt-3 space-y-2 leading-6 text-muted-foreground">
+          <p>
+            This is a broad estimate of carbon dioxide from six everyday sources, using average factors rather than your
+            actual car, grid or diet.
+          </p>
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Driving: 0.25 kg per km (0.40 kg per mile), the US EPA figure for an average petrol car.</li>
+            <li>Electricity: 0.48 kg per kWh, the world average grid in 2023 (Ember). US units use the US average, 0.37 kg per kWh (EPA eGRID). Your local grid may be much cleaner or dirtier.</li>
+            <li>Home gas: 3.0 kg per kg of LPG burned, or 5.3 kg per therm of natural gas (EPA).</li>
+            <li>Flights: 90 kg per hour in the air, a common rough average per passenger that leaves out the extra warming from contrails.</li>
+            <li>Meals with meat: 2.5 kg each, a rough average. Beef is far higher, chicken lower.</li>
+            <li>New things: 0.5 kg per US dollar, a rough average across goods.</li>
+            <li>Averages per person: world 4.7 t (Global Carbon Project, 2023), United States about 14 t.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
   );
 };
 
