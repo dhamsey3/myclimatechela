@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Car, Zap, Flame, Plane, Utensils, ShoppingBag, RotateCcw } from 'lucide-react';
 import {
   CATEGORIES,
@@ -37,6 +37,15 @@ const UNIT_SYSTEMS: { id: UnitSystem; label: string }[] = [
 const CarbonCalculator = () => {
   const [system, setSystem] = useState<UnitSystem>('metric');
   const [inputs, setInputs] = useState<Partial<Record<CategoryId, string>>>({});
+  // On phones the questions come one at a time; wider screens show them all.
+  const [step, setStep] = useState(0);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const lastStep = CATEGORIES.length - 1;
+
+  const goToStep = (next: number) => {
+    setStep(next);
+    requestAnimationFrame(() => document.getElementById(`carbon-${CATEGORIES[next].id}`)?.focus());
+  };
 
   const amounts = Object.fromEntries(
     Object.entries(inputs).map(([id, value]) => [id, parseFloat(value ?? '') || 0]),
@@ -80,12 +89,21 @@ const CarbonCalculator = () => {
             </div>
           </div>
 
+          <div className="mt-6 sm:hidden">
+            <p className="text-xs text-muted-foreground">Question {step + 1} of {CATEGORIES.length}</p>
+            <div className="mt-2 grid grid-cols-6 gap-1" aria-hidden="true">
+              {CATEGORIES.map((category, index) => (
+                <span key={category.id} className={`h-1 rounded-full ${index <= step ? 'bg-primary' : 'bg-border'}`} />
+              ))}
+            </div>
+          </div>
+
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
-            {CATEGORIES.map((category) => {
+            {CATEGORIES.map((category, index) => {
               const measure = category.measures[system];
               const Icon = ICONS[category.id];
               return (
-                <div key={category.id}>
+                <div key={category.id} className={index === step ? '' : 'hidden sm:block'}>
                   <label htmlFor={`carbon-${category.id}`} className="flex items-center gap-2 text-sm font-semibold">
                     <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
                     {category.label}
@@ -114,9 +132,37 @@ const CarbonCalculator = () => {
               );
             })}
           </div>
+
+          <div className="mt-6 flex gap-3 sm:hidden">
+            <button
+              type="button"
+              onClick={() => goToStep(step - 1)}
+              disabled={step === 0}
+              className="rounded-sm border px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
+            >
+              Back
+            </button>
+            {step < lastStep ? (
+              <button
+                type="button"
+                onClick={() => goToStep(step + 1)}
+                className="flex-1 rounded-sm bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                className="flex-1 rounded-sm bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                See my estimate
+              </button>
+            )}
+          </div>
         </form>
 
-        <div className="border-t bg-muted/35 p-6 sm:p-8 lg:border-l lg:border-t-0" aria-live="polite">
+        <div ref={resultsRef} className="scroll-mt-20 border-t bg-muted/35 p-6 sm:p-8 lg:border-l lg:border-t-0" aria-live="polite">
           <p className="editorial-kicker">Your estimate</p>
           {largest ? (
             <>
@@ -167,7 +213,7 @@ const CarbonCalculator = () => {
 
               <button
                 type="button"
-                onClick={() => setInputs({})}
+                onClick={() => { setInputs({}); setStep(0); }}
                 className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
