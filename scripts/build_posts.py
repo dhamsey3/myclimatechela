@@ -3,8 +3,22 @@ import argparse
 import re, html, textwrap, time, datetime, json, pathlib, sys, random
 import feedparser, requests
 
+# Captions, headings and bylines are not part of a story's opening text.
+NON_BODY_BLOCKS = re.compile(r"<(figure|figcaption|h[1-6])\b[^>]*>.*?</\1>", re.S | re.I)
+PARAGRAPH = re.compile(r"<p\b[^>]*>(.*?)</p>", re.S | re.I)
+BYLINE = re.compile(r"^(written )?by\s+[^.!?]{1,60}$", re.I)
+
 def clean(s):
-    return html.unescape(re.sub("<.*?>","", s or "")).strip()
+    """Strip tags, leaving a space where each one was so words don't run together."""
+    text = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", s or "")))
+    return re.sub(r" ([.,;:!?)])", r"\1", text).strip()
+
+def excerpt_text(markup):
+    """Opening text of a story for its preview card."""
+    markup = NON_BODY_BLOCKS.sub(" ", markup or "")
+    paragraphs = [clean(p) for p in PARAGRAPH.findall(markup)]
+    paragraphs = [p for p in paragraphs if p and not BYLINE.match(p)]
+    return " ".join(paragraphs) if paragraphs else clean(markup)
 
 def to_iso(ts):
     if not ts: return ""
@@ -95,7 +109,7 @@ def main():
         feed = feedparser.parse(content)
         for e in getattr(feed, "entries", []):
             link = e.get("link", "#")
-            summary_txt = textwrap.shorten(clean(e.get("summary", "")), 220)
+            summary_txt = textwrap.shorten(excerpt_text(e.get("summary", "")), 220)
             items.append(
                 {
                     "title": e.get("title", "Untitled"),

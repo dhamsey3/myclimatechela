@@ -83,6 +83,14 @@ jobs:
       - name: Create 404.html for SPA routing
         run: cp dist/index.html dist/404.html
 
+      # GitHub Pages serves about.html for /about, so these copies make /about,
+      # /contact and their old .html addresses load the app instead of a 404.
+      - name: Add entry points for app routes
+        run: |
+          for route in about contact; do
+            cp dist/index.html "dist/${route}.html"
+          done
+
       - name: Add CNAME (apex domain)
         run: echo 'myclimatedefinition.org' > dist/CNAME
 
