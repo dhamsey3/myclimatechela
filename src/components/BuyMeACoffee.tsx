@@ -1,9 +1,8 @@
 import { Coffee } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface BuyMeACoffeeProps {
-  variant?: 'card' | 'button' | 'banner';
+  variant?: 'column' | 'button' | 'banner';
   className?: string;
 }
 
@@ -18,7 +17,7 @@ const SupportButton = ({ className = '' }: { className?: string }) => (
   </Button>
 );
 
-const BuyMeACoffee = ({ variant = 'card', className = '' }: BuyMeACoffeeProps) => {
+const BuyMeACoffee = ({ variant = 'column', className = '' }: BuyMeACoffeeProps) => {
   if (variant === 'button') return <SupportButton className={className} />;
 
   if (variant === 'banner') {
@@ -37,16 +36,14 @@ const BuyMeACoffee = ({ variant = 'card', className = '' }: BuyMeACoffeeProps) =
   }
 
   return (
-    <Card className={`border bg-card shadow-none ${className}`}>
-      <CardContent className="p-6">
-        <p className="editorial-kicker">Support the work</p>
-        <h2 className="mt-3 font-editorial text-2xl font-semibold">Independent climate stories take care and time.</h2>
-        <p className="mt-3 text-sm leading-6 text-muted-foreground">
-          Your contribution helps fund the research, writing, and practical resources published here.
-        </p>
-        <SupportButton className="mt-5" />
-      </CardContent>
-    </Card>
+    <div className={`border-t border-foreground/20 pt-5 ${className}`}>
+      <p className="editorial-kicker">Support the work</p>
+      <h2 className="mt-3 font-editorial text-3xl font-semibold">Independent climate stories take care and time.</h2>
+      <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
+        Your contribution helps fund the research, writing, and practical resources published here.
+      </p>
+      <SupportButton className="mt-6" />
+    </div>
   );
 };
 

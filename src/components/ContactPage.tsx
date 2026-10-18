@@ -75,7 +75,7 @@ const ContactPage = () => {
             <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
               <div className="min-w-0">
                 <p className="editorial-kicker">Contact</p>
-                <h1 className="mt-5 break-words font-editorial text-5xl font-semibold leading-[1.02] sm:text-6xl">
+                <h1 className="mt-5 max-w-xl break-words font-editorial text-4xl font-semibold leading-[1.06] sm:text-5xl">
                   Every climate story starts with someone speaking and someone listening.
                 </h1>
                 <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
@@ -126,9 +126,9 @@ const ContactPage = () => {
               </div>
             </aside>
 
-            <div id="contact-form" className="border-t border-foreground/20 pt-5">
+            <div id="contact-form">
               <p className="editorial-kicker">Send a message</p>
-              <h2 className="mt-3 font-editorial text-4xl font-semibold">What would you like to talk about?</h2>
+              <h2 className="mt-3 font-editorial text-3xl font-semibold">What would you like to talk about?</h2>
               <p className="mt-4 max-w-2xl leading-7 text-muted-foreground">
                 We read every message. A clear subject helps us respond with the right context.
               </p>
