@@ -20,6 +20,28 @@ def excerpt_text(markup):
     paragraphs = [p for p in paragraphs if p and not BYLINE.match(p)]
     return " ".join(paragraphs) if paragraphs else clean(markup)
 
+def entry_markup(entry):
+    """Full story HTML: Medium sends it as content:encoded, other feeds as the summary."""
+    for block in entry.get("content") or []:
+        if block.get("value"):
+            return block["value"]
+    return entry.get("summary", "") or ""
+
+def byline_name(markup):
+    """Writer named in a "By ..." line before the story's first paragraph, if any."""
+    for paragraph in PARAGRAPH.findall(NON_BODY_BLOCKS.sub(" ", markup or "")):
+        text = clean(paragraph)
+        if not text:
+            continue
+        if BYLINE.match(text):
+            return re.sub(r"^(written )?by\s+", "", text, flags=re.I).strip()
+        return ""
+    return ""
+
+def reading_minutes(markup, words_per_minute=230):
+    words = len(clean(markup).split())
+    return max(1, round(words / words_per_minute)) if words else 0
+
 def to_iso(ts):
     if not ts: return ""
     try:
@@ -109,7 +131,8 @@ def main():
         feed = feedparser.parse(content)
         for e in getattr(feed, "entries", []):
             link = e.get("link", "#")
-            summary_txt = textwrap.shorten(excerpt_text(e.get("summary", "")), 220)
+            markup = entry_markup(e)
+            summary_txt = textwrap.shorten(excerpt_text(markup), 220)
             items.append(
                 {
                     "title": e.get("title", "Untitled"),
@@ -122,6 +145,9 @@ def main():
                         e.get("published_parsed") or e.get("updated_parsed")
                     ),
                     "image": extract_image(e),
+                    "tags": [t.get("term") for t in e.get("tags", []) if t.get("term")],
+                    "author": byline_name(markup),
+                    "reading_minutes": reading_minutes(markup),
                 }
             )
 
